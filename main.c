@@ -6,59 +6,69 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/09 18:11:14 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/09 19:23:43 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//int init_minishell()
+// void	get_token_type()
 
-char *ft_strtok(char *s, const char *delim)
+void	new_token(t_minishell *shell, char *data, int len)
 {
-	char *token;
-
-	if (s = NULL)
-
-	int i;
+	int		i;
+	t_token	*new;
+	t_token *last;
 
 	i = 0;
-	while (s[i])
+	new = malloc(sizeof(t_token));
+	new->data = malloc(sizeof(char) * len + 1);
+	while (--len)
+		new->data[i++] = data[len];
+	new->data[i] = '\0';
+	last = ft_lstlast(shell->tokens);
+	last->next = new;
+	new->prev = last;
+	// get_token_type
 }
 
-int ft_tokenize(t_minishell *data, char *command, int start)
+int	ft_tokenize(t_minishell *shell, char *command)
 {
-	int i;
+	int	i;
+	int	len;
 
 	i = 0;
-	// printf("cmd: [%s] \n", command);
-	while(ft_charinstr(DELIMITER, command[i + start]) == 0 && command[i + start])
-		i++;
-	if (ft_charinstr(DELIMITER, command[i + start]) == 1)
-		printf("FOUND ONE\n");
+	len = 0;
+	while (command[i])
+	{
+		while (ft_charinstr(DELIMITER, command[i]) == 0 && command[i])
+			i++;
+		if (ft_charinstr(DELIMITER, command[i]) == 1)
+			new_token(shell, command, i);
+		command + 5;
+	}
 	return (0);
 }
 
-int	init_minishell(t_minishell *data)
+int	init_minishell(t_minishell *shell)
 {
 	//todo: add shit to initialize?
 	return (0);
 }
 
-int main(void)
+int	main(void)
 {
-	char 		*command;
-	t_minishell data;
+	char		*command;
+	t_minishell	shell;
 
-	init_minishell(&data);
+	init_minishell(&shell);
 	while (strcmp(command, "exit") && strcmp(command, "q"))
 	{
 		command = readline("> ");
-		ft_tokenize(&data, command, 0);
+		ft_tokenize(&shell, command);
 		if (ft_strlen(command) > 0)
 			add_history(command);
 		free(command);
 	}
-	// printf("%i, %i, %i\n", COMMAND, OPTION, PIPE);
 	return (0);
 }

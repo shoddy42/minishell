@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/09 17:13:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/09 19:03:57 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <signal.h> //required
 # include "libft/libft.h"
 
-# define DELIMITER "|$&<>;"
+# define DELIMITER " |$&<>;\t\n"
 
 typedef enum e_tokentype
 {
@@ -30,14 +30,16 @@ typedef enum e_tokentype
     ENV,
     QUOTE,
     DQUOTE,
-    PIPE
+    PIPE,
+	VOID
 }   t_tokentype;
 
 typedef struct s_token
 {
-    char		*data;
-	int			exe;
-    t_tokentype	type;
+    char			*data;
+    t_tokentype		type;
+	struct s_token	*next;
+	struct s_token	*prev;
 }   t_token;
 
 typedef struct s_command
@@ -49,7 +51,7 @@ typedef struct s_command
 
 typedef struct s_shell_data
 {
-	t_command	*tokens;
+	t_token		*tokens;
 	char		*testing;
 	int			last_return;
 	int			test;
