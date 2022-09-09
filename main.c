@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/09 17:42:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/09 18:11:14 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,14 @@
 
 char *ft_strtok(char *s, const char *delim)
 {
+	char *token;
+
+	if (s = NULL)
+
 	int i;
 
 	i = 0;
 	while (s[i])
-
 }
 
 int ft_tokenize(t_minishell *data, char *command, int start)
@@ -28,7 +31,7 @@ int ft_tokenize(t_minishell *data, char *command, int start)
 	int i;
 
 	i = 0;
-	printf("cmd: [%s] \n", command);
+	// printf("cmd: [%s] \n", command);
 	while(ft_charinstr(DELIMITER, command[i + start]) == 0 && command[i + start])
 		i++;
 	if (ft_charinstr(DELIMITER, command[i + start]) == 1)
