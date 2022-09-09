@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/09 20:28:02 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/09 20:44:04 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	new_token(t_minishell *shell, char *data, int len)
 	printf("test: [%s]\n", new->data);
 	new->data[i] = '\0';
 	last = ft_token_last(shell->tokens);
+	// need to make sure there is a first node somehow?
 	// last->next = new;
 	// new->prev = last;
 	// get_token_type
