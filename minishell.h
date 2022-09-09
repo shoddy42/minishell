@@ -6,21 +6,24 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/08 22:50:43 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/09 17:13:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <string.h>
-#include <signal.h>
+# include <readline/readline.h> //required
+# include <readline/history.h> //required
+# include <stdio.h>  //mby?
+# include <unistd.h> //prolly?
+# include <stdlib.h> //prolly?
+# include <string.h> //?
+# include <signal.h> //required
+# include "libft/libft.h"
 
-typedef enum e_token
+# define DELIMITER "|$&<>;"
+
+typedef enum e_tokentype
 {
     COMMAND = 42,
     OPTION,
@@ -28,14 +31,29 @@ typedef enum e_token
     QUOTE,
     DQUOTE,
     PIPE
-}   t_token_names;
+}   t_tokentype;
+
+typedef struct s_token
+{
+    char		*data;
+	int			exe;
+    t_tokentype	type;
+}   t_token;
+
+typedef struct s_command
+{
+	char *command;
+	char **options;
+	char *index;
+}   t_command;
 
 typedef struct s_shell_data
 {
-    int test;
-
-    
-} t_data;
+	t_command	*tokens;
+	char		*testing;
+	int			last_return;
+	int			test;
+}	t_minishell;
 
 
 #endif
