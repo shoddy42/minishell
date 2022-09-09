@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/09 19:03:57 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/09 19:46:13 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <string.h> //?
 # include <signal.h> //required
 # include "libft/libft.h"
+# define LIST "t_token"
 
 # define DELIMITER " |$&<>;\t\n"
 
