@@ -30,6 +30,10 @@ typedef enum e_tokentype
     ENV,
     QUOTE,
     DQUOTE,
+	DOLLAR,
+	AND,
+	LEFT,
+	RIGHT,
     PIPE,
 	VOID
 }   t_tokentype;

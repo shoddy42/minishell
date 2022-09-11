@@ -15,7 +15,7 @@ SOURCES = $(FILES:%=ft_%.c)
 BSOURCES = $(BFILES:%=ft_%.c)
 OBJECTS = $(FILES:%=ft_%.o)
 BOBJECTS = $(BFILES:%=ft_%.o)
-FLAGS = -Wall -Wextra -Werror
+FLAGS = #-Wall -Wextra -Werror
 HEADERS = libft.h
 FILES = tolower toupper isprint isascii isalnum isdigit isalpha atoi \
 		strncmp strnstr strrchr strchr strlcat strlcpy strlen memcmp \
@@ -24,7 +24,7 @@ FILES = tolower toupper isprint isascii isalnum isdigit isalpha atoi \
 		putstr_fd putendl_fd putnbr_fd
 
 BFILES = lstnew lstadd_front lstsize lstlast lstadd_back lstdelone \
-		 lstclear lstiter lstmap charinstr
+		 lstclear lstiter lstmap charinstr strcmp
 
 
 all: $(NAME)
