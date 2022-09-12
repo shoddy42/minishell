@@ -6,15 +6,17 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/09 20:43:26 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/12 21:14:33 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# include <stdio.h>  //mby?
 # include <readline/readline.h> //required
 # include <readline/history.h> //required
-# include <stdio.h>  //mby?
+
+// #include
 # include <unistd.h> //prolly?
 # include <stdlib.h> //prolly?
 # include <string.h> //?
@@ -61,9 +63,18 @@ typedef struct s_shell_data
 	int			test;
 }	t_minishell;
 
+typedef struct s_env
+{
+	char 	*key;
+	char 	*beans;
+	struct	s_env *next;
+} t_env;
+
 
 #endif
 
+
+// void rl_replace_line (const char *text, int clear_undo);
 /**
  * minishell steps
   
@@ -75,3 +86,7 @@ typedef struct s_shell_data
 6: return?
 
  **/
+
+
+
+//-L /Users/$(USER)/.brew/opt/readline/lib -I /Users/$(USER)/.brew/opt/readline/include

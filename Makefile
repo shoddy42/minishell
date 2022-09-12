@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/09/09 16:15:43 by wkonings      ########   odam.nl          #
+#    Updated: 2022/09/12 21:14:50 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,10 +18,15 @@ FLAGS = -Wall -Wextra -Werror
 HEADERS = minishell.h
 FILES = main
 
+# BREW_DIR	= $(shell brew --prefix)
+# LIB_READLINE	= $(BREW_DIR)/opt/readline/lib
+# INCLUDE_READLINE = -I $(BREW_DIR)/opt/readline/include
+# READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
+
 all: $(NAME)
 
 $(NAME):
-	gcc $(SOURCES) $(INCLUDES) -lreadline
+	gcc $(SOURCES) $(INCLUDES) $(READLINE_DIRS) -lreadline 
 
 flags:
 	gcc $(FLAGS) -c $(SOURCES) -lreadline
