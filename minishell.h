@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/12 21:14:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/12 22:59:44 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,21 @@
 # include <signal.h> //required
 # include "libft/libft.h"
 
-# define DELIMITER " |$&<>;\t\n"
+# define DELIMITER " |$&<>;\'\"\t\n"
 
 typedef enum e_tokentype
 {
     COMMAND = 42,
-    OPTION,
-    ENV,
-    QUOTE,
-    DQUOTE,
-	DOLLAR,
-	AND,
-	LEFT,
-	RIGHT,
-    PIPE,
-	VOID
+    OPTION = 43,
+    ENV = 44,
+    QUOTE = 45,
+    DQUOTE = 46,
+	DOLLAR = 47,
+	AND = 48,
+	LEFT = 49,
+	RIGHT = 50,
+    PIPE = 51,
+	VOID = 52
 }   t_tokentype;
 
 typedef struct s_token

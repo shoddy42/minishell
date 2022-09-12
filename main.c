@@ -6,13 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/12 21:40:01 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/12 22:58:03 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_tokens(t_minishell *shell)
+void	free_tokens(t_minishell *shell)
 {
 	t_token *list;
 
@@ -28,8 +28,7 @@ void	ft_free_tokens(t_minishell *shell)
 	shell->tokens = NULL;
 }
 
-
-t_token	*ft_token_last(t_token *list)
+t_token	*get_last_token(t_token *list)
 {
 	t_token *tmp;
 
@@ -39,40 +38,37 @@ t_token	*ft_token_last(t_token *list)
 	return (tmp);
 }
 
-void	get_token_type(t_minishell *shell, t_token *new)
+void	get_token_type(t_minishell *shell, t_token *token)
 {
-	if (new->data[0] ==  ' ')
-		new->type = VOID;
-	if (new->data[0] ==  '|')
-		new->type = PIPE;
-	if (new->data[0] ==  '$')
-		new->type = DOLLAR;
-	if (new->data[0] ==  '&')
-		new->type = AND;
-	if (new->data[0] ==  '<')
-		new->type = LEFT;
-	if (new->data[0] ==  '>')
-		new->type = RIGHT;
-	if (new->data[0] ==  ' ')
-		new->type = VOID;
+	if (token->data[0] ==  ' ')
+		token->type = VOID;
+	else if (token->data[0] ==  '|')
+		token->type = PIPE;
+	else if (token->data[0] ==  '$')
+		token->type = DOLLAR;
+	else if (token->data[0] ==  '&')
+		token->type = AND;
+	else if (token->data[0] ==  '<')
+		token->type = LEFT;
+	else if (token->data[0] ==  '>')
+		token->type = RIGHT;
+	else
+		token->type = COMMAND;
 }
 
-int	new_token(t_minishell *shell, char *data, int len)
+void	new_token(t_minishell *shell, char *data, int len)
 {
 	int		i;
 	t_token	*new;
 	t_token *last;
 
 	i = -1;
-	// printf("%i ", len);
-	new = ft_calloc(sizeof(t_token), 1);
-	new->data = ft_calloc(sizeof(char), len + 1);
+	new = ft_calloc(1, sizeof(t_token));
+	new->data = ft_calloc(len + 1, sizeof(char));
 	while (++i < len)
 		new->data[i] = data[i];
-	new->data[i] = '\0';
-	// printf("data: [%s]\n", new->data);
-	last = ft_token_last(shell->tokens);
-	if (last != NULL)// && last->data != NULL)
+	last = get_last_token(shell->tokens);
+	if (last != NULL)
 	{
 		last->next = new;
 		new->prev = last;
@@ -80,9 +76,10 @@ int	new_token(t_minishell *shell, char *data, int len)
 	else
 		shell->tokens = new;
 	get_token_type(shell, new);
-	return (0);
 }
 
+
+//only issue with this so far is that for the final token, it'll allocate 1 bit too many.
 void	ft_tokenize(t_minishell *shell, char *command)
 {
 	int	i;
@@ -106,14 +103,10 @@ void	ft_tokenize(t_minishell *shell, char *command)
 void sighandler(int signum)
 {
 	printf("caught signal: %i\n", signum);
+	//TODO: actual handling of specific signals.
+
 	// remove the exit later
-	// rl_replace_line("eee: ", 0);
-	// rl_redisplay()
-	// rl_on_new_line();
-		// rl_on_new_line
-	// rl_on_new_line
-	// exit(1);
-	// rl_redi
+	exit(69);
 }
 
 void print_tokens(t_minishell *shell)
@@ -122,33 +115,27 @@ void print_tokens(t_minishell *shell)
 	t_token *test;
 
 	test = shell->tokens;
-	// printf("shell: %s", shell->tokens->data);
 	printf("all tokens: ");
 	while (test && test->next)
 	{
+		printf("(%i)", test->type);
 		printf("[%s]-", test->data);
 		test = test->next;
 	}
 	if (test)
-		printf("[%s]", test->data);
-	// printf("[%s]\n", test->data);
+	{
+		printf("(%i)", test->type);
+		printf("[%s]\n", test->data);
+	}
 }
 
 int	init_minishell(t_minishell *shell)
 {
-	//first token for testing purposes
-	// t_token *first;
-
-	// first = ft_calloc(1, sizeof(t_token));
-	// first->data = ft_strdup("test");
-	// shell->tokens = first;
 	//todo: add things to initialize? kek
 
-	//todo: fix signals, to catch al control + X commands
+	signal(SIGINT, sighandler);
 	
-	// signal(SIGINT, sighandler);
-	
-	//todo: make function that takes ENVP from main, and turns it into a linked list
+	//todo: make function that gets env probably with getenv command instead of thru main.
 	
 	// printf("first?: [%s]\n", shell->tokens->data);
 	return (0);
@@ -159,11 +146,9 @@ int	main(void)
 	char		*command;
 	int			tmp_exit = 0;
 	t_minishell	shell;
-	int		pass = 0; // remove when done testing
-
 
 	init_minishell(&shell);
-	while (tmp_exit == 0 && pass < 2)
+	while (tmp_exit == 0)
 	{
 		// printf("LOOPING\n\n");
 		command = readline("> ");
@@ -174,8 +159,7 @@ int	main(void)
 			add_history(command);
 		free(command);
 		print_tokens(&shell);
-		ft_free_tokens(&shell);
-		// pass++;
+		free_tokens(&shell);
 	}
 	return (0);
 }
