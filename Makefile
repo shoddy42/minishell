@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/09/13 23:16:17 by wkonings      ########   odam.nl          #
+#    Updated: 2022/09/14 01:15:48 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ OBJECTS = $(FILES:%=%.o)
 INCLUDES = libft/libft.a
 FLAGS = -Wall -Wextra -Werror
 HEADERS = minishell.h
-FILES = main tokenize token_utils pipex pipex_utils
+FILES = main tokenize token_utils
 
 # BREW_DIR	= $(shell brew --prefix)
 # LIB_READLINE	= $(BREW_DIR)/opt/readline/lib

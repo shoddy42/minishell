@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/13 23:14:47 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/14 01:40:35 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,10 @@ int	init_minishell(t_minishell *shell)
 	return (0);
 }
 
-int	main(int ac, char *av, char **env)
+int	main(void)
 {
 	char		*command;
 	int			tmp_exit = 0;
-	extern int test;
 	t_minishell	shell;
 
 	init_minishell(&shell);

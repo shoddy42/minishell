@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/13 23:19:46 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/14 01:45:16 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,6 @@
 # include "libft/libft.h"
 
 # define DELIMITER " |$&<>;\'\"\t\n"
-
-typedef struct s_ppx
-{
-	char	**path;
-
-	int		tunnel[2];
-	int		pid;
-	int		here_doc;
-	int		infile_fd;
-	int		outfile_fd;
-}	t_ppx;
-
-typedef enum e_numppx
-{
-	FIRST = 0,
-	REGULAR = 1,
-	HEREDOC = 2,
-
-	WRITE = 0,
-	PERROR = 1
-}	t_numppx;
 
 typedef enum e_tokentype
 {
@@ -80,8 +59,9 @@ typedef struct s_command
 
 typedef struct s_env
 {
-	char 	*key;
-	char 	*beans;
+	char 	*key; // not yet in use, might need.
+	char 	*beans; // not yet in use, might need.
+	char	*data;
 	struct	s_env *next;
 } t_env;
 
@@ -90,7 +70,6 @@ typedef struct s_shell_data
 	t_token		*tokens;
 	t_env		*env;
 	char		*testing;
-	int			has_pipe;
 	int			last_return;
 	int			test;
 }	t_minishell;
@@ -107,12 +86,12 @@ t_token	*get_last_token(t_token *list);
 void 	print_tokens(t_minishell *shell);
 
 //PIPEX
-char	*pipex_pathjoin(char const *path, char const *cmd);
-void	pipex_error(char *error_message, int mode);
-int		pipex_heredoc(char *av, t_ppx *pipex);
-void	pipex_open(int ac, char **av, t_ppx *pipex);
-int		split_path(char *env[], t_ppx *pipex);
-int		get_fd_in(int current_fd, t_ppx *pipex, int mode);
+// char	*pipex_pathjoin(char const *path, char const *cmd);
+// void	pipex_error(char *error_message, int mode);
+// int		pipex_heredoc(char *av, t_ppx *pipex);
+// void	pipex_open(int ac, char **av, t_ppx *pipex);
+// int		split_path(char *env[], t_ppx *pipex);
+// int		get_fd_in(int current_fd, t_ppx *pipex, int mode);
 
 #endif
 

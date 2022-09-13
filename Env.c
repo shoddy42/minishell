@@ -1,57 +1,56 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   Env.c                                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/09/14 01:15:25 by wkonings      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include <stdio.h>
 
-//should put the key of each line in ENV in tmp->key
-//and also put each line of the key into tmp->beans
-
-char    env_key(char   *envl)
+void	print_env(t_minishell *shell)
 {
-    int     i;
-    char    ret;
+	int i = 0;
+	t_env *test;
 
-    i = 0;
-    ret = malloc(ft_strlen(envl) * sizeof(char));
-    while (i != '=')
-    {
-        ret[i] = envl[i];
-        i++;
-    }
-    return (ret);
+	test = shell->env;
+	printf("ENVP: ");
+	while (test && test->next)
+	{
+		printf("[%s]\n", test->data);
+		test = test->next;
+	}
+	if (test)
+	{
+		printf("[%s]\n", test->data);
+	}
+
 }
 
-char    env_beans(char  *envl)
+t_env	*new_env(char *data)
 {
-    int     i;
-    int     j;
-    char    ret;
+	t_env *new;
 
-    j = 0;
-    i = 0;
-    ret = malloc(ft_strlen(envl) * sizeof(char));
-    while (envl[i]!= '=')
-        i++;
-    i++;
-    while(envl[i])
-    {
-        ret[j] = envl[i];
-        i++;
-        j++;
-    }
-    return (ret);
+	new = ft_calloc(1, sizeof(t_env));
+	new->data = ft_strdup(data);
+	return (new);
 }
 
-void env_init(char  **envp)
+void	init_env(t_minishell *shell, char  **env)
 {
-    t_env   *tmp;
-    int j;
+	int i;
+	t_env	*tmp;
 
-    j = 0;
-
-    while(j != 0)
-    {
-        tmp->key = env_key(envp[j]);
-        tmp->beans = env_beans(envp[j]);
-        tmp->next = tmp->next;
-        j++;
-    }
+	i = 0;
+	shell->env = new_env(env[i]);
+	tmp = shell->env;
+	while (*env[++i])
+	{
+		tmp->next = new_env(env[i]);
+		tmp = tmp->next;
+	}
 }
