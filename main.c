@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/13 23:01:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/13 23:14:47 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void parse_token(t_minishell *shell)
 		}
 		token = token->next;
 	}
-	test = 7;
 }
 
 void sighandler(int signum)
