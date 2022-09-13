@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/12 22:59:44 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/13 20:45:54 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,17 @@ typedef struct s_env
 	struct	s_env *next;
 } t_env;
 
+
+
+// tokenize.c
+void	set_token_type(t_minishell *shell, t_token *token);
+void	new_token(t_minishell *shell, char *data, int len);
+void	ft_tokenize(t_minishell *shell, char *command);
+
+// token_utils.c
+void	free_tokens(t_minishell *shell);
+t_token	*get_last_token(t_token *list);
+void 	print_tokens(t_minishell *shell);
 
 #endif
 
