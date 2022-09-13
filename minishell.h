@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/13 20:45:54 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/13 21:56:13 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,10 @@ typedef struct s_token
 typedef struct s_command
 {
 	char *command;
-	char **options;
+	// char **options;
 	char *index;
 }   t_command;
 
-typedef struct s_shell_data
-{
-	t_token		*tokens;
-	char		*testing;
-	int			last_return;
-	int			test;
-}	t_minishell;
 
 typedef struct s_env
 {
@@ -70,6 +63,14 @@ typedef struct s_env
 	struct	s_env *next;
 } t_env;
 
+typedef struct s_shell_data
+{
+	t_token		*tokens;
+	char		*testing;
+	int			has_pipe;
+	int			last_return;
+	int			test;
+}	t_minishell;
 
 
 // tokenize.c

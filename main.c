@@ -6,39 +6,30 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/13 21:11:04 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/13 22:28:26 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	yolo_exe(t_token *cmd)
-{
-	pid_t child;
-
-	child = fork();
-	if (child)
-		execve(cmd,)
-	
-}
-
 void parse_token(t_minishell *shell)
 {
-	t_token	*cmd;
+	t_token	*token;
+	t_command *cmd;
 	int cmd_finished = 0;
 
-	cmd = shell->tokens;
-	while (cmd)
+	token = shell->tokens;
+	cmd = ft_calloc(1, sizeof(t_command));
+	while (token)
 	{
-		if (cmd->type == COMMAND)
+		if (token->type == COMMAND && cmd->command == NULL)
 		{
-			yolo_exe()
-			printf("command: [%s]\n", cmd->data);
+			cmd->command = ft_strdup(token->data);
+			printf("cmd: %s\n", cmd->command);
 		}
-		cmd = cmd->next;
+		token = token->next;
 	}
-
-	
+	test = 7;
 }
 
 void sighandler(int signum)
@@ -65,6 +56,7 @@ int	main(void)
 {
 	char		*command;
 	int			tmp_exit = 0;
+	extern int test;
 	t_minishell	shell;
 
 	init_minishell(&shell);
