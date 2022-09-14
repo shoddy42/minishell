@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/14 01:45:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/14 02:02:39 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_env
 	char 	*key; // not yet in use, might need.
 	char 	*beans; // not yet in use, might need.
 	char	*data;
+	int			segma;
 	struct	s_env *next;
 } t_env;
 
