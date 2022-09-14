@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/13 20:34:25 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/14 01:52:40 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void print_tokens(t_minishell *shell)
 	printf("all tokens: ");
 	while (test && test->next)
 	{
-		printf("(%i)", test->type);
+		// printf("(%i)", test->type);
 		printf("[%s]-", test->data);
 		test = test->next;
 	}
 	if (test)
 	{
-		printf("(%i)", test->type);
+		// printf("(%i)", test->type);
 		printf("[%s]\n", test->data);
 	}
 }

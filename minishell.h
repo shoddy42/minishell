@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/14 02:02:39 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/14 04:55:32 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ typedef struct s_token
 
 typedef struct s_command
 {
-	char *command;
-	// char **options;
-	char *index;
+	char *command; // not required, can use options[0] instead if want?
+	char **options;
+	// char *index;
 }   t_command;
 
 
@@ -62,7 +62,6 @@ typedef struct s_env
 	char 	*key; // not yet in use, might need.
 	char 	*beans; // not yet in use, might need.
 	char	*data;
-	int			segma;
 	struct	s_env *next;
 } t_env;
 
@@ -70,7 +69,8 @@ typedef struct s_shell_data
 {
 	t_token		*tokens;
 	t_env		*env;
-	char		*testing;
+	char		**envp;
+	char		**path;
 	int			last_return;
 	int			test;
 }	t_minishell;
@@ -85,6 +85,10 @@ void	ft_tokenize(t_minishell *shell, char *command);
 void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
 void 	print_tokens(t_minishell *shell);
+
+// env
+void	init_env(t_minishell *shell, char  **env);
+void	print_env(t_minishell *shell);
 
 //PIPEX
 // char	*pipex_pathjoin(char const *path, char const *cmd);
