@@ -6,7 +6,7 @@
 #    By: wkonings <marvin@codam.nl>                   +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/09/09 16:31:32 by wkonings      ########   odam.nl          #
+#    Updated: 2022/09/15 03:36:56 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ FILES = tolower toupper isprint isascii isalnum isdigit isalpha atoi \
 		putstr_fd putendl_fd putnbr_fd
 
 BFILES = lstnew lstadd_front lstsize lstlast lstadd_back lstdelone \
-		 lstclear lstiter lstmap charinstr strcmp
+		 lstclear lstiter lstmap charinstr strcmp strexpand
 
 
 all: $(NAME)

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/14 04:56:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/15 04:12:59 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ void    execute(t_command *cmd, t_minishell *shell)
 	char	*path;
 	pid_t	child;
 
-
 	child = fork();
 	i = 0;
-	if (access(cmd->options[0], X_OK) == 0 && child == 0)
-	{
+
+	int k = -1;
+	while (cmd->options[++k])
+		printf("opt: [%s]\n", cmd->options[k]);
+	if (cmd->options && access(cmd->options[0], X_OK) == 0 && child == 0)
 		execve(cmd->options[0], cmd->options, shell->envp);
-		printf("we in!\n");
-	}
 	while (shell->path[i] && child == 0)
 	{
 		path = pipex_pathjoin(shell->path[i], cmd->command);
@@ -67,8 +67,6 @@ void    execute(t_command *cmd, t_minishell *shell)
 	if (child == 0)
 		exit(1);
 	waitpid(child, NULL, 0);
-	// rl_redisplay();
-	// printf("\n");
 }
 
 char	**get_command_options(t_token	*token)
@@ -89,17 +87,53 @@ char	**get_command_options(t_token	*token)
 	while (token && token->type == COMMAND)
 	{
 		options[i] = ft_strdup(token->data);
-		// printf("(%i) opt: [%s]\n", i, options[i]);
 		token = token->next;
 		i++;
 	}
 	return (options);
 }
 
+void	expand_dong(t_token *token)
+{
+	char *tmp;
+
+	tmp = getenv(token->data + 1);
+	token->data = tmp;
+}
+
+t_token	*handle_quote(t_token *token)
+{
+	t_token	*tmp;
+	t_token	*ret;
+	char	*str;
+
+	tmp = token->next;
+	ret = ft_calloc(1, sizeof(t_token));
+	printf("start quote handle\n");
+	while (tmp && tmp->next)
+	{
+		printf("tmp??: %s\n", tmp->data);
+		str = ft_strexpand(str, tmp->data);
+		tmp = tmp->next;
+		if (tmp->type == QUOTE)
+		{
+			if (tmp->next)
+				tmp = tmp->next;
+			break;
+		}
+	}
+	token->data = ft_strdup(str);
+	ft_bzero(str, ft_strlen(str));
+	// printf("expanded: %s\n", ret->data);
+	token->next = tmp;
+	if (token->next->type == QUOTE)
+		token->next = NULL;
+	return (tmp);
+}
+
 void parse_token(t_minishell *shell)
 {
 	t_token		*token;
-	t_token		tmp;
 	t_command	*cmd;
 	int			cmd_finished = 0;
 	int			i;
@@ -109,16 +143,19 @@ void parse_token(t_minishell *shell)
 	cmd = ft_calloc(1, sizeof(t_command));
 	while (token)
 	{
+		if (token->type == QUOTE)
+			handle_quote(token);
+		if (token->data[0] == '$')
+			expand_dong(token);
 		if (token->type == COMMAND && cmd->command == NULL)
-		{
 			cmd->command = ft_strdup(token->data);
-			printf("cmd: %s\n", cmd->command);
-		}
-		if (cmd->command && cmd->options == NULL)
+		if (cmd->command && cmd->options == NULL && token->type == COMMAND)
 			cmd->options = get_command_options(token);
+		// printf("afta quo: %s\n", token->data);
+		// printf("token?: %s\n", token->data);
 		token = token->next;
 	}
-	execute(cmd, shell);
+	// execute(cmd, shell);
 }
 
 void sighandler(int signum)

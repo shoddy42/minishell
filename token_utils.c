@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/14 01:52:40 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/15 04:11:20 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,30 @@ void print_tokens(t_minishell *shell)
 	printf("all tokens: ");
 	while (test && test->next)
 	{
-		// printf("(%i)", test->type);
-		printf("[%s]-", test->data);
+		if (test->type && test->type != VOID)
+		{
+			// printf("(%i)", test->type);
+			printf("[%s]-", test->data);
+		}
 		test = test->next;
 	}
 	if (test)
 	{
-		// printf("(%i)", test->type);
-		printf("[%s]\n", test->data);
+		if (test->type && test->type != VOID)
+		{
+			// printf("(%i)", test->type);
+			printf("[%s]\n", test->data);
+		}
 	}
+	printf("\n");
+}
+
+void	free_single_token(t_token *token)
+{
+	free(token->data);
+	token->next = NULL;
+	token->prev = NULL;
+	free(token);
 }
 
 void	free_tokens(t_minishell *shell)

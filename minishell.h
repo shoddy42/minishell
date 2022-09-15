@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/14 04:55:32 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/15 03:24:15 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <fcntl.h>
 # include "libft/libft.h"
 
-# define DELIMITER " |$&<>;\'\"\t\n"
+# define DELIMITER " |<>;\t\'\"\n"
 
 typedef enum e_tokentype
 {

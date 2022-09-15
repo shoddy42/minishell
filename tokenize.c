@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/14 01:52:06 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/15 04:11:54 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void	set_token_type(t_minishell *shell, t_token *token)
 	else if (token->data[0] ==  ';')
 		token->type = VOID;
 	else if (token->data[0] ==  '\'')
-		token->type = VOID;
+		token->type = QUOTE;
 	else if (token->data[0] ==  '\"')
-		token->type = VOID;
+		token->type = DQUOTE;
 	else if (token->data[0] ==  '\t')
 		token->type = VOID;
 	else if (token->data[0] ==  '\n')
@@ -66,17 +66,17 @@ void	new_token(t_minishell *shell, char *data, int len)
 void	ft_tokenize(t_minishell *shell, char *command)
 {
 	int	i;
-	int	len;
+	// int	len;
 
 	i = 0;
-	len = 0;
+	// len = 0;
 	while (command[i])
 	{
 		while (ft_charinstr(DELIMITER, command[i]) == 0 && command[i])
 			i++;
 		if (ft_charinstr(DELIMITER, command[i]) == 1 && i > 0)
 			i--;
-		if (!(command[0] == ' ' && i == 0))
+		// if (!(command[0] == ' ' && i == 0))
 			new_token(shell, command, i + 1);
 		command += i + 1;
 		i = 0;
