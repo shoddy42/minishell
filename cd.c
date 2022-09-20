@@ -6,7 +6,7 @@ int	go_home(t_command	*cmd)
 	int	cd_ret;
 	char	*home_p;
 
-	if (home_p = getenv("HOME=") == NULL)
+	if (!(home_p = getenv("HOME=")))
 		return (1);
 	cd_ret = chdir(home_p);
 	return (0);
