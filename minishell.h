@@ -92,6 +92,9 @@ void 	print_tokens(t_minishell *shell);
 void	init_env(t_minishell *shell, char  **env);
 void	print_env(t_minishell *shell);
 
+// execute.c
+void    execute(t_command *cmd, t_minishell *shell);
+
 //PIPEX
 // char	*pipex_pathjoin(char const *path, char const *cmd);
 // void	pipex_error(char *error_message, int mode);
