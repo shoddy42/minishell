@@ -22,20 +22,21 @@ void print_tokens(t_minishell *shell)
 	printf("all tokens: ");
 	while (test && test->next)
 	{
-		if (test->type && test->type != VOID)
-		{
-			// printf("(%i)", test->type);
+		// if (test->type && test->type != VOID)
+		// {
+			printf("(%i)", test->type);
 			printf("[%s]-", test->data);
-		}
+		// }
 		test = test->next;
 	}
-	if (test)
+	if (test != NULL)
 	{
-		if (test->type && test->type != VOID)
-		{
-			// printf("(%i)", test->type);
+		// if (test->type && test->type != VOID)
+		// {
+			printf("final token ");
+			printf("(%i)", test->type);
 			printf("[%s]\n", test->data);
-		}
+		// }
 	}
 	printf("\n");
 }
@@ -57,10 +58,13 @@ void	free_tokens(t_minishell *shell)
 	{
 		if (list->data)
 			free(list->data);
+		if (list->prev)
+			list->prev = NULL;
 		list = list->next;
 	}
 	if (list)
 		free(list);
+	// shell->tokens->next = NULL;
 	shell->tokens = NULL;
 }
 

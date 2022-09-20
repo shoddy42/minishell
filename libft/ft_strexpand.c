@@ -14,28 +14,28 @@
 
 char	*ft_strexpand(char *str, char const *expand)
 {
-	char	*str;
+	char	*s;
 	size_t	i;
 	size_t	j;
 
 	if (!str && !expand)
 		return (NULL);
-	str = ft_calloc((ft_strlen(str) + ft_strlen(expand) + 1), sizeof(char));
+	s = ft_calloc((ft_strlen(str) + ft_strlen(expand) + 1), sizeof(char));
 	if (!str)
 		return (NULL);
 	i = 0;
 	j = 0;
 	while (str[i])
 	{
-		str[i] = str[i];
+		s[i] = str[i];
 		i++;
 	}
 	while (expand[j])
 	{
-		str[i + j] = expand[j];
+		s[i + j] = expand[j];
 		j++;
 	}
-	str[i + j] = '\0';
-    free(str);
-	return (str);
+	s[i + j] = '\0';
+	free(str);
+	return (s);
 }

@@ -24,6 +24,8 @@
 # include <fcntl.h>
 # include "libft/libft.h"
 
+# include <sys/wait.h> // needed for WSL
+
 # define DELIMITER " |<>;\t\'\"\n"
 
 typedef enum e_tokentype

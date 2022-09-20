@@ -58,7 +58,10 @@ void	new_token(t_minishell *shell, char *data, int len)
 		new->prev = last;
 	}
 	else
+	{
+		new->next = NULL;
 		shell->tokens = new;
+	}
 	set_token_type(shell, new);
 }
 
@@ -66,18 +69,15 @@ void	new_token(t_minishell *shell, char *data, int len)
 void	ft_tokenize(t_minishell *shell, char *command)
 {
 	int	i;
-	// int	len;
 
 	i = 0;
-	// len = 0;
 	while (command[i])
 	{
 		while (ft_charinstr(DELIMITER, command[i]) == 0 && command[i])
 			i++;
 		if (ft_charinstr(DELIMITER, command[i]) == 1 && i > 0)
 			i--;
-		// if (!(command[0] == ' ' && i == 0))
-			new_token(shell, command, i + 1);
+		new_token(shell, command, i + 1);
 		command += i + 1;
 		i = 0;
 	}

@@ -86,9 +86,12 @@ char	**get_command_options(t_token	*token)
 	i = 0;
 	while (token && token->type == COMMAND)
 	{
-		options[i] = ft_strdup(token->data);
+		if (token->type == COMMAND)
+		{
+			options[i] = ft_strdup(token->data);
+			i++;
+		}
 		token = token->next;
-		i++;
 	}
 	return (options);
 }
@@ -108,6 +111,7 @@ t_token	*handle_quote(t_token *token)
 	char	*str;
 
 	tmp = token->next;
+	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
 	ret = ft_calloc(1, sizeof(t_token));
 	printf("start quote handle\n");
 	while (tmp && tmp->next)
@@ -123,8 +127,10 @@ t_token	*handle_quote(t_token *token)
 		}
 	}
 	token->data = ft_strdup(str);
-	ft_bzero(str, ft_strlen(str));
-	// printf("expanded: %s\n", ret->data);
+	if (str);
+		free(str);
+	// ft_bzero(str, ft_strlen(str));
+	printf("expanded: %s\n", token->data);
 	token->next = tmp;
 	if (token->next->type == QUOTE)
 		token->next = NULL;
@@ -151,11 +157,10 @@ void parse_token(t_minishell *shell)
 			cmd->command = ft_strdup(token->data);
 		if (cmd->command && cmd->options == NULL && token->type == COMMAND)
 			cmd->options = get_command_options(token);
-		// printf("afta quo: %s\n", token->data);
-		// printf("token?: %s\n", token->data);
 		token = token->next;
 	}
-	// execute(cmd, shell);
+	if (cmd->command)
+		execute(cmd, shell);
 }
 
 void sighandler(int signum)
@@ -173,6 +178,7 @@ int	init_minishell(t_minishell *shell)
 
 	signal(SIGINT, sighandler);
 	// shell->env = NULL;
+	shell->tokens = NULL;
 	
 	//todo: make function that gets env probably with getenv command instead of thru main.
 
@@ -189,7 +195,6 @@ int	main(int ac, char **av, char **env)
 	init_minishell(shell);
 	shell->envp = env;
 	init_env(shell, env);
-	// print_env(shell);
 	while (tmp_exit == 0)
 	{
 		command = readline("> ");
@@ -199,7 +204,8 @@ int	main(int ac, char **av, char **env)
 		parse_token(shell);
 		if (ft_strlen(command) > 0)
 			add_history(command);
-		free(command);
+		if (command)
+			free(command);
 		print_tokens(shell);
 		free_tokens(shell);
 	}
