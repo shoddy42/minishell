@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/15 03:24:15 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/20 11:59:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ typedef struct s_shell_data
 
 
 // tokenize.c
-void	set_token_type(t_minishell *shell, t_token *token);
-void	new_token(t_minishell *shell, char *data, int len);
+void	set_token_type(t_minishell *shell, t_token *token, char *data);
+int		new_token(t_minishell *shell, char *data, int len);
 void	ft_tokenize(t_minishell *shell, char *command);
 
 // token_utils.c

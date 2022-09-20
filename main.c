@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/15 04:12:59 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/20 11:33:12 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void    execute(t_command *cmd, t_minishell *shell)
 	i = 0;
 
 	int k = -1;
-	while (cmd->options[++k])
+	while (cmd->options[++k] && child == 0)
 		printf("opt: [%s]\n", cmd->options[k]);
 	if (cmd->options && access(cmd->options[0], X_OK) == 0 && child == 0)
 		execve(cmd->options[0], cmd->options, shell->envp);
@@ -60,7 +60,10 @@ void    execute(t_command *cmd, t_minishell *shell)
 	{
 		path = pipex_pathjoin(shell->path[i], cmd->command);
 		if (access(path, X_OK) == 0)
+		{
+			printf("its go time\n");
 			execve(path, cmd->options, shell->envp);
+		}
 		free(path);
 		i++;
 	}
@@ -77,14 +80,15 @@ char	**get_command_options(t_token	*token)
 
 	tmp = token;
 	i = 0;
-	while (tmp && tmp->type == COMMAND)
+	while (tmp && (tmp->type == COMMAND || tmp->type == VOID))
 	{
-		i++;
+		if (tmp->type == COMMAND)
+			i++;
 		tmp = tmp->next;
 	}
 	options = ft_calloc(i + 1, sizeof(char *));
 	i = 0;
-	while (token && token->type == COMMAND)
+	while (token && (token->type == COMMAND || token->type == VOID))
 	{
 		if (token->type == COMMAND)
 		{
@@ -104,7 +108,7 @@ void	expand_dong(t_token *token)
 	token->data = tmp;
 }
 
-t_token	*handle_quote(t_token *token)
+t_token	*handle_quote_parse(t_token *token)
 {
 	t_token	*tmp;
 	t_token	*ret;
@@ -127,13 +131,14 @@ t_token	*handle_quote(t_token *token)
 		}
 	}
 	token->data = ft_strdup(str);
-	if (str);
+	if (str)
 		free(str);
 	// ft_bzero(str, ft_strlen(str));
 	printf("expanded: %s\n", token->data);
 	token->next = tmp;
 	if (token->next->type == QUOTE)
 		token->next = NULL;
+	token->type = COMMAND;
 	return (tmp);
 }
 
@@ -149,8 +154,8 @@ void parse_token(t_minishell *shell)
 	cmd = ft_calloc(1, sizeof(t_command));
 	while (token)
 	{
-		if (token->type == QUOTE)
-			handle_quote(token);
+		// if (token->type == QUOTE)
+		// 	handle_quote(token);
 		if (token->data[0] == '$')
 			expand_dong(token);
 		if (token->type == COMMAND && cmd->command == NULL)
@@ -178,7 +183,6 @@ int	init_minishell(t_minishell *shell)
 
 	signal(SIGINT, sighandler);
 	// shell->env = NULL;
-	shell->tokens = NULL;
 	
 	//todo: make function that gets env probably with getenv command instead of thru main.
 

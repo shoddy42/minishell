@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/15 04:11:20 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/20 11:52:25 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void print_tokens(t_minishell *shell)
 	{
 		// if (test->type && test->type != VOID)
 		// {
-			printf("final token ");
+			// printf("final token ");
 			printf("(%i)", test->type);
 			printf("[%s]\n", test->data);
 		// }
