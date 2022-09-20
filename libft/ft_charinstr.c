@@ -6,18 +6,18 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/09 16:31:51 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/09 17:11:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/20 11:48:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_charinstr(const char *str, char c)
+int	ft_charinstr(char c, const char *str)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] != c && str[i] != '\0')
+	while (str[i] && str[i] != c)
 		i++;
-	if (str[i] == c && str[i] != '\0')
+	if (str[i] == c)
 		return (1);
 	return (0);
 }
