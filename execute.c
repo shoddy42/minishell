@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+// this function is not properly protected, might need to exit instead of return?
+char	*pipex_pathjoin(char const *path, char const *cmd)
+{
+	char	*ret;
+	size_t	i;
+	size_t	j;
+
+	if (!path || !cmd)
+		return (NULL);
+	ret = malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(cmd) + 2));
+	if (!ret)
+		return (NULL);
+	i = -1;
+	j = -1;
+	while (path[++i])
+		ret[i] = path[i];
+	while (cmd[++j] && cmd[j] != ' ')
+		ret[i + j + 1] = cmd[j];
+	ret[i] = '/';
+	ret[i + j + 1] = '\0';
+	return (ret);
+}
+
 /*
 this function is way too basic. we'll need split
 the forking to a different process most likely.
@@ -47,4 +70,6 @@ void    execute(t_command *cmd, t_minishell *shell)
 	if (child == 0)
 		exit(1);
 	waitpid(child, NULL, 0);
+    if (ft_strcmp(cmd->command, "cd") == 0)
+        printf("YEP HERE\n");
 }

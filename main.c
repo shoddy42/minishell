@@ -13,28 +13,7 @@
 #include "minishell.h"
 
 
-// this function is not properly protected, might need to exit instead of return?
-char	*pipex_pathjoin(char const *path, char const *cmd)
-{
-	char	*ret;
-	size_t	i;
-	size_t	j;
 
-	if (!path || !cmd)
-		return (NULL);
-	ret = malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(cmd) + 2));
-	if (!ret)
-		return (NULL);
-	i = -1;
-	j = -1;
-	while (path[++i])
-		ret[i] = path[i];
-	while (cmd[++j] && cmd[j] != ' ')
-		ret[i + j + 1] = cmd[j];
-	ret[i] = '/';
-	ret[i + j + 1] = '\0';
-	return (ret);
-}
 
 char	**get_command_options(t_token	*token)
 {
