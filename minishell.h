@@ -87,6 +87,7 @@ void	ft_tokenize(t_minishell *shell, char *command);
 void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
 void 	print_tokens(t_minishell *shell);
+void	free_next_tokens(t_token *tokens);
 
 // env
 void	init_env(t_minishell *shell, char  **env);

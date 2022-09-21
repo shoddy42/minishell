@@ -12,9 +12,6 @@
 
 #include "minishell.h"
 
-
-
-
 char	**get_command_options(t_token	*token)
 {
 	char	**options;
@@ -76,7 +73,6 @@ t_token	*handle_quote_parse(t_token *token)
 	token->data = ft_strdup(str);
 	if (str)
 		free(str);
-	// ft_bzero(str, ft_strlen(str));
 	printf("expanded: %s\n", token->data);
 	token->next = tmp;
 	if (token->next->type == QUOTE)
@@ -84,6 +80,39 @@ t_token	*handle_quote_parse(t_token *token)
 	token->type = COMMAND;
 	return (tmp);
 }
+
+t_token	*handle_quote_finalcope(t_token *token)
+{
+	t_token	*tmp;
+	t_token	*ret;
+	char	*str;
+
+	tmp = token->next;
+	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
+	ret = ft_calloc(1, sizeof(t_token));
+	printf("start quote handle\n");
+	while (tmp && tmp->type != QUOTE && tmp->next)
+	{
+		// printf("tmp??: %s\n", tmp->data);
+		str = ft_strexpand(str, tmp->data);
+		tmp = tmp->next;
+	}
+	if (tmp->type == QUOTE)
+		if (tmp->next)
+			tmp = tmp->next;
+	token->data = ft_strdup(str);
+	if (str)
+		free(str);
+	free_next_tokens(token);
+	printf("expanded: %s\n", token->data);
+	// token->next = tmp;
+	// if (token->next->type == QUOTE)
+	// 	token->next = NULL;
+	if (token)
+		token->type = COMMAND;
+	return (tmp);
+}
+
 
 void parse_token(t_minishell *shell)
 {
@@ -97,8 +126,8 @@ void parse_token(t_minishell *shell)
 	cmd = ft_calloc(1, sizeof(t_command));
 	while (token)
 	{
-		// if (token->type == QUOTE)
-		// 	handle_quote(token);
+		if (token->type == QUOTE)
+			token = handle_quote_finalcope(token);
 		if (token->data[0] == '$')
 			expand_dong(token);
 		if (token->type == COMMAND && cmd->command == NULL)

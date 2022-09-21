@@ -49,6 +49,27 @@ void	free_single_token(t_token *token)
 	free(token);
 }
 
+void	free_next_tokens(t_token *tokens)
+{
+	t_token	*list;
+	// t_token *last;
+
+	list = tokens;
+	while (list)
+	{
+		if (list->data)
+		{
+			printf("freeing: [%s]\n", list->data);
+			ft_bzero(list->data, ft_strlen(list->data));
+			free(list->data);
+		}
+		list->prev = NULL;
+		// free(list);
+		// if (list->next)
+		list = list->next;
+	}
+}
+
 void	free_tokens(t_minishell *shell)
 {
 	t_token *list;
@@ -58,8 +79,8 @@ void	free_tokens(t_minishell *shell)
 	{
 		if (list->data)
 			free(list->data);
-		if (list->prev)
-			list->prev = NULL;
+		// if (list->prev)
+		// 	list->prev = NULL;
 		list = list->next;
 	}
 	if (list)
