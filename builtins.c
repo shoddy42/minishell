@@ -3,12 +3,12 @@
 #include <unistd.h>
 #include <string.h>
 
-int    check_builtin(t_command    *cmd)
+int    check_builtin(t_command    *cmd, t_token *token)
 {
     if(strcmp(cmd->options[0], "cd") == 0)
         return(ms_cd(cmd));
-    // else if(ft_strcmp(cmd->options[0], "echo") == 0)
-    //     ms_echo(cmd);
+    else if(ft_strcmp(cmd->options[0], "echo") == 0)
+        return(ms_echo(token));
     // else if(ft_strcmp(cmd->options[0], "env") == 0)
     //     ms_env(cmd);
     // else if(ft_strcmp(cmd->options[0], "pwd") == 0)
