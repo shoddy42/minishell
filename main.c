@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/20 11:33:12 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/21 19:44:51 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ t_token	*handle_quote_finalcope(t_token *token)
 		if (tmp->next)
 			tmp = tmp->next;
 	token->data = ft_strdup(str);
-	if (str)
+	if (str != NULL)
 		free(str);
 	free_next_tokens(token);
 	printf("expanded: %s\n", token->data);
@@ -126,8 +126,8 @@ void parse_token(t_minishell *shell)
 	cmd = ft_calloc(1, sizeof(t_command));
 	while (token)
 	{
-		if (token->type == QUOTE)
-			token = handle_quote_finalcope(token);
+		// if (token->type == QUOTE)
+		// 	token = handle_quote_finalcope(token);
 		if (token->data[0] == '$')
 			expand_dong(token);
 		if (token->type == COMMAND && cmd->command == NULL)

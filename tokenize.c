@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/20 12:21:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/21 19:41:51 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,38 +112,48 @@ int		new_token(t_minishell *shell, char *data, int len)
 	return (len);
 }
 
-// int		handle_quote_early(char *command, char c, int start)
-// {
-// 	int i;
+int		handle_quote_early(char *command, char c, int start)
+{
+	int i;
 
-// 	i = 1;
-// 	printf("found quote\n");
-// 	while (command[i + start] && command[i + start] != c)
-// 		i++;
-// 	if (command[i + start] != c)
-// 		printf("NO CLOSING QUOTE\n");
-// 	else
-// 		i++;
-// 	return (i);
-// }
+	i = 1;
+	printf("found quote\n");
+	while (command[i + start] && command[i + start] != c)
+		i++;
+	if (command[i + start] != c)
+		printf("NO CLOSING QUOTE\n");
+	// if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
+	// 	i = i;
+	// else
+	// 	i++;
+	printf("skip = [%i]\n", i);
+	return (i);
+}
 
 //only issue with this so far is that for the final token, it'll allocate 1 bit toomany.
 void	ft_tokenize(t_minishell *shell, char *command)
 {
 	int	i;
+	int	skip;
 
 	i = 0;
+	skip = 0;
 	while (command[i])
 	{
 		while (ft_charinstr(command[i], DELIMITER) == 0 && command[i])
 			i++;
-		// if (command[i] == '\'' || command[i] == '\"')
-		// 	i += handle_quote_early(command, command[i], i);
-		if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
+		if (command[i] == '\'' || command[i] == '\"')
+		{
+			i += handle_quote_early(command, command[i], i);
+			// i--;
+		}
+		else if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
 			i--;
-		command += new_token(shell, command, i + 1);
-		// new_token(shell, command, i + 1);
-		// command += i + 1;
+		printf ("new token [%c][%c] len = [%i]\n", *command, *(command + 1), i);
+		// command += new_token(shell, command, i + 1);
+		new_token(shell, command, i + 1);
+		command += i + 1 + skip;
+		skip = 0;
 		i = 0;
 	}
 }

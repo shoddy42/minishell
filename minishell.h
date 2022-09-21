@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/20 11:59:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/21 20:05:03 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ typedef struct s_token
 
 typedef struct s_command
 {
-	char *command; // not required, can use options[0] instead if want?
-	char **options;
+	char			*command; // not required, can use options[0] instead if want?
+	char			**options;
+	struct s_token	*used_token;
 	// char *index;
 }   t_command;
 

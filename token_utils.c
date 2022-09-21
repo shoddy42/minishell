@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/20 11:52:25 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/21 18:56:36 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void print_tokens(t_minishell *shell)
 	{
 		// if (test->type && test->type != VOID)
 		// {
-			printf("(%i)", test->type);
+			// printf("(%i)", test->type);
 			printf("[%s]-", test->data);
 		// }
 		test = test->next;
@@ -34,7 +34,7 @@ void print_tokens(t_minishell *shell)
 		// if (test->type && test->type != VOID)
 		// {
 			// printf("final token ");
-			printf("(%i)", test->type);
+			// printf("(%i)", test->type);
 			printf("[%s]\n", test->data);
 		// }
 	}
@@ -52,7 +52,6 @@ void	free_single_token(t_token *token)
 void	free_next_tokens(t_token *tokens)
 {
 	t_token	*list;
-	// t_token *last;
 
 	list = tokens;
 	while (list)
@@ -60,10 +59,10 @@ void	free_next_tokens(t_token *tokens)
 		if (list->data)
 		{
 			printf("freeing: [%s]\n", list->data);
-			ft_bzero(list->data, ft_strlen(list->data));
+			// ft_bzero(list->data, ft_strlen(list->data));
 			free(list->data);
 		}
-		list->prev = NULL;
+		// list->prev = NULL;
 		// free(list);
 		// if (list->next)
 		list = list->next;
