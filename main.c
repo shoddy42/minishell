@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/21 19:44:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/22 18:01:37 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,48 +48,61 @@ void	expand_dong(t_token *token)
 	token->data = tmp;
 }
 
-t_token	*handle_quote_parse(t_token *token)
-{
-	t_token	*tmp;
-	t_token	*ret;
-	char	*str;
+// t_token	*handle_quote_parse(t_token *token)
+// {
+// 	t_token	*tmp;
+// 	t_token	*ret;
+// 	char	*str;
 
-	tmp = token->next;
-	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
-	ret = ft_calloc(1, sizeof(t_token));
-	printf("start quote handle\n");
-	while (tmp && tmp->next)
+// 	tmp = token->next;
+// 	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
+// 	ret = ft_calloc(1, sizeof(t_token));
+// 	printf("start quote handle\n");
+// 	while (tmp && tmp->next)
+// 	{
+// 		printf("tmp??: %s\n", tmp->data);
+// 		str = ft_strexpand(str, tmp->data);
+// 		tmp = tmp->next;
+// 		if (tmp->type == QUOTE)
+// 		{
+// 			if (tmp->next)
+// 				tmp = tmp->next;
+// 			break;
+// 		}
+// 	}
+// 	token->data = ft_strdup(str);
+// 	if (str)
+// 		free(str);
+// 	printf("expanded: %s\n", token->data);
+// 	token->next = tmp;
+// 	if (token->next->type == QUOTE)
+// 		token->next = NULL;
+// 	token->type = COMMAND;
+// 	return (tmp);
+// }
+
+void	free_tokens_til(t_token *start, t_token *end)
+{
+	t_token *tmp;
+
+	while (start != end)
 	{
-		printf("tmp??: %s\n", tmp->data);
-		str = ft_strexpand(str, tmp->data);
-		tmp = tmp->next;
-		if (tmp->type == QUOTE)
-		{
-			if (tmp->next)
-				tmp = tmp->next;
-			break;
-		}
+		tmp = start;
+		start = start->next;
+		printf("TMP = [%s] START = [%s]\n", tmp->data, start->data);
+		if (tmp->data)
+			free(tmp->data);
+		free(tmp);
 	}
-	token->data = ft_strdup(str);
-	if (str)
-		free(str);
-	printf("expanded: %s\n", token->data);
-	token->next = tmp;
-	if (token->next->type == QUOTE)
-		token->next = NULL;
-	token->type = COMMAND;
-	return (tmp);
 }
 
 t_token	*handle_quote_finalcope(t_token *token)
 {
 	t_token	*tmp;
-	t_token	*ret;
 	char	*str;
 
 	tmp = token->next;
 	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
-	ret = ft_calloc(1, sizeof(t_token));
 	printf("start quote handle\n");
 	while (tmp && tmp->type != QUOTE && tmp->next)
 	{
@@ -97,19 +110,18 @@ t_token	*handle_quote_finalcope(t_token *token)
 		str = ft_strexpand(str, tmp->data);
 		tmp = tmp->next;
 	}
-	if (tmp->type == QUOTE)
-		if (tmp->next)
-			tmp = tmp->next;
-	token->data = ft_strdup(str);
-	if (str != NULL)
-		free(str);
-	free_next_tokens(token);
+	if (tmp->next)
+	{
+		tmp = tmp->next;
+		token->next = NULL;
+	}
+	free_tokens_til(token->next, tmp);
+	token->data = str;
+	token->next = tmp;
+		printf("next is quote\n");
 	printf("expanded: %s\n", token->data);
-	// token->next = tmp;
-	// if (token->next->type == QUOTE)
-	// 	token->next = NULL;
-	if (token)
-		token->type = COMMAND;
+	// if (token)
+	// 	token->type = COMMAND;
 	return (tmp);
 }
 
@@ -126,8 +138,8 @@ void parse_token(t_minishell *shell)
 	cmd = ft_calloc(1, sizeof(t_command));
 	while (token)
 	{
-		// if (token->type == QUOTE)
-		// 	token = handle_quote_finalcope(token);
+		if (token->type == QUOTE)
+			token = handle_quote_finalcope(token);
 		if (token->data[0] == '$')
 			expand_dong(token);
 		if (token->type == COMMAND && cmd->command == NULL)

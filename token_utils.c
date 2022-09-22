@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/21 18:56:36 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/22 16:12:51 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,26 +47,6 @@ void	free_single_token(t_token *token)
 	token->next = NULL;
 	token->prev = NULL;
 	free(token);
-}
-
-void	free_next_tokens(t_token *tokens)
-{
-	t_token	*list;
-
-	list = tokens;
-	while (list)
-	{
-		if (list->data)
-		{
-			printf("freeing: [%s]\n", list->data);
-			// ft_bzero(list->data, ft_strlen(list->data));
-			free(list->data);
-		}
-		// list->prev = NULL;
-		// free(list);
-		// if (list->next)
-		list = list->next;
-	}
 }
 
 void	free_tokens(t_minishell *shell)

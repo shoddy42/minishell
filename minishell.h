@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/21 20:18:13 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/09/22 15:52:50 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	print_env(t_minishell *shell);
 void    execute(t_command *cmd, t_minishell *shell);
 
 // Builtins.c
-int    check_builtin(t_command    *cmd, t_token *token)
+int    check_builtin(t_command    *cmd, t_token *token);
 int    ms_cd(t_command	*cmd);
 
 //PIPEX
