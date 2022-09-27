@@ -89,7 +89,6 @@ void	free_tokens_til(t_token *start, t_token *end)
 	{
 		tmp = start;
 		start = start->next;
-		printf("TMP = [%s] START = [%s]\n", tmp->data, start->data);
 		if (tmp->data)
 			free(tmp->data);
 		free(tmp);
@@ -106,18 +105,28 @@ t_token	*handle_quote_finalcope(t_token *token)
 	printf("start quote handle\n");
 	while (tmp && tmp->type != QUOTE && tmp->next)
 	{
-		// printf("tmp??: %s\n", tmp->data);
 		str = ft_strexpand(str, tmp->data);
 		tmp = tmp->next;
 	}
-	if (tmp->next)
+	if (tmp->type == QUOTE)
 	{
-		tmp = tmp->next;
-		token->next = NULL;
+		printf ("current token: [%s]\n", tmp->data);
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+		{
+			token->next = NULL;
+			// tmp = NULL;
+			printf ("ELSE SCENARIO DUNNO LOL\n");
+		}
+		// token->next = NULL;
 	}
+	else
+		printf ("WARNING: UNCLOSED QUOTE\n");
 	free_tokens_til(token->next, tmp);
 	token->data = str;
 	token->next = tmp;
+	// token->next = NULL;
 		printf("next is quote\n");
 	printf("expanded: %s\n", token->data);
 	// if (token)
@@ -140,25 +149,42 @@ void parse_token(t_minishell *shell)
 	{
 		if (token->type == QUOTE)
 			token = handle_quote_finalcope(token);
+		if (!token)
+			printf("WARNING SEGFAULT INCOMING XDDD\n");
 		if (token->data[0] == '$')
 			expand_dong(token);
 		if (token->type == COMMAND && cmd->command == NULL)
 			cmd->command = ft_strdup(token->data);
 		if (cmd->command && cmd->options == NULL && token->type == COMMAND)
 			cmd->options = get_command_options(token);
+		// if (token->next) //maybe removing the if statingment men
 		token = token->next;
 	}
 	if (cmd->command)
 		execute(cmd, shell);
 }
 
-void sighandler(int signum)
+void	insert_prompt(t_minishell	*shell)
 {
-	printf("caught signal: %i\n", signum);
-	//TODO: actual handling of specific signals.
+	shell->command = readline("> ");	
+}
 
-	// remove the exit later
-	exit(69);
+void	 sighandler(int signum)
+{
+	if(signum == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	if(signum == SIGQUIT)
+	{
+		ft_putstr_fd("\b\b", 1);
+	}
+
+	//WHEN ALL DONE CAN REMOVING MEN
+	exit(1);
 }
 
 int	init_minishell(t_minishell *shell)
@@ -166,6 +192,8 @@ int	init_minishell(t_minishell *shell)
 	//todo: add things to initialize? kek
 
 	signal(SIGINT, sighandler);
+	signal(SIGQUIT, sighandler);
+
 	// shell->env = NULL;
 	
 	//todo: make function that gets env probably with getenv command instead of thru main.
@@ -175,25 +203,23 @@ int	init_minishell(t_minishell *shell)
 
 int	main(int ac, char **av, char **env)
 {
-	char		*command;
-	int			tmp_exit = 0;
 	t_minishell	*shell;
 
 	shell = ft_calloc(1, sizeof(t_minishell));
 	init_minishell(shell);
 	shell->envp = env;
 	init_env(shell, env);
-	while (tmp_exit == 0)
+	while (shell->exit == 0)
 	{
-		command = readline("> ");
-		if (command[0] == 'q' && ft_strlen(command) == 1)
-			tmp_exit = 1;
-		ft_tokenize(shell, command);
+		shell->command = readline("> ");
+		if (shell->command[0] == 'q' && ft_strlen(shell->command) == 1)
+			shell->exit = 1;
+		ft_tokenize(shell, shell->command);
 		parse_token(shell);
-		if (ft_strlen(command) > 0)
-			add_history(command);
-		if (command)
-			free(command);
+		if (ft_strlen(shell->command) > 0)
+			add_history(shell->command);
+		if (shell->command)
+			free(shell->command);
 		print_tokens(shell);
 		free_tokens(shell);
 	}

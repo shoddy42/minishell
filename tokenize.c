@@ -68,20 +68,6 @@ void	set_token_type(t_minishell *shell, t_token *token, char *data)
 		token->type = COMMAND;
 }
 
-// int	handle_quote_token(t_minishell *shell, t_token *token, char *data)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while (data[++i])
-// 		if (data[i] == '\'')
-// 			break;
-// 	if (data[i] == '\'')
-// 		return (i + 1);
-// 	printf ("UNCLOSED QUOTE!!\n");
-// 	return (1);
-// }
-
 int		new_token(t_minishell *shell, char *data, int len)
 {
 	int		i;
@@ -111,24 +97,6 @@ int		new_token(t_minishell *shell, char *data, int len)
 	// printf ("len = [%i] ", len);
 	return (len);
 }
-
-// int		handle_quote_early(char *command, char c, int start)
-// {
-// 	int i;
-
-// 	i = 1;
-// 	printf("found quote\n");
-// 	while (command[i + start] && command[i + start] != c)
-// 		i++;
-// 	if (command[i + start] != c)
-// 		printf("NO CLOSING QUOTE\n");
-// 	// if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
-// 	// 	i = i;
-// 	// else
-// 	// 	i++;
-// 	printf("skip = [%i]\n", i);
-// 	return (i);
-// }
 
 //only issue with this so far is that for the final token, it'll allocate 1 bit toomany.
 void	ft_tokenize(t_minishell *shell, char *command)

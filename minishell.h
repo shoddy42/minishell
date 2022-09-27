@@ -74,7 +74,9 @@ typedef struct s_shell_data
 	t_env		*env;
 	char		**envp;
 	char		**path;
+	char		*command;
 	int			last_return;
+	int			exit;
 	int			test;
 }	t_minishell;
 
@@ -89,6 +91,7 @@ void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
 void 	print_tokens(t_minishell *shell);
 void	free_next_tokens(t_token *tokens);
+void	free_single_token(t_token *token);
 
 // env
 void	init_env(t_minishell *shell, char  **env);
