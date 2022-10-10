@@ -48,90 +48,41 @@ void	expand_dong(t_token *token)
 	token->data = tmp;
 }
 
-// t_token	*handle_quote_parse(t_token *token)
-// {
-// 	t_token	*tmp;
-// 	t_token	*ret;
-// 	char	*str;
-
-// 	tmp = token->next;
-// 	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
-// 	ret = ft_calloc(1, sizeof(t_token));
-// 	printf("start quote handle\n");
-// 	while (tmp && tmp->next)
-// 	{
-// 		printf("tmp??: %s\n", tmp->data);
-// 		str = ft_strexpand(str, tmp->data);
-// 		tmp = tmp->next;
-// 		if (tmp->type == QUOTE)
-// 		{
-// 			if (tmp->next)
-// 				tmp = tmp->next;
-// 			break;
-// 		}
-// 	}
-// 	token->data = ft_strdup(str);
-// 	if (str)
-// 		free(str);
-// 	printf("expanded: %s\n", token->data);
-// 	token->next = tmp;
-// 	if (token->next->type == QUOTE)
-// 		token->next = NULL;
-// 	token->type = COMMAND;
-// 	return (tmp);
-// }
-
-void	free_tokens_til(t_token *start, t_token *end)
-{
-	t_token *tmp;
-
-	while (start != end)
-	{
-		tmp = start;
-		start = start->next;
-		if (tmp->data)
-			free(tmp->data);
-		free(tmp);
-	}
-}
-
-t_token	*handle_quote_finalcope(t_token *token)
+t_token	*handle_quote(t_token *token)
 {
 	t_token	*tmp;
 	char	*str;
 
-	tmp = token->next;
-	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
-	printf("start quote handle\n");
-	while (tmp && tmp->type != QUOTE && tmp->next)
+	tmp = token;
+	if (!tmp || !tmp->next)
 	{
-		str = ft_strexpand(str, tmp->data);
+		printf("ERROR: OUT OF TOKENS\n");
+		return (token);
+	}
+	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
+	token->type = COMMAND;
+	while (tmp && tmp->next && tmp->type != QUOTE)
+	{
+		if (tmp->next->type != QUOTE)
+			str = ft_strexpand(str, tmp->next->data);
 		tmp = tmp->next;
 	}
-	if (tmp->type == QUOTE)
+	token->data = str;
+	if (tmp->type == QUOTE && tmp->next)
 	{
-		printf ("current token: [%s]\n", tmp->data);
-		if (tmp->next)
 			tmp = tmp->next;
-		else
-		{
-			token->next = NULL;
-			// tmp = NULL;
-			printf ("ELSE SCENARIO DUNNO LOL\n");
-		}
-		// token->next = NULL;
+			free_tokens_til(token->next, tmp);
+			token->next = tmp;
 	}
 	else
-		printf ("WARNING: UNCLOSED QUOTE\n");
-	free_tokens_til(token->next, tmp);
-	token->data = str;
-	token->next = tmp;
-	// token->next = NULL;
-		printf("next is quote\n");
-	printf("expanded: %s\n", token->data);
-	// if (token)
-	// 	token->type = COMMAND;
-	return (tmp);
+	{
+		if (tmp->type != QUOTE)
+			printf ("WARNING: UNCLOSED QUOTE\n");
+		free_tokens_til(token->next, tmp);
+		free_single_token(tmp);
+		token->next = NULL;
+	}
+	return (token);
 }
 
 
@@ -147,8 +98,9 @@ void parse_token(t_minishell *shell)
 	cmd = ft_calloc(1, sizeof(t_command));
 	while (token)
 	{
+		print_tokens(shell);
 		if (token->type == QUOTE)
-			token = handle_quote_finalcope(token);
+			token = handle_quote(token);
 		if (!token)
 			printf("WARNING SEGFAULT INCOMING XDDD\n");
 		if (token->data[0] == '$')
@@ -157,11 +109,10 @@ void parse_token(t_minishell *shell)
 			cmd->command = ft_strdup(token->data);
 		if (cmd->command && cmd->options == NULL && token->type == COMMAND)
 			cmd->options = get_command_options(token);
-		// if (token->next) //maybe removing the if statingment men
 		token = token->next;
 	}
-	if (cmd->command)
-		execute(cmd, shell);
+	// if (cmd->command)
+	// 	execute(cmd, shell);
 }
 
 void	insert_prompt(t_minishell	*shell)

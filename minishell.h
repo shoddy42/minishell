@@ -71,6 +71,7 @@ typedef struct s_env
 typedef struct s_shell_data
 {
 	t_token		*tokens;
+	int			token_size;
 	t_env		*env;
 	char		**envp;
 	char		**path;
@@ -87,11 +88,11 @@ int		new_token(t_minishell *shell, char *data, int len);
 void	ft_tokenize(t_minishell *shell, char *command);
 
 // token_utils.c
+void 	print_tokens(t_minishell *shell);
+void	free_tokens_til(t_token *start, t_token *end);
+void	free_single_token(t_token *token);
 void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
-void 	print_tokens(t_minishell *shell);
-void	free_next_tokens(t_token *tokens);
-void	free_single_token(t_token *token);
 
 // env
 void	init_env(t_minishell *shell, char  **env);

@@ -77,8 +77,6 @@ int		new_token(t_minishell *shell, char *data, int len)
 	i = -1;
 	new = ft_calloc(1, sizeof(t_token));
 	set_token_type(shell, new, data);
-	// if (new->type == QUOTE)
-	// 	len = handle_quote_token(shell, new, data);
 	new->data = ft_calloc(len + 1, sizeof(char));
 	while (++i < len)
 		new->data[i] = data[i];
@@ -94,7 +92,6 @@ int		new_token(t_minishell *shell, char *data, int len)
 		new->next = NULL;
 		shell->tokens = new;
 	}
-	// printf ("len = [%i] ", len);
 	return (len);
 }
 
@@ -112,7 +109,7 @@ void	ft_tokenize(t_minishell *shell, char *command)
 			i++;
 		if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
 			i--;
-		printf ("new token [%c][%c] len = [%i]\n", *command, *(command + 1), i);
+		// printf ("new token [%c][%c] len = [%i]\n", *command, *(command + 1), i);
 		// command += new_token(shell, command, i + 1);
 		new_token(shell, command, i + 1);
 		command += i + 1 + skip;

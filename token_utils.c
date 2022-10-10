@@ -41,6 +41,21 @@ void print_tokens(t_minishell *shell)
 	printf("\n");
 }
 
+// free tokens starting from START, up to END, does NOT free END
+void	free_tokens_til(t_token *start, t_token *end)
+{
+	t_token *tmp;
+
+	while (start != end)
+	{
+		tmp = start;
+		start = start->next;
+		if (tmp->data)
+			free(tmp->data);
+		free(tmp);
+	}
+}
+
 void	free_single_token(t_token *token)
 {
 	free(token->data);
