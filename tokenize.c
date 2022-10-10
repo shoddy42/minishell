@@ -78,6 +78,7 @@ int		new_token(t_minishell *shell, char *data, int len)
 	new = ft_calloc(1, sizeof(t_token));
 	set_token_type(shell, new, data);
 	new->data = ft_calloc(len + 1, sizeof(char));
+	new->fd = -1;
 	while (++i < len)
 		new->data[i] = data[i];
 	// split this part off either back into ft_tokenize, or into a new func link_token

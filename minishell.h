@@ -40,12 +40,15 @@ typedef enum e_tokentype
 	LEFT = 49,
 	RIGHT = 50,
     PIPE = 51,
-	VOID = 52
+	VOID = 52,
+	HEREDOC = 53,
+	HEREDOC_FILE = 54
 }   t_tokentype;
 
 typedef struct s_token
 {
     char			*data;
+	int				fd;
     t_tokentype		type;
 	struct s_token	*next;
 	struct s_token	*prev;
@@ -104,6 +107,11 @@ void    execute(t_command *cmd, t_minishell *shell);
 // Builtins.c
 int    check_builtin(t_command    *cmd, t_token *token);
 int    ms_cd(t_command	*cmd);
+
+// heredoc.c
+t_token	*heredoc(t_token    *token, t_minishell *shell);
+void    heredoc_loop(t_token    *token, t_minishell *shell);
+void    ms_heredoc(t_token  *token, t_minishell *shell);
 
 //PIPEX
 // char	*pipex_pathjoin(char const *path, char const *cmd);

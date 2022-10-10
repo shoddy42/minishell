@@ -22,21 +22,21 @@ void print_tokens(t_minishell *shell)
 	printf("all tokens: ");
 	while (test && test->next)
 	{
-		// if (test->type && test->type != VOID)
-		// {
-			// printf("(%i)", test->type);
+		if (test->type && test->type != VOID)
+		{
+			printf("(%i)", test->type);
 			printf("[%s]-", test->data);
-		// }
+		}
 		test = test->next;
 	}
 	if (test != NULL)
 	{
-		// if (test->type && test->type != VOID)
-		// {
+		if (test->type && test->type != VOID)
+		{
 			// printf("final token ");
-			// printf("(%i)", test->type);
+			printf("(%i)", test->type);
 			printf("[%s]\n", test->data);
-		// }
+		}
 	}
 	printf("\n");
 }

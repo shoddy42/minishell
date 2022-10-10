@@ -16,7 +16,7 @@ OBJECTS = $(FILES:%=%.o)
 INCLUDES = libft/libft.a
 FLAGS = -Wall -Wextra -Werror
 HEADERS = minishell.h
-FILES = main tokenize token_utils env execute
+FILES = main tokenize token_utils env execute heredoc builtins cd
 
 # BREW_DIR	= $(shell brew --prefix)
 # LIB_READLINE	= $(BREW_DIR)/opt/readline/lib

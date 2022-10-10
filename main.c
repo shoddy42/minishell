@@ -86,6 +86,21 @@ t_token	*handle_quote(t_token *token)
 }
 
 
+t_token	*handle_left(t_token *token, t_minishell *shell)
+{
+	t_token *tmp;
+
+	tmp = token;
+	if (tmp->next && tmp->next->type == LEFT)
+	{
+		tmp = tmp->next;
+		tmp = heredoc(tmp, shell);
+		if (tmp->type == HEREDOC_FILE)
+	
+	}
+	return (token);
+}
+
 void parse_token(t_minishell *shell)
 {
 	t_token		*token;
@@ -99,10 +114,12 @@ void parse_token(t_minishell *shell)
 	while (token)
 	{
 		print_tokens(shell);
+		if (token->type == LEFT)
+			token = handle_left(token, shell);
 		if (token->type == QUOTE)
 			token = handle_quote(token);
 		if (!token)
-			printf("WARNING SEGFAULT INCOMING XDDD\n");
+			printf("WARNING SEGFAULT INCOMING xdd\n");
 		if (token->data[0] == '$')
 			expand_dong(token);
 		if (token->type == COMMAND && cmd->command == NULL)
@@ -111,8 +128,8 @@ void parse_token(t_minishell *shell)
 			cmd->options = get_command_options(token);
 		token = token->next;
 	}
-	// if (cmd->command)
-	// 	execute(cmd, shell);
+	if (cmd->command)
+		execute(cmd, shell);
 }
 
 void	insert_prompt(t_minishell	*shell)
@@ -162,7 +179,7 @@ int	main(int ac, char **av, char **env)
 	init_env(shell, env);
 	while (shell->exit == 0)
 	{
-		shell->command = readline("> ");
+		shell->command = readline("minishell> ");
 		if (shell->command[0] == 'q' && ft_strlen(shell->command) == 1)
 			shell->exit = 1;
 		ft_tokenize(shell, shell->command);
@@ -171,7 +188,7 @@ int	main(int ac, char **av, char **env)
 			add_history(shell->command);
 		if (shell->command)
 			free(shell->command);
-		print_tokens(shell);
+		// print_tokens(shell);
 		free_tokens(shell);
 	}
 	return (0);
