@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 10:56:58 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 12:27:42 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void	ft_tokenize(t_minishell *shell, char *command);
 
 // token_utils.c
 void 	print_tokens(t_minishell *shell);
+void	print_tokens_backwards(t_minishell *shell);
 void	free_tokens_til(t_token *start, t_token *end);
 void	free_single_token(t_token *token);
 void	free_tokens(t_minishell *shell);

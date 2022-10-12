@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 12:12:30 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 12:27:02 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,9 +135,10 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 	else
 		cmd->outfile = open(tmp->data, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	printf("cmd outfile fd = [%i]\n", cmd->outfile);
-	if (token->prev)
-		tmp->prev = token->prev;
-	printf ("TEST: [%s]\n", token->prev->data);
+	// if (token->prev)
+		// printf("token prev = [%s]", token->prev->data);
+		// tmp->prev = token->prev;
+	// printf ("TEST: [%s]\n", token->prev->data);
 	// tmp->type = OUTFILE;
 	// free_tokens_til(token, tmp);
 	printf("handle right return token = [%s]\n", tmp->data);
@@ -236,6 +237,7 @@ int	main(int ac, char **av, char **envp)
 		if (shell->command)
 			free(shell->command);
 		print_tokens(shell);
+		print_tokens_backwards(shell);
 		free_tokens(shell);
 	}
 	return (0);
