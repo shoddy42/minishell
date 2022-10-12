@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 21:01:13 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/12 21:04:09 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void    execute(t_command *cmd, t_minishell *shell)
 		exit(1);
 	}
 	waitpid(child, NULL, 0);
-	if (check_builtin(cmd) == 1)
+	if (check_builtin(cmd) == 1) //cmd->options doesnt give me the full command line, only "echo" but not anything after?
 		;
 		// printf("not gud mens");
 }
