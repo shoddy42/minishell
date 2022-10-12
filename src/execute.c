@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 13:29:21 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/12 18:25:57 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void    execute(t_command *cmd, t_minishell *shell)
 	i = 0;
 
 	int k = -1;
+	printf("IN EXEC = %s\n", cmd->options[i]);
 	while (cmd->options[++k] && child == 0)
 		printf("opt: [%s]\n", cmd->options[k]);
 	if (cmd->options && access(cmd->options[0], X_OK) == 0 && child == 0)
@@ -73,6 +74,6 @@ void    execute(t_command *cmd, t_minishell *shell)
 		exit(1);
 	}
 	waitpid(child, NULL, 0);
-	// if (check_builtin(cmd) == 1)
-		// printf("not gud mens");
+	if (check_builtin(cmd) == 1)
+		printf("not gud mens");
 }

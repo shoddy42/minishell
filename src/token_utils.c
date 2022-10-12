@@ -6,14 +6,14 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 13:30:28 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/12 17:25:53 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
 // REMOVE THIS FUNCTION LATER
-void print_tokens(t_minishell *shell)
+void	print_tokens(t_minishell *shell)
 {
 	int i = 0;
 	t_token *test;
@@ -41,11 +41,50 @@ void print_tokens(t_minishell *shell)
 	printf("\n");
 }
 
-// free tokens starting from START, up to END, does NOT free END
+//	remove later
+//	to check if token->prev is still fully linked.
+void	print_tokens_backwards(t_minishell *shell)
+{
+	int i = 0;
+	t_token *test;
+
+	test = shell->tokens;
+	printf("backwards:  ");
+	while (test && test->next)
+		test = test->next;
+	while (test && test->prev)
+	{
+		if (test->type && test->type != VOID)
+		{
+			printf("(%i)", test->type);
+			printf("[%s]-", test->data);
+		}
+		test = test->prev;
+	}
+	if (test != NULL)
+	{
+		if (test->type && test->type != VOID)
+		{
+			// printf("final token ");
+			printf("(%i)", test->type);
+			printf("[%s]\n", test->data);
+		}
+	}
+	printf("\n");
+}
+
+// maybe rename to REMOVE_tokens_til?
+// free tokens starting from START, up to END, does NOT free END. IF there is a prev token, it will relink. so far it only links  start->prev to end 
 void	free_tokens_til(t_token *start, t_token *end)
 {
-	t_token *tmp;
+	t_token	*tmp;
+	t_token	*replace_prev;
 
+	if (start->prev)
+	{
+		start->prev->next = end;
+		replace_prev = start->prev;
+	}
 	while (start != end)
 	{
 		tmp = start;
@@ -54,6 +93,7 @@ void	free_tokens_til(t_token *start, t_token *end)
 			free(tmp->data);
 		free(tmp);
 	}
+	end->prev = replace_prev;
 }
 
 void	free_single_token(t_token *token)

@@ -1,25 +1,31 @@
 #include "../include/minishell.h"
 
-char	**get_command_options(t_token	*token, t_command   *cmd)
+char	*solve_quotes(char	**str)
 {
-	char	*options;
-	t_token	*tmp;
-	int		i;
+	char *ret;
 
-	tmp = token;
-	i = 0;
 
-	while (tmp && tmp->type != PIPE)
+}
+
+int ms_echo(t_command *command)
+{
+	int	i;
+	char	*ret;
+	int	x;
+
+	i = 1;
+	x = 0;
+	if(!(command->options))
+		return(1);
+	while(command->options[i])
 	{
-        if (ft_strcmp(cmd->options[1], 
-			i++;
-		token = token->next;
+		// if (command->options[i][x] == "\"")
+		// 	x++;
+		// ret = ft_strjoin(ret, command->options[i]);
+		i++;
+		printf("Ret = %s", command->options[i]);
 	}
-	return (options);
-}
-
-int ms_echo(t_token *token)
-}
-
+	return(0);
 
 }
+
