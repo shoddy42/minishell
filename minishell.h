@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/22 15:52:50 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 10:56:58 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,18 @@
 
 typedef enum e_tokentype
 {
-    COMMAND = 42,
-    OPTION = 43,
-    ENV = 44,
-    QUOTE = 45,
-    DQUOTE = 46,
-	DOLLAR = 47,
-	AND = 48,
-	LEFT = 49,
-	RIGHT = 50,
-    PIPE = 51,
-	VOID = 52,
-	HEREDOC = 53,
-	HEREDOC_FILE = 54
+    COMMAND = 42,	//currently all "words" are commands. probably should be renamed "WORD"
+    QUOTE = 45,	 	//for '
+    DQUOTE = 46, 	//for ""
+	DOLLAR = 47,	//for $, probably should be renamed to "VARIABLE"
+	AND = 48,		//for &
+	LEFT = 49,		//for <
+	RIGHT = 50,		//for >
+    PIPE = 51,		//for |
+	HEREDOC = 53,	//for >>
+	HEREDOC_FILE = 54,
+	OUTFILE,
+	VOID = 69,		//any whitespace.
 }   t_tokentype;
 
 typedef struct s_token
@@ -57,9 +56,10 @@ typedef struct s_token
 typedef struct s_command
 {
 	char			*command; // not required, can use options[0] instead if want?
-	char			**options;
+	char			**options;	
+	int				outfile;
+	int				intfile;
 	struct s_token	*used_token;
-	// char *index;
 }   t_command;
 
 
@@ -80,6 +80,7 @@ typedef struct s_shell_data
 	char		**path;
 	char		*command;
 	int			last_return;
+	int			pipe_count;
 	int			exit;
 	int			test;
 }	t_minishell;
@@ -113,14 +114,6 @@ t_token	*heredoc(t_token    *token, t_minishell *shell);
 void    heredoc_loop(t_token    *token, t_minishell *shell);
 void    ms_heredoc(t_token  *token, t_minishell *shell);
 
-//PIPEX
-// char	*pipex_pathjoin(char const *path, char const *cmd);
-// void	pipex_error(char *error_message, int mode);
-// int		pipex_heredoc(char *av, t_ppx *pipex);
-// void	pipex_open(int ac, char **av, t_ppx *pipex);
-// int		split_path(char *env[], t_ppx *pipex);
-// int		get_fd_in(int current_fd, t_ppx *pipex, int mode);
-
 #endif
 
 
@@ -136,7 +129,3 @@ void    ms_heredoc(t_token  *token, t_minishell *shell);
 6: return?
 
  **/
-
-
-
-//-L /Users/$(USER)/.brew/opt/readline/lib -I /Users/$(USER)/.brew/opt/readline/include

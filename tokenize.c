@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/22 15:54:17 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 10:57:20 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ void	set_token_type(t_minishell *shell, t_token *token, char *data)
 	if (data[0] ==  ' ')
 		token->type = VOID;
 	else if (data[0] ==  '|')
+	{
 		token->type = PIPE;
+		shell->pipe_count++;
+	}
 	else if (data[0] ==  '$')
 		token->type = DOLLAR;
 	else if (data[0] ==  '&')

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/22 18:01:37 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 11:13:06 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ char	**get_command_options(t_token	*token)
 	return (options);
 }
 
+// unsure whether this is one is REALLY just this simple.
 void	expand_dong(t_token *token)
 {
 	char *tmp;
@@ -48,10 +49,13 @@ void	expand_dong(t_token *token)
 	token->data = tmp;
 }
 
+
+// todo: make function work with DQUOTE and its expansion of variables.
 t_token	*handle_quote(t_token *token)
 {
 	t_token	*tmp;
 	char	*str;
+	int		type; // to differenciate between QUOTE and DQUOTE and whether or not to expand variables.
 
 	tmp = token;
 	if (!tmp || !tmp->next)
@@ -85,7 +89,6 @@ t_token	*handle_quote(t_token *token)
 	return (token);
 }
 
-
 t_token	*handle_left(t_token *token, t_minishell *shell)
 {
 	t_token *tmp;
@@ -96,11 +99,49 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		tmp = tmp->next;
 		tmp = heredoc(tmp, shell);
 		if (tmp->type == HEREDOC_FILE)
-	
+			printf("heredoc time\n");
 	}
 	return (token);
 }
 
+t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
+{
+	t_token 	*tmp;
+	int			append;
+
+	append = 0;
+	printf("\nentered handle_right on token [%s]\n", token->data);
+	if (token->next)
+		tmp = token->next;
+	if (!tmp)
+		printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
+	if (tmp->type == RIGHT)
+	{
+		append = 1;
+		if (tmp->next)
+			tmp = tmp->next;
+	}
+	while (tmp->type == VOID && tmp->next)
+		tmp = tmp->next;
+	if (tmp->type != COMMAND)
+		printf ("REDIRECT FAILURE, NO FILENAME GIVEN\n");
+	else
+		printf ("opening file [%s]\n", tmp->data);
+	if (append == 1)
+		cmd->outfile = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
+	else
+		cmd->outfile = open(tmp->data, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	printf("cmd outfile fd = [%i]\n", cmd->outfile);
+	if (tmp->next)
+		tmp = tmp->next;
+	printf("handle right return token = [%s]\n", tmp->data);
+	return (tmp);
+}
+
+
+/*
+	this function will have to be split into an expansion and a real parsing function
+*/
 void parse_token(t_minishell *shell)
 {
 	t_token		*token;
@@ -111,30 +152,34 @@ void parse_token(t_minishell *shell)
 	i = 0;
 	token = shell->tokens;
 	cmd = ft_calloc(1, sizeof(t_command));
+	cmd->outfile = STDOUT_FILENO;
 	while (token)
 	{
-		print_tokens(shell);
+		// print_tokens(shell);
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
+		if (token->type == RIGHT)
+			token = handle_right(token, shell, cmd);
 		if (token->type == QUOTE)
 			token = handle_quote(token);
 		if (!token)
 			printf("WARNING SEGFAULT INCOMING xdd\n");
-		if (token->data[0] == '$')
+		if (token->type == DOLLAR)
 			expand_dong(token);
-		if (token->type == COMMAND && cmd->command == NULL)
-			cmd->command = ft_strdup(token->data);
-		if (cmd->command && cmd->options == NULL && token->type == COMMAND)
-			cmd->options = get_command_options(token);
+		// if (token->type == COMMAND && cmd->command == NULL)
+		// 	cmd->command = ft_strdup(token->data);
+		// if (cmd->command && cmd->options == NULL && token->type == COMMAND)
+		// 	cmd->options = get_command_options(token);
 		token = token->next;
 	}
 	if (cmd->command)
 		execute(cmd, shell);
+	free (cmd);
 }
 
 void	insert_prompt(t_minishell	*shell)
 {
-	shell->command = readline("> ");	
+	shell->command = readline("> ");
 }
 
 void	 sighandler(int signum)
@@ -155,28 +200,27 @@ void	 sighandler(int signum)
 	exit(1);
 }
 
-int	init_minishell(t_minishell *shell)
+int	init_minishell(t_minishell *shell, char **envp)
 {
 	//todo: add things to initialize? kek
 
 	signal(SIGINT, sighandler);
 	signal(SIGQUIT, sighandler);
+	shell->envp = envp;
+	init_env(shell, envp);
 
-	// shell->env = NULL;
 	
 	//todo: make function that gets env probably with getenv command instead of thru main.
 
 	return (0);
 }
 
-int	main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **envp)
 {
 	t_minishell	*shell;
 
 	shell = ft_calloc(1, sizeof(t_minishell));
-	init_minishell(shell);
-	shell->envp = env;
-	init_env(shell, env);
+	init_minishell(shell, envp);
 	while (shell->exit == 0)
 	{
 		shell->command = readline("minishell> ");
@@ -188,7 +232,7 @@ int	main(int ac, char **av, char **env)
 			add_history(shell->command);
 		if (shell->command)
 			free(shell->command);
-		// print_tokens(shell);
+		print_tokens(shell);
 		free_tokens(shell);
 	}
 	return (0);

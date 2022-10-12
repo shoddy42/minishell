@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/09/14 02:11:12 by wkonings      ########   odam.nl          #
+#    Updated: 2022/10/12 10:04:44 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,18 +18,18 @@ FLAGS = -Wall -Wextra -Werror
 HEADERS = minishell.h
 FILES = main tokenize token_utils env execute heredoc builtins cd
 
-# BREW_DIR	= $(shell brew --prefix)
-# LIB_READLINE	= $(BREW_DIR)/opt/readline/lib
-# INCLUDE_READLINE = -I $(BREW_DIR)/opt/readline/include
-# READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
+BREW_DIR	= $(shell brew --prefix)
+LIB_READLINE	= $(BREW_DIR)/opt/readline/lib
+INCLUDE_READLINE = -I $(BREW_DIR)/opt/readline/include
+READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
 
 all: $(NAME)
 
 $(NAME):
-	gcc $(SOURCES) $(INCLUDES) $(READLINE_DIRS) -lreadline 
+	gcc $(SOURCES) $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 
 flags:
-	gcc $(FLAGS) -c $(SOURCES) -lreadline
+	gcc $(FLAGS) $(SOURCES) $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 	./a.out
 
 test: re

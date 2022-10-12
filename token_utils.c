@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/22 16:12:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 11:11:05 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,20 @@ void	free_tokens(t_minishell *shell)
 	list = shell->tokens;
 	while (list && list->next)
 	{
+		printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
 		if (list->data)
 			free(list->data);
-		// if (list->prev)
-		// 	list->prev = NULL;
 		list = list->next;
+		if (list->prev)
+			free(list->prev);
 	}
 	if (list)
+	{
+		printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
+		if (list->data)
+			free(list->data);
 		free(list);
+	}
 	// shell->tokens->next = NULL;
 	shell->tokens = NULL;
 }

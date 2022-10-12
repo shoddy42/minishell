@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/22 15:53:17 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 07:34:14 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,10 @@ void    execute(t_command *cmd, t_minishell *shell)
 		i++;
 	}
 	if (child == 0)
+	{
+		printf("%s: command not found.\n", cmd->options[0]);
 		exit(1);
+	}
 	waitpid(child, NULL, 0);
 	// if (check_builtin(cmd) == 1)
 		// printf("not gud mens");
