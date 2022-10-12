@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 11:57:46 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 13:30:32 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 void	set_token_type(t_minishell *shell, t_token *token, char *data)
 {

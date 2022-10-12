@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   pixex_util.c                                       :+:    :+:            */
+/*   pipex_utils.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/15 18:18:54 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/13 23:16:04 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 13:29:43 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*pipex_pathjoin(char const *path, char const *cmd)
 {

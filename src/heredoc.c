@@ -1,4 +1,4 @@
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 
 t_token	*heredoc(t_token    *token, t_minishell *shell)

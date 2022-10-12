@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 12:12:30 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 13:29:32 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 char	**get_command_options(t_token	*token)
 {

@@ -1,4 +1,4 @@
-#include "include/minishell.h"
+#include "../include/minishell.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>

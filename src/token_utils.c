@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 11:57:49 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 13:30:28 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 // REMOVE THIS FUNCTION LATER
 void print_tokens(t_minishell *shell)
