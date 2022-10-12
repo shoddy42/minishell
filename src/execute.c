@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 11:58:43 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 13:42:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,6 @@ void    execute(t_command *cmd, t_minishell *shell)
 		exit(1);
 	}
 	waitpid(child, NULL, 0);
-	// if (check_builtin(cmd) == 1)
-		// printf("not gud mens");
+	if (check_builtin(cmd) == 1)
+		printf("not gud mens");
 }

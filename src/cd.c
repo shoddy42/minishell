@@ -3,7 +3,7 @@
 
 int	go_home(t_command	*cmd)
 {
-	int	cd_ret;
+	int		cd_ret;
 	char	*home_p;
 
 	if (!(home_p = getenv("HOME=")))

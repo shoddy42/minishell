@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 12:37:15 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 14:32:58 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	print_tokens(t_minishell *shell)
 	printf("\n");
 }
 
+//	remove later
 //	to check if token->prev is still fully linked.
-
 void	print_tokens_backwards(t_minishell *shell)
 {
 	int i = 0;
@@ -73,14 +73,18 @@ void	print_tokens_backwards(t_minishell *shell)
 	printf("\n");
 }
 
-// free tokens starting from START, up to END, does NOT free END
+// maybe rename to REMOVE_tokens_til?
+// free tokens starting from START, up to END, does NOT free END. IF there is a prev token, it will relink. so far it only links  start->prev to end 
 void	free_tokens_til(t_token *start, t_token *end)
 {
 	t_token	*tmp;
 	t_token	*replace_prev;
 
 	if (start->prev)
+	{
+		start->prev->next = end;
 		replace_prev = start->prev;
+	}
 	while (start != end)
 	{
 		tmp = start;

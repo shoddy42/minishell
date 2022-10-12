@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 
-int    check_builtin(t_command    *cmd, t_token *token)
+int    check_builtin(t_command    *cmd)
 {
     if(strcmp(cmd->options[0], "cd") == 0)
         return(ms_cd(cmd));

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 12:27:42 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 13:43:03 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef enum e_tokentype
     PIPE = 51,		//for |
 	HEREDOC = 53,	//for >>
 	HEREDOC_FILE = 54,
-	OUTFILE,
+	OUTFILE = 55,
 	VOID = 69,		//any whitespace.
 }   t_tokentype;
 
@@ -107,7 +107,7 @@ void	print_env(t_minishell *shell);
 void    execute(t_command *cmd, t_minishell *shell);
 
 // Builtins.c
-int    check_builtin(t_command    *cmd, t_token *token);
+int    check_builtin(t_command    *cmd);
 int    ms_cd(t_command	*cmd);
 
 // heredoc.c

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 12:27:02 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 14:56:32 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,15 +133,17 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 	if (append == 1)
 		cmd->outfile = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
 	else
-		cmd->outfile = open(tmp->data, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		cmd->outfile = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	printf("cmd outfile fd = [%i]\n", cmd->outfile);
 	// if (token->prev)
 		// printf("token prev = [%s]", token->prev->data);
 		// tmp->prev = token->prev;
 	// printf ("TEST: [%s]\n", token->prev->data);
 	// tmp->type = OUTFILE;
-	// free_tokens_til(token, tmp);
-	printf("handle right return token = [%s]\n", tmp->data);
+	free_tokens_til(token, tmp); //if TOKEN is the HEAD, we SEGF
+	printf("handle right return token = [%s]\n\n", tmp->data);
+	print_tokens(shell);
+	// printf("XD [%s]\n", tmp->next->data);
 	return (tmp);
 }
 
@@ -178,8 +180,8 @@ void parse_token(t_minishell *shell)
 			cmd->options = get_command_options(token); //todo: free this later.
 		token = token->next;
 	}
-	if (cmd->command)
-		execute(cmd, shell);
+	// if (cmd->command)
+	// 	execute(cmd, shell);
 	// if (cmd->command)
 		// free (cmd->command); // not sure when to free.
 	// free (cmd); // not sure when to free.
@@ -192,16 +194,12 @@ void	insert_prompt(t_minishell	*shell)
 
 void	 sighandler(int signum)
 {
-	if(signum == SIGINT)
+	if(signum == SIGINT) // ctrl + C
 	{
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-	}
-	if(signum == SIGQUIT)
-	{
-		ft_putstr_fd("\b\b", 1);
 	}
 
 	//WHEN ALL DONE CAN REMOVING MEN
@@ -213,7 +211,7 @@ int	init_minishell(t_minishell *shell, char **envp)
 	//todo: add things to initialize? kek
 
 	signal(SIGINT, sighandler);
-	signal(SIGQUIT, sighandler);
+	signal(SIGQUIT, SIG_IGN);
 	shell->envp = envp;
 	init_env(shell, envp);
 	return (0);
@@ -228,6 +226,8 @@ int	main(int ac, char **av, char **envp)
 	while (shell->exit == 0)
 	{
 		shell->command = readline("minishell> ");
+		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
+			exit (0);
 		if (shell->command[0] == 'q' && ft_strlen(shell->command) == 1)
 			shell->exit = 1;
 		ft_tokenize(shell, shell->command);
@@ -237,8 +237,10 @@ int	main(int ac, char **av, char **envp)
 		if (shell->command)
 			free(shell->command);
 		print_tokens(shell);
+		write(1, "SEG NOW?!\n", 10);
 		print_tokens_backwards(shell);
 		free_tokens(shell);
 	}
+	
 	return (0);
 }
