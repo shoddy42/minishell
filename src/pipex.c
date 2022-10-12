@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/03 21:08:54 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 13:30:23 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/12 15:06:57 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../include/minishell.h"
 
 void	pipexec(char *cmd, char *envp[], t_ppx *pipex)
 {

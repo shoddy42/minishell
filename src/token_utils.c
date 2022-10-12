@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 17:25:53 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/12 21:01:54 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_tokens(t_minishell *shell)
 	t_token *test;
 
 	test = shell->tokens;
-	printf("all tokens: ");
+	printf("\nall tokens: ");
 	while (test && test->next)
 	{
 		if (test->type && test->type != VOID)

@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/15 18:18:54 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 13:29:43 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/12 15:06:49 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../include/minishell.h"
 
 char	*pipex_pathjoin(char const *path, char const *cmd)
 {
