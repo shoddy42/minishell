@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "include/minishell.h"
 #include <sys/param.h>
 
 int	go_home(t_command	*cmd)

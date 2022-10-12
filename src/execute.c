@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 07:34:14 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 11:58:43 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "include/minishell.h"
 
 // this function is not properly protected, might need to exit instead of return?
 char	*pipex_pathjoin(char const *path, char const *cmd)

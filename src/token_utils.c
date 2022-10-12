@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 11:11:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 11:57:49 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "include/minishell.h"
 
 // REMOVE THIS FUNCTION LATER
 void print_tokens(t_minishell *shell)
@@ -71,7 +71,7 @@ void	free_tokens(t_minishell *shell)
 	list = shell->tokens;
 	while (list && list->next)
 	{
-		printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
+		// printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
 		if (list->data)
 			free(list->data);
 		list = list->next;
@@ -80,7 +80,7 @@ void	free_tokens(t_minishell *shell)
 	}
 	if (list)
 	{
-		printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
+		// printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
 		if (list->data)
 			free(list->data);
 		free(list);

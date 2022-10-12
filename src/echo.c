@@ -1,5 +1,4 @@
-#include "minishell.h"
-
+#include "include/minishell.h"
 
 char	**get_command_options(t_token	*token, t_command   *cmd)
 {

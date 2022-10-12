@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 11:13:06 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 12:12:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "include/minishell.h"
 
 char	**get_command_options(t_token	*token)
 {
@@ -48,7 +48,6 @@ void	expand_dong(t_token *token)
 	tmp = getenv(token->data + 1);
 	token->data = tmp;
 }
-
 
 // todo: make function work with DQUOTE and its expansion of variables.
 t_token	*handle_quote(t_token *token)
@@ -110,11 +109,15 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 	int			append;
 
 	append = 0;
+	tmp = NULL;
 	printf("\nentered handle_right on token [%s]\n", token->data);
 	if (token->next)
 		tmp = token->next;
 	if (!tmp)
+	{
 		printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
+		exit (1);
+	}
 	if (tmp->type == RIGHT)
 	{
 		append = 1;
@@ -132,12 +135,14 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 	else
 		cmd->outfile = open(tmp->data, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	printf("cmd outfile fd = [%i]\n", cmd->outfile);
-	if (tmp->next)
-		tmp = tmp->next;
+	if (token->prev)
+		tmp->prev = token->prev;
+	printf ("TEST: [%s]\n", token->prev->data);
+	// tmp->type = OUTFILE;
+	// free_tokens_til(token, tmp);
 	printf("handle right return token = [%s]\n", tmp->data);
 	return (tmp);
 }
-
 
 /*
 	this function will have to be split into an expansion and a real parsing function
@@ -155,7 +160,7 @@ void parse_token(t_minishell *shell)
 	cmd->outfile = STDOUT_FILENO;
 	while (token)
 	{
-		// print_tokens(shell);
+		// print_tokens(shell); //for testing purposes.
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT)
@@ -166,15 +171,17 @@ void parse_token(t_minishell *shell)
 			printf("WARNING SEGFAULT INCOMING xdd\n");
 		if (token->type == DOLLAR)
 			expand_dong(token);
-		// if (token->type == COMMAND && cmd->command == NULL)
-		// 	cmd->command = ft_strdup(token->data);
-		// if (cmd->command && cmd->options == NULL && token->type == COMMAND)
-		// 	cmd->options = get_command_options(token);
+		if (token->type == COMMAND && cmd->command == NULL)
+			cmd->command = ft_strdup(token->data);
+		if (cmd->command && cmd->options == NULL && token->type == COMMAND)
+			cmd->options = get_command_options(token); //todo: free this later.
 		token = token->next;
 	}
 	if (cmd->command)
 		execute(cmd, shell);
-	free (cmd);
+	// if (cmd->command)
+		// free (cmd->command); // not sure when to free.
+	// free (cmd); // not sure when to free.
 }
 
 void	insert_prompt(t_minishell	*shell)
@@ -197,7 +204,7 @@ void	 sighandler(int signum)
 	}
 
 	//WHEN ALL DONE CAN REMOVING MEN
-	exit(1);
+	// exit(1);
 }
 
 int	init_minishell(t_minishell *shell, char **envp)
@@ -208,10 +215,6 @@ int	init_minishell(t_minishell *shell, char **envp)
 	signal(SIGQUIT, sighandler);
 	shell->envp = envp;
 	init_env(shell, envp);
-
-	
-	//todo: make function that gets env probably with getenv command instead of thru main.
-
 	return (0);
 }
 

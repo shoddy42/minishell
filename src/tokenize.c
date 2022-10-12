@@ -6,39 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 10:57:20 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 11:57:46 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-// void	set_token_type(t_minishell *shell, t_token *token)
-// {
-// 	if (token->data[0] ==  ' ')
-// 		token->type = VOID;
-// 	else if (token->data[0] ==  '|')
-// 		token->type = PIPE;
-// 	else if (token->data[0] ==  '$')
-// 		token->type = DOLLAR;
-// 	else if (token->data[0] ==  '&')
-// 		token->type = AND;
-// 	else if (token->data[0] ==  '<')
-// 		token->type = LEFT;
-// 	else if (token->data[0] ==  '>')
-// 		token->type = RIGHT;
-// 	else if (token->data[0] ==  ';')
-// 		token->type = VOID;
-// 	else if (token->data[0] ==  '\'')
-// 		token->type = QUOTE;
-// 	else if (token->data[0] ==  '\"')
-// 		token->type = DQUOTE;
-// 	else if (token->data[0] ==  '\t')
-// 		token->type = VOID;
-// 	else if (token->data[0] ==  '\n')
-// 		token->type = VOID;
-// 	else
-// 		token->type = COMMAND;
-// }
+#include "include/minishell.h"
 
 void	set_token_type(t_minishell *shell, t_token *token, char *data)
 {
