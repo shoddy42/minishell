@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 14:56:32 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/12 15:59:15 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,11 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 	return (token);
 }
 
+/*
+	todo: add check for >>> and possibly other forms of wrng input.
+	todo: split function so it's norme
+*/
+
 t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 {
 	t_token 	*tmp;
@@ -116,7 +121,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 	if (!tmp)
 	{
 		printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
-		exit (1);
+		return (token);
 	}
 	if (tmp->type == RIGHT)
 	{
@@ -127,11 +132,17 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 	while (tmp->type == VOID && tmp->next)
 		tmp = tmp->next;
 	if (tmp->type != COMMAND)
+	{
 		printf ("REDIRECT FAILURE, NO FILENAME GIVEN\n");
+		return (token);
+	}
 	else
 		printf ("opening file [%s]\n", tmp->data);
 	if (append == 1)
+	{
+		printf ("OPENING IN APPEND MODE\n");
 		cmd->outfile = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
+	}
 	else
 		cmd->outfile = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	printf("cmd outfile fd = [%i]\n", cmd->outfile);
@@ -139,11 +150,13 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 		// printf("token prev = [%s]", token->prev->data);
 		// tmp->prev = token->prev;
 	// printf ("TEST: [%s]\n", token->prev->data);
-	// tmp->type = OUTFILE;
-	free_tokens_til(token, tmp); //if TOKEN is the HEAD, we SEGF
-	printf("handle right return token = [%s]\n\n", tmp->data);
-	print_tokens(shell);
-	// printf("XD [%s]\n", tmp->next->data);
+	tmp->type = OUTFILE;
+	if (!token->prev) //ugly fix, but the problem is if token happens to be the HEAD (shell->tokens), we will segf.
+	{
+		printf ("NEW HEAD INSTALLED\n");
+		shell->tokens = tmp;
+	}
+	free_tokens_til(token, tmp);
 	return (tmp);
 }
 
@@ -170,8 +183,6 @@ void parse_token(t_minishell *shell)
 			token = handle_right(token, shell, cmd);
 		if (token->type == QUOTE)
 			token = handle_quote(token);
-		if (!token)
-			printf("WARNING SEGFAULT INCOMING xdd\n");
 		if (token->type == DOLLAR)
 			expand_dong(token);
 		if (token->type == COMMAND && cmd->command == NULL)
@@ -180,8 +191,8 @@ void parse_token(t_minishell *shell)
 			cmd->options = get_command_options(token); //todo: free this later.
 		token = token->next;
 	}
-	// if (cmd->command)
-	// 	execute(cmd, shell);
+	if (cmd->command)
+		execute(cmd, shell);
 	// if (cmd->command)
 		// free (cmd->command); // not sure when to free.
 	// free (cmd); // not sure when to free.
@@ -203,7 +214,7 @@ void	 sighandler(int signum)
 	}
 
 	//WHEN ALL DONE CAN REMOVING MEN
-	// exit(1);
+	exit(1);
 }
 
 int	init_minishell(t_minishell *shell, char **envp)
@@ -237,8 +248,7 @@ int	main(int ac, char **av, char **envp)
 		if (shell->command)
 			free(shell->command);
 		print_tokens(shell);
-		write(1, "SEG NOW?!\n", 10);
-		print_tokens_backwards(shell);
+		// print_tokens_backwards(shell);
 		free_tokens(shell);
 	}
 	
