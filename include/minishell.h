@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 13:12:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 18:21:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,12 @@ typedef struct s_token
 
 typedef struct s_command
 {
-	char			*command; // not required, can use options[0] instead if want?
-	char			**options;	
-	int				executable;
-	int				outfile;
-	int				infile;
+	// char			*command; // not required, can use options[0] instead if want?
+	char				**command;	
+	int					executable;
+	int					outfile;
+	int					infile;
+	struct	s_command	*next;
 	// struct s_token	*used_token; //might not be needed at all?
 }   t_command;
 
@@ -76,14 +77,14 @@ typedef struct s_env
 typedef struct s_shell_data
 {
 	t_token		*tokens;
-	int			token_size;
+	t_command	*commands;
 	t_env		*env;
-	char		**envp;
+	char		**envp;		// i dont think this ever REALLY gets used?
 	char		**path;
-	char		*command;
-	int			last_return;
-	int			pipe_count;
-	int			exit;
+	char		*command;	// might not be needed
+	int			last_return;	//not YET in use
+	int			pipe_count;		//might not be needed.
+	int			exit;			//only for 
 	int			test;
 }	t_minishell;
 
@@ -127,8 +128,8 @@ int		init_minishell(t_minishell *shell, char **envp);
 void	sighandler(int signum);
 
 // redirects.c
-t_token	*handle_left(t_token *token, t_minishell *shell, t_command *cmd);
-t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd);
+t_token	*handle_left(t_token *token, t_minishell *shell);
+t_token	*handle_right(t_token *token, t_minishell *shell);
 
 #endif
 

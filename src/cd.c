@@ -28,12 +28,12 @@ int    ms_cd(t_command	*cmd)
 {
 	int cd_ret;
 
-	if(!cmd->options)
+	if(!cmd->command)
 		return(1);
-	cd_ret = chdir(cmd->options[1]);
+	cd_ret = chdir(cmd->command[1]);
 	if (cd_ret == 1)
 		return (1);
-	if (!cmd->options[1])
+	if (!cmd->command[1])
 		return(go_home(cmd));
 	else return (0);
 }

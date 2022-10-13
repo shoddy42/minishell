@@ -28,17 +28,17 @@ int ms_echo(t_command *command)
 
 	i = 0;
 	x = 0;
-	printf("str[i] = [%s]\n", command->options[2]);
-	if(!(command->options))
+	printf("str[i] = [%s]\n", command->command[2]);
+	if(!(command->command))
 		return(1);
-	while(command->options[i])
+	while(command->command[i])
 	{
-		// if (command->options[i][x] == "\"")
+		// if (command->command[i][x] == "\"")
 		// 	x++;
-		// ret = ft_strjoin(ret, command->options[i]);
+		// ret = ft_strjoin(ret, command->command[i]);
 		i++;
 	}
-	check_qoutes(command->options[i - 1]);
+	check_qoutes(command->command[i - 1]);
 	return(0);
 
 }
@@ -46,19 +46,19 @@ int ms_echo(t_command *command)
 
 int check_builtin(t_command    *cmd)
 {
-	if(strcmp(cmd->options[0], "cd") == 0)
+	if(strcmp(cmd->command[0], "cd") == 0)
 		return(ms_cd(cmd));
-	else if(ft_strcmp(cmd->options[0], "echo") == 0)
+	else if(ft_strcmp(cmd->command[0], "echo") == 0)
 		return(ms_echo(cmd));
-	// else if(ft_strcmp(cmd->options[0], "env") == 0)
+	// else if(ft_strcmp(cmd->command[0], "env") == 0)
 	//     ms_env(cmd);
-	// else if(ft_strcmp(cmd->options[0], "pwd") == 0)
+	// else if(ft_strcmp(cmd->command[0], "pwd") == 0)
 	//     ms_pwd(cmd);
-	// else if(ft_strcmp(cmd->options[0], "cd") == 0)
+	// else if(ft_strcmp(cmd->command[0], "cd") == 0)
 	//     ms_export(cmd);
-	// else if(ft_strcmp(cmd->options[0], "unset") == 0)
+	// else if(ft_strcmp(cmd->command[0], "unset") == 0)
 	//     ms_exit(cmd);
-	// else if(ft_strcmp(cmd->options[0], "exit") == 0)
+	// else if(ft_strcmp(cmd->command[0], "exit") == 0)
 	//     ms_exit(cmd);
 	else   
 		return(1);

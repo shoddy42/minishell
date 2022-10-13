@@ -6,13 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 13:08:02 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 17:54:49 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-t_token	*handle_left(t_token *token, t_minishell *shell, t_command *cmd)
+t_token	*handle_left(t_token *token, t_minishell *shell)
 {
 	t_token *tmp;
 
@@ -52,15 +52,15 @@ t_token	*handle_left(t_token *token, t_minishell *shell, t_command *cmd)
 		tmp->type = INFILE;
 	}
 	printf("returned token [%s]\n", tmp->data);
-	cmd->infile = tmp->fd;
-	printf ("cmd->infile = [%i]\n", cmd->infile);
+	// cmd->infile = tmp->fd;
+	// printf ("cmd->infile = [%i]\n", cmd->infile);
 	return (tmp);
 }
 
 // todo: add check for >>> and possibly other forms of wrong input.
 // todo: split function so it's norme
 
-t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
+t_token	*handle_right(t_token *token, t_minishell *shell)
 {
 	t_token 	*tmp;
 	int			append;
@@ -93,12 +93,12 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd)
 	if (append == 1)
 	{
 		printf ("OPENING IN APPEND MODE\n");
-		cmd->outfile = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
-		close (cmd->infile);
+		tmp->fd = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
+		// close (tmp->fd);
 	}
 	else
-		cmd->outfile = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
-	printf("cmd outfile fd = [%i]\n", cmd->outfile);
+		tmp->fd = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
+	// printf("cmd outfile fd = [%i]\n", cmd->outfile);
 	tmp->type = OUTFILE;
 	if (!token->prev) //ugly fix, but the problem is if token happens to be the HEAD (shell->tokens), we will segf.
 	{

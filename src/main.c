@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 14:40:21 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 18:24:49 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,39 +74,78 @@ t_token	*handle_quote(t_token *token)
 	return (token);
 }
 
+char	**get_command_options(t_token	*token)
+{
+	char	**commands;
+	t_token	*tmp;
+	int		i;
+
+	tmp = token;
+	i = 0;
+	while (tmp && !(tmp->type == PIPE))
+	{
+		if (tmp->type == COMMAND)
+			i++;
+		tmp = tmp->next;
+	}
+	commands = ft_calloc(i + 1, sizeof(char *));
+	i = 0;
+	while (token && (token->type == COMMAND || token->type == VOID))
+	{
+		if (token->type == COMMAND)
+		{
+			commands[i] = ft_strdup(token->data);
+			i++;
+		}
+		token = token->next;
+	}
+	return (commands);
+}
+
+int	make_command(t_minishell *shell)
+{
+	t_command	*cmd;
+	t_token		*token;
+
+	cmd = ft_calloc(1, sizeof(t_command));
+	shell->commands = cmd;
+
+
+	return (0);
+}
+		// move everything related to command execution to somewhere else.
+		// if (token->type == COMMAND && cmd->command == NULL)
+		// 	cmd->command = ft_strdup(token->data);
+		// if (cmd->command && cmd->options == NULL && token->type == COMMAND)
+		// 	cmd->options = get_command_options(token); //todo: free this later.
+
 // this function will have to be split into an expansion and a real parsing function
 void parse_token(t_minishell *shell)
 {
 	t_token		*token;
-	t_command	*cmd;
 	int			i;
 
 	i = 0;
 	token = shell->tokens;
-	cmd = ft_calloc(1, sizeof(t_command));
-	cmd->outfile = STDOUT_FILENO;
-	cmd->infile = STDIN_FILENO;
+	// cmd = ft_calloc(1, sizeof(t_command));
+	// cmd->outfile = STDOUT_FILENO;
+	// cmd->infile = STDIN_FILENO;
 	while (token)
 	{
 		// print_tokens(shell); //for testing purposes.
 		if (token->type == LEFT)
-			token = handle_left(token, shell, cmd);
+			token = handle_left(token, shell);
 		if (token->type == RIGHT)
-			token = handle_right(token, shell, cmd);
+			token = handle_right(token, shell);
 		if (token->type == QUOTE)
 			token = handle_quote(token);
 		if (token->type == VARIABLE)
 			expand_dong(token);
-		// move everything related to command execution to somewhere else.
-		if (token->type == COMMAND && cmd->command == NULL)
-			cmd->command = ft_strdup(token->data);
-		if (cmd->command && cmd->options == NULL && token->type == COMMAND)
-			cmd->options = get_command_options(token); //todo: free this later.
 		token = token->next;
 	}
-	make_command()
-	if (cmd->executable == 1)
-		execute(cmd, shell);
+	make_command(shell);
+	// if (cmd->executable == 1)
+	// 	execute(cmd, shell);
 	// if (cmd->command)
 		// free (cmd->command); // not sure when to free.
 	// free (cmd); // not sure when to free.
