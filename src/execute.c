@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 09:30:45 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 12:33:17 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,18 @@ void    execute(t_command *cmd, t_minishell *shell)
 	pid_t	child;
 	int		tunnel[2];
 
-	child = fork();
-	i = 0;
+	// pre execution printing of all op the command options
+	printf ("\nEXECUTION STARTS\n");
 
+	printf("infile: %i\n", cmd->infile);
+	printf("outfile: %i\n", cmd->outfile);
 	int k = -1;
 	while (cmd->options[++k] && child == 0)
 		printf("opt: [%s]\n", cmd->options[k]);
 
-
+	// actual code starts
+	i = 0;
+	child = fork();
 	pipe(tunnel);
 	if (child == 0)
 		dup2(cmd->outfile, STDOUT_FILENO);
@@ -95,10 +99,7 @@ void    execute(t_command *cmd, t_minishell *shell)
 	{
 		path = pipex_pathjoin(shell->path[i], cmd->command);
 		if (access(path, X_OK) == 0)
-		{
-			// printf("its go time\n");
 			execve(path, cmd->options, shell->envp);
-		}
 		free(path);
 		i++;
 	}

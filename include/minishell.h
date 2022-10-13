@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 10:06:08 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 13:12:51 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include <readline/readline.h> //required
 # include <readline/history.h> //required
 
-// #include
 # include <unistd.h> //prolly?
 # include <stdlib.h> //prolly?
 # include <string.h> //?
@@ -24,7 +23,7 @@
 # include <fcntl.h>
 # include "../libft/libft.h"
 
-# include <sys/wait.h> // needed for WSL
+// # include <sys/wait.h> // needed for WSL
 
 # define DELIMITER " |<>;\t\'\"\n"
 
@@ -42,6 +41,7 @@ typedef enum e_tokentype
 	HEREDOC_FILE = 54,
 	OUTFILE = 55,
 	INFILE = 56,
+	ERROR = 57,
 	VOID = 69,		//any whitespace.
 }   t_tokentype;
 
@@ -58,9 +58,10 @@ typedef struct s_command
 {
 	char			*command; // not required, can use options[0] instead if want?
 	char			**options;	
+	int				executable;
 	int				outfile;
-	int				intfile;
-	struct s_token	*used_token;
+	int				infile;
+	// struct s_token	*used_token; //might not be needed at all?
 }   t_command;
 
 
@@ -126,7 +127,7 @@ int		init_minishell(t_minishell *shell, char **envp);
 void	sighandler(int signum);
 
 // redirects.c
-t_token	*handle_left(t_token *token, t_minishell *shell);
+t_token	*handle_left(t_token *token, t_minishell *shell, t_command *cmd);
 t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd);
 
 #endif
@@ -135,12 +136,16 @@ t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd);
 // void rl_replace_line (const char *text, int clear_undo);
 /**
  * minishell steps
-  
-1: get input                 
-2: tokenize input            
-3: check which are executable
-4: expand
-5: execute
-6: return?
+
+init minishell:
+
+
+1: get input
+2: tokenize input
+3: expand input
+4: resolve heredoc
+5: prep execution
+6: execute
+7: return?
 
  **/

@@ -1,5 +1,16 @@
-#include "../include/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   heredoc.c                                          :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/10/13 12:40:46 by wkonings      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "../include/minishell.h"
 
 t_token	*heredoc(t_token    *token, t_minishell *shell)
 {
@@ -17,6 +28,7 @@ t_token	*heredoc(t_token    *token, t_minishell *shell)
 	while (1)
 	{
 		line = readline("heredoc> ");
+		// if (ft_charinstr('$', line); // need to add actual parsing to the text in heredoc :/
 		if(ft_strcmp(line, delim) == 0)
 			{
 				free(line);
@@ -32,8 +44,7 @@ t_token	*heredoc(t_token    *token, t_minishell *shell)
 	return (tmp);
 }
 
-
-void    heredoc_loop(t_token    *token, t_minishell *shell)
+void    heredoc_loop(t_token *token, t_minishell *shell)
 {
 	char	*delim;
 	char	*line;
@@ -67,9 +78,6 @@ void    heredoc_loop(t_token    *token, t_minishell *shell)
 void    ms_heredoc(t_token  *token, t_minishell *shell)
 {
 	int	pid;
-
-
-
 
 	pid = fork();
 	if (pid == 0)

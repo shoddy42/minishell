@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 10:02:04 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 13:31:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ char *print_token_type(int type)
 		return "OUTFILE";
 	if (type == INFILE)
 		return "INFILE";
+	if (type ==	ERROR)
+		return "ERROR";
 	if (type == VOID)
 		return "VOID";
 	return ("TYPELESS ERROR!!!");

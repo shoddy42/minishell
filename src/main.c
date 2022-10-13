@@ -6,11 +6,23 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 10:06:42 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 14:40:21 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+// need to actually write this function, dont know how to make it extendable yet.
+
+// char	*find_variable(char *str)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (str[i] && str[i] != '$')
+// 		i++;
+// 	// if (str[i] == '$')
+// }
 
 // unsure whether this is one is REALLY just this simple.
 void	expand_dong(t_token *token)
@@ -62,38 +74,38 @@ t_token	*handle_quote(t_token *token)
 	return (token);
 }
 
-/*
-	this function will have to be split into an expansion and a real parsing function
-*/
+// this function will have to be split into an expansion and a real parsing function
 void parse_token(t_minishell *shell)
 {
 	t_token		*token;
 	t_command	*cmd;
-	int			cmd_finished = 0;
 	int			i;
 
 	i = 0;
 	token = shell->tokens;
 	cmd = ft_calloc(1, sizeof(t_command));
 	cmd->outfile = STDOUT_FILENO;
+	cmd->infile = STDIN_FILENO;
 	while (token)
 	{
 		// print_tokens(shell); //for testing purposes.
 		if (token->type == LEFT)
-			token = handle_left(token, shell);
+			token = handle_left(token, shell, cmd);
 		if (token->type == RIGHT)
 			token = handle_right(token, shell, cmd);
 		if (token->type == QUOTE)
 			token = handle_quote(token);
 		if (token->type == VARIABLE)
 			expand_dong(token);
+		// move everything related to command execution to somewhere else.
 		if (token->type == COMMAND && cmd->command == NULL)
 			cmd->command = ft_strdup(token->data);
 		if (cmd->command && cmd->options == NULL && token->type == COMMAND)
 			cmd->options = get_command_options(token); //todo: free this later.
 		token = token->next;
 	}
-	if (cmd->command)
+	make_command()
+	if (cmd->executable == 1)
 		execute(cmd, shell);
 	// if (cmd->command)
 		// free (cmd->command); // not sure when to free.
@@ -131,6 +143,5 @@ int	main(int ac, char **av, char **envp)
 		// print_tokens_backwards(shell);
 		free_tokens(shell);
 	}
-	
 	return (0);
 }
