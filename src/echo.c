@@ -1,12 +1,5 @@
 #include "../include/minishell.h"
 
-char	*solve_quotes(char	**str)
-{
-	char *ret;
-
-
-}
-
 int ms_echo(t_command *command)
 {
 	int	i;
@@ -17,7 +10,7 @@ int ms_echo(t_command *command)
 	x = 0;
 	if(!(command->options))
 		return(1);
-	while(command->options[i])
+	while(command->options[3])
 	{
 		// if (command->options[i][x] == "\"")
 		// 	x++;
@@ -28,4 +21,3 @@ int ms_echo(t_command *command)
 	return(0);
 
 }
-

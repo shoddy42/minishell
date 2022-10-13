@@ -6,11 +6,31 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 13:28:51 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/13 18:39:49 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int	export(t_command *cmd, t_minishell	*shell)
+{
+
+}
+
+int	get_env(t_minishell	*shell)
+{
+	t_env	*tmp;
+
+	if(!(shell->env))
+		return(1);
+	tmp = shell->env;
+	while(tmp && tmp->next)
+	{
+		ft_putstr_fd(tmp->data,1); 
+		tmp = tmp->next;
+	}
+	return(0);
+}
 
 void	print_env(t_minishell *shell)
 {

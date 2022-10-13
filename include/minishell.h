@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 13:12:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 16:27:09 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ char	*pipex_pathjoin(char const *path, char const *cmd); //doesn't need to be in
 int	check_builtin(t_command    *cmd);
 int	ms_cd(t_command	*cmd);
 int	ms_echo(t_command	*cmd);
+int	ms_pwd(t_command	*cmd);
 
 // heredoc.c
 t_token	*heredoc(t_token    *token, t_minishell *shell);

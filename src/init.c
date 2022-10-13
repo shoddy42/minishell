@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 09:25:58 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 16:31:32 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../include/minishell.h"
 
 void	sighandler(int signum)
 {
