@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 18:24:49 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/13 19:18:21 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,9 +143,9 @@ void parse_token(t_minishell *shell)
 			expand_dong(token);
 		token = token->next;
 	}
-	make_command(shell);
-	// if (cmd->executable == 1)
-	// 	execute(cmd, shell);
+	// make_command()
+	if(cmd->options)
+		execute(cmd, shell);
 	// if (cmd->command)
 		// free (cmd->command); // not sure when to free.
 	// free (cmd); // not sure when to free.
