@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 21:01:54 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/13 10:02:04 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	print_tokens(t_minishell *shell)
 	{
 		if (test->type && test->type != VOID)
 		{
-			printf("(%i)", test->type);
+			printf("(%s)", print_token_type(test->type));
 			printf("[%s]-", test->data);
 		}
 		test = test->next;
@@ -34,7 +34,7 @@ void	print_tokens(t_minishell *shell)
 		if (test->type && test->type != VOID)
 		{
 			// printf("final token ");
-			printf("(%i)", test->type);
+			printf("(%s)", print_token_type(test->type));
 			printf("[%s]\n", test->data);
 		}
 	}
@@ -56,7 +56,7 @@ void	print_tokens_backwards(t_minishell *shell)
 	{
 		if (test->type && test->type != VOID)
 		{
-			printf("(%i)", test->type);
+			printf("(%s)", print_token_type(test->type));
 			printf("[%s]-", test->data);
 		}
 		test = test->prev;
@@ -66,11 +66,42 @@ void	print_tokens_backwards(t_minishell *shell)
 		if (test->type && test->type != VOID)
 		{
 			// printf("final token ");
-			printf("(%i)", test->type);
+			printf("(%s)", print_token_type(test->type));
 			printf("[%s]\n", test->data);
 		}
 	}
 	printf("\n");
+}
+
+char *print_token_type(int type)
+{
+	if (type == COMMAND)
+		return "COMMAND";
+	if (type == QUOTE)
+		return "QUOTE";
+	if (type == DQUOTE)
+		return "DQUOTE";
+	if (type == VARIABLE)
+		return "VARIABLE";
+	if (type == AND)
+		return "AND";
+	if (type == LEFT)
+		return "LEFT";
+	if (type == RIGHT)
+		return "RIGHT";
+	if (type == PIPE)
+		return "PIPE";
+	if (type == HEREDOC)
+		return "HEREDOC";
+	if (type == HEREDOC_FILE)
+		return "HEREDOC_FILE";
+	if (type == OUTFILE)
+		return "OUTFILE";
+	if (type == INFILE)
+		return "INFILE";
+	if (type == VOID)
+		return "VOID";
+	return ("TYPELESS ERROR!!!");
 }
 
 // maybe rename to REMOVE_tokens_til?

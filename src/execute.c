@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 21:04:09 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/13 09:30:45 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,35 @@ char	*pipex_pathjoin(char const *path, char const *cmd)
 	ret[i] = '/';
 	ret[i + j + 1] = '\0';
 	return (ret);
+}
+
+// this function probably needs to get overhauled
+char	**get_command_options(t_token	*token)
+{
+	char	**options;
+	t_token	*tmp;
+	int		i;
+
+	tmp = token;
+	i = 0;
+	while (tmp && (tmp->type == COMMAND || tmp->type == VOID))
+	{
+		if (tmp->type == COMMAND)
+			i++;
+		tmp = tmp->next;
+	}
+	options = ft_calloc(i + 1, sizeof(char *));
+	i = 0;
+	while (token && (token->type == COMMAND || token->type == VOID))
+	{
+		if (token->type == COMMAND)
+		{
+			options[i] = ft_strdup(token->data);
+			i++;
+		}
+		token = token->next;
+	}
+	return (options);
 }
 
 /*

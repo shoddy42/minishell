@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/12 18:14:29 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/13 10:06:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef enum e_tokentype
     COMMAND = 42,	//currently all "words" are commands. probably should be renamed "WORD"
     QUOTE = 45,	 	//for '
     DQUOTE = 46, 	//for ""
-	DOLLAR = 47,	//for $, probably should be renamed to "VARIABLE"
+	VARIABLE = 47,	//for $
 	AND = 48,		//for &
 	LEFT = 49,		//for <
 	RIGHT = 50,		//for >
@@ -41,6 +41,7 @@ typedef enum e_tokentype
 	HEREDOC = 53,	//for >>
 	HEREDOC_FILE = 54,
 	OUTFILE = 55,
+	INFILE = 56,
 	VOID = 69,		//any whitespace.
 }   t_tokentype;
 
@@ -92,12 +93,14 @@ int		new_token(t_minishell *shell, char *data, int len);
 void	ft_tokenize(t_minishell *shell, char *command);
 
 // token_utils.c
-void 	print_tokens(t_minishell *shell);
-void	print_tokens_backwards(t_minishell *shell);
+void 	print_tokens(t_minishell *shell);			//REMOVE LATER
+void	print_tokens_backwards(t_minishell *shell); //REMOVE LATER
+char 	*print_token_type(int type);				// REMOVE LATER
 void	free_tokens_til(t_token *start, t_token *end);
 void	free_single_token(t_token *token);
 void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
+
 
 // env
 void	init_env(t_minishell *shell, char  **env);
@@ -105,6 +108,8 @@ void	print_env(t_minishell *shell);
 
 // execute.c
 void    execute(t_command *cmd, t_minishell *shell);
+char	**get_command_options(t_token	*token);
+char	*pipex_pathjoin(char const *path, char const *cmd); //doesn't need to be in here probably.
 
 // Builtins.c
 int	check_builtin(t_command    *cmd);
@@ -115,6 +120,14 @@ int	ms_echo(t_command	*cmd);
 t_token	*heredoc(t_token    *token, t_minishell *shell);
 void    heredoc_loop(t_token    *token, t_minishell *shell);
 void    ms_heredoc(t_token  *token, t_minishell *shell);
+
+// init.c
+int		init_minishell(t_minishell *shell, char **envp);
+void	sighandler(int signum);
+
+// redirects.c
+t_token	*handle_left(t_token *token, t_minishell *shell);
+t_token	*handle_right(t_token *token, t_minishell *shell, t_command *cmd);
 
 #endif
 

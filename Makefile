@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/10/12 13:29:52 by wkonings      ########   odam.nl          #
+#    Updated: 2022/10/13 10:06:31 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ INCLUDES = libft/libft.a
 FLAGS = -Wall -Wextra -Werror
 HEADERS_DIR = include/
 HEADERS = minishell.h
-FILES = main tokenize token_utils env execute heredoc builtins cd
+FILES = main tokenize token_utils env execute heredoc builtins cd init redirects
 
 BREW_DIR	= $(shell brew --prefix)
 LIB_READLINE	= $(BREW_DIR)/opt/readline/lib
