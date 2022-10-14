@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 17:58:13 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/14 18:19:02 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void    execute(t_command *cmd, t_minishell *shell)
 
 	// actual code starts
 	i = 0;
+	if (check_builtin(cmd) == 0)
+		return ; //cmd->command doesnt give me the full command line, only "echo" but not anything after?
 	child = fork();
 	pipe(tunnel);
 	if (child == 0)
@@ -109,7 +111,6 @@ void    execute(t_command *cmd, t_minishell *shell)
 		exit(1);
 	}
 	waitpid(child, NULL, 0);
-	if (check_builtin(cmd) == 1) //cmd->command doesnt give me the full command line, only "echo" but not anything after?
 		;
 		// printf("not gud mens");
 }

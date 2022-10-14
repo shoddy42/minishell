@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+	/* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
 /*   main.c                                             :+:    :+:            */
@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/14 14:45:55 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/14 18:01:36 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,57 +66,93 @@ t_token	*handle_quote(t_token *token, int type)
 	return (token);
 }
 
-t_command	*get_command_size(t_token	*token)
+t_token	*get_command(t_token *token, t_command *cmd)
 {
 	char		**commands;
 	t_token		*tmp;
-	t_command	*cmd;
-	int		i;
+	// t_command	*ret;
+	int			i;
 
 	tmp = token;
 	i = 0;
-	cmd = ft_calloc(1, sizeof(t_command));
-	while (tmp && !(tmp->type == PIPE))
+	while (tmp && tmp->type != PIPE)
 	{
 		if (tmp->type == COMMAND)
 			i++;
 		tmp = tmp->next;
 	}
-	commands = ft_calloc(i + 1, sizeof(char *));
+	cmd->command = ft_calloc(i + 1, sizeof(char *));
+	printf ("allocated command with [%i]\n", i + 1);
 	tmp = token;
-	while (token && token->type != PIPE)
+	i = 0;
+	while (tmp && tmp->type != PIPE)
 	{
-		if (token->type == COMMAND)
+		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(token->data);
-		if (token->type == INFILE || token->type == HEREDOC_FILE)
+		if (tmp->type == INFILE || token->type == HEREDOC_FILE)
 			cmd->infile = token->fd;
-		if (token->type == OUTFILE)
+		if (tmp->type == OUTFILE)
 			cmd->infile = token->fd;
-		token = token->next;
+		tmp = tmp->next;
 	}
-	return (cmd);
+	return (tmp);
+}
+
+t_command	*new_command(t_minishell *shell, t_command *cmd)
+{
+	t_command	*new;
+
+	new = ft_calloc(1, sizeof(t_command));
+	new->outfile = STDOUT_FILENO;
+	new->infile = STDIN_FILENO;
+	if (cmd)
+	{
+		new->prev = cmd;
+		cmd->next = new;
+	}
+	return (new);
+}
+
+int	do_pipe_magic(t_minishell *shell, t_command *cmd)
+{
+	cmd->outfile = shell->tunnel[1];
+	if (cmd->prev) 
+		cmd->prev->infile = shell->tunnel[0];
+	else
+		return (-1);
+	return (0);
 }
 
 int	make_commands(t_minishell *shell)
 {
-	// t_command	*cmd;
+	t_command	*cmd;
 	t_token		*token;
 	int			i;
+	int			pipe;
 
-	// shell->commands = cmd;
+	cmd = new_command(shell, NULL);
+	shell->commands = cmd;
 	token = shell->tokens;
 	while (token)
 	{
-		//  = get_command_size(token);
+		token = get_command(token, cmd);
 		i = 0;
 		if (token && token->type == PIPE)
 		{
 			printf ("PIPE FOUND \n");
-			token = token->next;
+			cmd = new_command(shell, cmd);
+			if (do_pipe_magic(shell, cmd) == -1)
+				exit(75);
+			if (token->next)
+				token = token->next;
+			else
+				printf("SOMETIN WONG\n");
 		}
 	}
-	// if (cmd->command[0] != NULL)
-		// execute(cmd, shell);
+	if (cmd->command[0] != NULL)
+		execute(cmd, shell);
+	else
+		printf ("COMMAND = NULL");
 
 	return (0);
 }
