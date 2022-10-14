@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 18:35:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/14 11:46:00 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	set_token_type(t_minishell *shell, t_token *token, char *data)
 	// 	token->type = AND;
 	else if (data[0] == '<')
 		token->type = LEFT;
-	else if (strncmp(data, ">>", 2) == 0)
+	// else if (strncmp(data, ">>", 2) == 0)
 	else if (data[0] == '>')
 		token->type = RIGHT;
 	// else if (data[0] == ';') //probably not needed

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 18:39:49 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/14 11:46:15 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	export(t_command *cmd, t_minishell	*shell)
 {
 
+	return (0);
 }
 
 int	get_env(t_minishell	*shell)

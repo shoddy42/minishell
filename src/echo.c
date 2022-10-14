@@ -8,15 +8,15 @@ int ms_echo(t_command *command)
 
 	i = 1;
 	x = 0;
-	if(!(command->options))
+	if(!(command->command))
 		return(1);
-	while(command->options[3])
+	while(command->command[3])
 	{
-		// if (command->options[i][x] == "\"")
+		// if (command->command[i][x] == "\"")
 		// 	x++;
-		// ret = ft_strjoin(ret, command->options[i]);
+		// ret = ft_strjoin(ret, command->command[i]);
 		i++;
-		printf("Ret = %s", command->options[i]);
+		printf("Ret = %s", command->command[i]);
 	}
 	return(0);
 

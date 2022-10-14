@@ -13,9 +13,9 @@ int check_builtin(t_command    *cmd)
 		return(ms_echo(cmd));
 	// else if(ft_strcmp(cmd->command[0], "env") == 0)
 	//     ms_env(cmd);
-	else if(ft_strcmp(cmd->options[0], "pwd") == 0)
+	else if(ft_strcmp(cmd->command[0], "pwd") == 0)
 		ms_pwd(cmd);
-	// else if(ft_strcmp(cmd->options[0], "export") == 0)
+	// else if(ft_strcmp(cmd->command[0], "export") == 0)
 	//     ms_export(cmd);
 	// else if(ft_strcmp(cmd->command[0], "unset") == 0)
 	//     ms_exit(cmd);

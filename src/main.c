@@ -6,23 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 19:18:21 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/14 14:45:55 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-// need to actually write this function, dont know how to make it extendable yet.
-
-// char	*find_variable(char *str)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (str[i] && str[i] != '$')
-// 		i++;
-// 	// if (str[i] == '$')
-// }
 
 // unsure whether this is one is REALLY just this simple.
 void	expand_dong(t_token *token)
@@ -32,15 +20,16 @@ void	expand_dong(t_token *token)
 	tmp = getenv(token->data + 1);
 	free(token->data);
 	token->type = COMMAND; //might need other types too?
-	token->data = ft_strdup(tmp);
+	if (!tmp)
+		token->data = ft_strdup("");
+	else
+		token->data = ft_strdup(tmp);
 }
 
-// todo: make function work with DQUOTE and its expansion of variables.
-t_token	*handle_quote(t_token *token)
+t_token	*handle_quote(t_token *token, int type)
 {
 	t_token	*tmp;
 	char	*str;
-	int		type; // to differenciate between QUOTE and DQUOTE and whether or not to expand variables.
 
 	tmp = token;
 	if (!tmp || !tmp->next)
@@ -50,14 +39,17 @@ t_token	*handle_quote(t_token *token)
 	}
 	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
 	token->type = COMMAND;
-	while (tmp && tmp->next && tmp->type != QUOTE)
+	while (tmp && tmp->next && tmp->type != type)
 	{
-		if (tmp->next->type != QUOTE)
+		if (type == DQUOTE)
+			if (tmp->next->type == VARIABLE)
+				expand_dong(tmp->next);
+		if (tmp->next->type != type)
 			str = ft_strexpand(str, tmp->next->data);
 		tmp = tmp->next;
 	}
 	token->data = str;
-	if (tmp->type == QUOTE && tmp->next)
+	if (tmp->type == type && tmp->next)
 	{
 			tmp = tmp->next;
 			free_tokens_til(token->next, tmp);
@@ -65,8 +57,8 @@ t_token	*handle_quote(t_token *token)
 	}
 	else
 	{
-		if (tmp->type != QUOTE)
-			printf ("WARNING: UNCLOSED QUOTE\n");
+		if (tmp->type != type)
+			printf ("WARNING: UNCLOSED type\n");
 		free_tokens_til(token->next, tmp);
 		free_single_token(tmp);
 		token->next = NULL;
@@ -74,14 +66,16 @@ t_token	*handle_quote(t_token *token)
 	return (token);
 }
 
-char	**get_command_options(t_token	*token)
+t_command	*get_command_size(t_token	*token)
 {
-	char	**commands;
-	t_token	*tmp;
+	char		**commands;
+	t_token		*tmp;
+	t_command	*cmd;
 	int		i;
 
 	tmp = token;
 	i = 0;
+	cmd = ft_calloc(1, sizeof(t_command));
 	while (tmp && !(tmp->type == PIPE))
 	{
 		if (tmp->type == COMMAND)
@@ -89,27 +83,40 @@ char	**get_command_options(t_token	*token)
 		tmp = tmp->next;
 	}
 	commands = ft_calloc(i + 1, sizeof(char *));
-	i = 0;
-	while (token && (token->type == COMMAND || token->type == VOID))
+	tmp = token;
+	while (token && token->type != PIPE)
 	{
 		if (token->type == COMMAND)
-		{
-			commands[i] = ft_strdup(token->data);
-			i++;
-		}
+			cmd->command[i++] = ft_strdup(token->data);
+		if (token->type == INFILE || token->type == HEREDOC_FILE)
+			cmd->infile = token->fd;
+		if (token->type == OUTFILE)
+			cmd->infile = token->fd;
 		token = token->next;
 	}
-	return (commands);
+	return (cmd);
 }
 
-int	make_command(t_minishell *shell)
+int	make_commands(t_minishell *shell)
 {
-	t_command	*cmd;
+	// t_command	*cmd;
 	t_token		*token;
+	int			i;
 
-	cmd = ft_calloc(1, sizeof(t_command));
-	shell->commands = cmd;
-
+	// shell->commands = cmd;
+	token = shell->tokens;
+	while (token)
+	{
+		//  = get_command_size(token);
+		i = 0;
+		if (token && token->type == PIPE)
+		{
+			printf ("PIPE FOUND \n");
+			token = token->next;
+		}
+	}
+	// if (cmd->command[0] != NULL)
+		// execute(cmd, shell);
 
 	return (0);
 }
@@ -137,15 +144,15 @@ void parse_token(t_minishell *shell)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT)
 			token = handle_right(token, shell);
-		if (token->type == QUOTE)
-			token = handle_quote(token);
+		if (token->type == QUOTE || token->type == DQUOTE)
+			token = handle_quote(token, token->type);
 		if (token->type == VARIABLE)
 			expand_dong(token);
 		token = token->next;
 	}
-	// make_command()
-	if(cmd->options)
-		execute(cmd, shell);
+	make_commands(shell);
+	// if(cmd->options)
+	// 	execute(cmd, shell);
 	// if (cmd->command)
 		// free (cmd->command); // not sure when to free.
 	// free (cmd); // not sure when to free.
