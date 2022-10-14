@@ -85,7 +85,7 @@ t_token	*get_command(t_token *token, t_command *cmd)
 	tmp = token;
 	printf ("token at get_command = [%s]", token->data);
 	i = 0;
-	while (tmp && tmp->type != PIPE)
+	while (tmp && tmp->next && tmp->type != PIPE)
 	{
 		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(tmp->data);
@@ -137,6 +137,7 @@ int	make_commands(t_minishell *shell)
 	while (token)
 	{
 		token = get_command(token, cmd);
+		printf("returned token = [%s]", token->data);
 		i = 0;
 		if (token && token->type == PIPE)
 		{
@@ -145,25 +146,24 @@ int	make_commands(t_minishell *shell)
 			if (do_pipe_magic(shell, cmd) == -1)
 				exit(75);
 			if (token->next)
+			{
+				printf("skipping pipe? [%s]\n", token->data);
 				token = token->next;
+			}
 			else
 				printf("SOMETIN WONG\n");
 		}
 		// token = token->next;
 	}
 	i = 0;
-	// printf ("\n");
-	// while (cmd->command[i])
-	// {
-	// 	printf("(%i)[%s]\n", i, cmd->command[i]);
-	// 	i++;
-	// }
-	// }
+	printf ("CMD:\n");
+	while (cmd && cmd->command && cmd->command[i])
+	{
+		printf("(%i)[%s]\n", i, cmd->command[i]);
+		i++;
+	}
 	if (cmd && cmd->command && cmd->command[0] != NULL)
 		execute(cmd, shell);
-	// else
-	// 	printf ("COMMAND = NULL");
-
 	return (0);
 }
 		// move everything related to command execution to somewhere else.
