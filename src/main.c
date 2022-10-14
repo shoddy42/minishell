@@ -70,7 +70,6 @@ t_token	*get_command(t_token *token, t_command *cmd)
 {
 	char		**commands;
 	t_token		*tmp;
-	// t_command	*ret;
 	int			i;
 
 	tmp = token;
@@ -106,11 +105,12 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 	new = ft_calloc(1, sizeof(t_command));
 	new->outfile = STDOUT_FILENO;
 	new->infile = STDIN_FILENO;
-	if (cmd)
-	{
-		new->prev = cmd;
-		cmd->next = new;
-	}
+	// if (cmd != NULL)
+	// {
+	// 	printf ("previous command found\n");
+	// 	new->prev = cmd;
+	// 	cmd->next = new;
+	// }
 	return (new);
 }
 
@@ -131,7 +131,7 @@ int	make_commands(t_minishell *shell)
 	int			i;
 	int			pipe;
 
-	cmd = new_command(shell, NULL);
+	cmd = new_command(shell, cmd);
 	shell->commands = cmd;
 	token = shell->tokens;
 	while (token)
@@ -149,18 +149,20 @@ int	make_commands(t_minishell *shell)
 			else
 				printf("SOMETIN WONG\n");
 		}
+		// token = token->next;
 	}
 	i = 0;
-	printf ("\n");
-	while (cmd->command[i])
-	{
-		printf("(%i)[%s]\n", i, cmd->command[i]);
-		i++;
-	}
-	if (cmd->command[0] != NULL)
+	// printf ("\n");
+	// while (cmd->command[i])
+	// {
+	// 	printf("(%i)[%s]\n", i, cmd->command[i]);
+	// 	i++;
+	// }
+	// }
+	if (cmd && cmd->command && cmd->command[0] != NULL)
 		execute(cmd, shell);
-	else
-		printf ("COMMAND = NULL");
+	// else
+	// 	printf ("COMMAND = NULL");
 
 	return (0);
 }

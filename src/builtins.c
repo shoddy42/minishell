@@ -5,7 +5,7 @@
 
 
 
-int check_builtin(t_command    *cmd)
+int check_builtin(t_command *cmd, t_minishell *shell)
 {
 	if(strcmp(cmd->command[0], "cd") == 0)
 		return(ms_cd(cmd));

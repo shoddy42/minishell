@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/14 18:12:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/14 19:34:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,10 @@ char	**get_command_options(t_token	*token);
 char	*pipex_pathjoin(char const *path, char const *cmd); //doesn't need to be in here probably.
 
 // Builtins.c
-int	check_builtin(t_command    *cmd);
+int	check_builtin(t_command *cmd, t_minishell *shell);
 int	ms_cd(t_command	*cmd);
-int	ms_echo(t_command	*cmd);
-int	ms_pwd(t_command	*cmd);
+int	ms_echo(t_command *cmd);
+int	ms_pwd(t_command *cmd);
 
 // heredoc.c
 t_token	*heredoc(t_token    *token, t_minishell *shell);
