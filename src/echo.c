@@ -1,23 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   echo.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/10/14 18:42:30 by auzochuk      #+#    #+#                 */
+/*   Updated: 2022/10/14 18:44:54 by auzochuk      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int ms_echo(t_command *command)
 {
 	int	i;
-	char	*ret;
-	int	x;
 
 	i = 1;
-	x = 0;
 	if(!(command->command))
 		return(1);
-	while(command->command[3])
-	{
-		// if (command->command[i][x] == "\"")
-		// 	x++;
-		// ret = ft_strjoin(ret, command->command[i]);
+	if (ft_strcmp(command->command[i], "-n") == 0)
 		i++;
-		printf("Ret = %s", command->command[i]);
+	while(command->command[i])
+	{
+		ft_putstr_fd(command->command[i], command->outfile);
+		write(command->outfile, " ", 1);
+		i++;
 	}
+	if (ft_strcmp(command->command[1], "-n") == 0)
+		return (0);
+	ft_putchar_fd('\n', command->outfile);
 	return(0);
-
 }
