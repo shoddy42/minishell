@@ -84,15 +84,16 @@ t_token	*get_command(t_token *token, t_command *cmd)
 	cmd->command = ft_calloc(i + 1, sizeof(char *));
 	printf ("allocated command with [%i]\n", i + 1);
 	tmp = token;
+	printf ("token at get_command = [%s]", token->data);
 	i = 0;
 	while (tmp && tmp->type != PIPE)
 	{
 		if (tmp->type == COMMAND)
-			cmd->command[i++] = ft_strdup(token->data);
-		if (tmp->type == INFILE || token->type == HEREDOC_FILE)
-			cmd->infile = token->fd;
+			cmd->command[i++] = ft_strdup(tmp->data);
+		if (tmp->type == INFILE || tmp->type == HEREDOC_FILE)
+			cmd->infile = tmp->fd;
 		if (tmp->type == OUTFILE)
-			cmd->infile = token->fd;
+			cmd->infile = tmp->fd;
 		tmp = tmp->next;
 	}
 	return (tmp);
@@ -148,6 +149,13 @@ int	make_commands(t_minishell *shell)
 			else
 				printf("SOMETIN WONG\n");
 		}
+	}
+	i = 0;
+	printf ("\n");
+	while (cmd->command[i])
+	{
+		printf("(%i)[%s]\n", i, cmd->command[i]);
+		i++;
 	}
 	if (cmd->command[0] != NULL)
 		execute(cmd, shell);
