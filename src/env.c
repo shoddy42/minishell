@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/17 16:25:11 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/17 20:17:47 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	init_env(t_minishell *shell, char  **env)
 		tmp->next = new_env(env[i]);
 		shell->env->key = fill_key(env[i]);
 		shell->env->data = fill_data(env[i]);
-		printf("Data: %s\n",shell->env->data);
+		// printf("Data: %s\n",shell->env->data);
 		tmp = tmp->next;
 
 	}
