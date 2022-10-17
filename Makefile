@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/10/17 15:00:19 by wkonings      ########   odam.nl          #
+#    Updated: 2022/10/17 20:12:21 by auzochuk      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ INCLUDES = libft/libft.a
 FLAGS = -Wall -Wextra -Werror
 HEADERS_DIR = include/
 HEADERS = minishell.h
-FILES = main tokenize token_utils env execute heredoc builtins cd init redirects pwd echo quote expand
+FILES = main tokenize token_utils env execute heredoc builtins cd init redirects pwd echo unset expand quote
 
 BREW_DIR	= $(shell brew --prefix)
 LIB_READLINE	= $(BREW_DIR)/opt/readline/lib
@@ -37,6 +37,7 @@ flags:
 
 test: re
 	./a.out
+
 clean:
 	/bin/rm -f $(OBJECTS)
 
