@@ -85,14 +85,19 @@ t_token	*get_command(t_token *token, t_command *cmd)
 	tmp = token;
 	printf ("token at get_command = [%s]", token->data);
 	i = 0;
-	while (tmp && tmp->next && tmp->type != PIPE)
+	while (tmp && tmp->type != PIPE)
 	{
 		if (tmp->type == COMMAND)
+		{
+			printf ("adding [%s]\n", tmp->data);
 			cmd->command[i++] = ft_strdup(tmp->data);
+		}
 		if (tmp->type == INFILE || tmp->type == HEREDOC_FILE)
 			cmd->infile = tmp->fd;
 		if (tmp->type == OUTFILE)
 			cmd->infile = tmp->fd;
+		if (!tmp->next)
+			break;
 		tmp = tmp->next;
 	}
 	return (tmp);
@@ -137,14 +142,14 @@ int	make_commands(t_minishell *shell)
 	while (token)
 	{
 		token = get_command(token, cmd);
-		printf("returned token = [%s]", token->data);
+		printf("returned token = [%s]\n", token->data);
 		i = 0;
 		if (token && token->type == PIPE)
 		{
 			printf ("PIPE FOUND \n");
 			cmd = new_command(shell, cmd);
-			if (do_pipe_magic(shell, cmd) == -1)
-				exit(75);
+			// if (do_pipe_magic(shell, cmd) == -1)
+			// 	exit(75);
 			if (token->next)
 			{
 				printf("skipping pipe? [%s]\n", token->data);
@@ -153,15 +158,16 @@ int	make_commands(t_minishell *shell)
 			else
 				printf("SOMETIN WONG\n");
 		}
-		// token = token->next;
+		token = token->next;
 	}
 	i = 0;
-	printf ("CMD:\n");
+	printf ("\nCMD:\n");
 	while (cmd && cmd->command && cmd->command[i])
 	{
 		printf("(%i)[%s]\n", i, cmd->command[i]);
 		i++;
 	}
+	printf ("\n");
 	if (cmd && cmd->command && cmd->command[0] != NULL)
 		execute(cmd, shell);
 	return (0);
