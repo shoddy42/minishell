@@ -12,61 +12,36 @@
 
 #include "../include/minishell.h"
 
-// unsure whether this is one is REALLY just this simple.
-void	expand_dong(t_token *token)
+void	print_commands(t_minishell *shell)
 {
-	char *tmp;
+	t_command	*tmp;
+	int	cmd_num = 0;
+	int i = 0;
 
-	tmp = getenv(token->data + 1);
-	free(token->data);
-	token->type = COMMAND; //might need other types too?
-	if (!tmp)
-		token->data = ft_strdup("");
-	else
-		token->data = ft_strdup(tmp);
-}
-
-t_token	*handle_quote(t_token *token, int type)
-{
-	t_token	*tmp;
-	char	*str;
-
-	tmp = token;
-	if (!tmp || !tmp->next)
+	tmp = shell->commands;
+	printf ("\nPrinting all commands:\n");
+	while(tmp)
 	{
-		printf("ERROR: OUT OF TOKENS\n");
-		return (token);
-	}
-	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
-	token->type = COMMAND;
-	while (tmp && tmp->next && tmp->type != type)
-	{
-		if (type == DQUOTE)
-			if (tmp->next->type == VARIABLE)
-				expand_dong(tmp->next);
-		if (tmp->next->type != type)
-			str = ft_strexpand(str, tmp->next->data);
+		printf ("\nCOMMAND (%i)\n", cmd_num);
+		cmd_num++;
+		i = 0;
+		while (tmp && tmp->command[i])
+		{
+			printf("cmd(%i) = [%s]\n", i, tmp->command[i]);
+			i++;
+		}
+		if (!tmp->next)
+		{
+			printf ("no command next\n");
+			break;
+		}
+		if (!tmp->next)
+			break;
 		tmp = tmp->next;
 	}
-	token->data = str;
-	if (tmp->type == type && tmp->next)
-	{
-			tmp = tmp->next;
-			free_tokens_til(token->next, tmp);
-			token->next = tmp;
-	}
-	else
-	{
-		if (tmp->type != type)
-			printf ("WARNING: UNCLOSED type\n");
-		free_tokens_til(token->next, tmp);
-		free_single_token(tmp);
-		token->next = NULL;
-	}
-	return (token);
 }
 
-t_token	*get_command(t_token *token, t_command *cmd)
+t_token	*get_command_options(t_token *token, t_command *cmd)
 {
 	char		**commands;
 	t_token		*tmp;
@@ -83,13 +58,13 @@ t_token	*get_command(t_token *token, t_command *cmd)
 	cmd->command = ft_calloc(i + 1, sizeof(char *));
 	printf ("allocated command with [%i]\n", i + 1);
 	tmp = token;
-	printf ("token at get_command = [%s]", token->data);
+	printf ("token at get_command_options = [%s]\n", token->data);
 	i = 0;
 	while (tmp && tmp->type != PIPE)
 	{
 		if (tmp->type == COMMAND)
 		{
-			printf ("adding [%s]\n", tmp->data);
+			// printf ("adding [%s]\n", tmp->data);
 			cmd->command[i++] = ft_strdup(tmp->data);
 		}
 		if (tmp->type == INFILE || tmp->type == HEREDOC_FILE)
@@ -110,12 +85,12 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 	new = ft_calloc(1, sizeof(t_command));
 	new->outfile = STDOUT_FILENO;
 	new->infile = STDIN_FILENO;
-	// if (cmd != NULL)
-	// {
-	// 	printf ("previous command found\n");
-	// 	new->prev = cmd;
-	// 	cmd->next = new;
-	// }
+	if (cmd != NULL)
+	{
+		// printf ("previous command found\n");
+		new->prev = cmd;
+		cmd->next = new;
+	}
 	return (new);
 }
 
@@ -141,7 +116,7 @@ int	make_commands(t_minishell *shell)
 	token = shell->tokens;
 	while (token)
 	{
-		token = get_command(token, cmd);
+		token = get_command_options(token, cmd);
 		printf("returned token = [%s]\n", token->data);
 		i = 0;
 		if (token && token->type == PIPE)
@@ -150,24 +125,24 @@ int	make_commands(t_minishell *shell)
 			cmd = new_command(shell, cmd);
 			// if (do_pipe_magic(shell, cmd) == -1)
 			// 	exit(75);
-			if (token->next)
-			{
-				printf("skipping pipe? [%s]\n", token->data);
-				token = token->next;
-			}
-			else
-				printf("SOMETIN WONG\n");
+			// if (token->next)
+			// {
+			// 	printf("skipping pipe? [%s]\n", token->data);
+			// 	token = token->next;
+			// }
+			// else
+			// 	printf("SOMETIN WONG\n");
 		}
 		token = token->next;
 	}
-	i = 0;
-	printf ("\nCMD:\n");
-	while (cmd && cmd->command && cmd->command[i])
-	{
-		printf("(%i)[%s]\n", i, cmd->command[i]);
-		i++;
-	}
-	printf ("\n");
+	// i = 0;
+	// printf ("\nCMD:\n");
+	// while (cmd && cmd->command && cmd->command[i])
+	// {
+	// 	printf("(%i)[%s]\n", i, cmd->command[i]);
+	// 	i++;
+	// }
+	// printf ("\n");
 	if (cmd && cmd->command && cmd->command[0] != NULL)
 		execute(cmd, shell);
 	return (0);
@@ -203,6 +178,7 @@ void parse_token(t_minishell *shell)
 		token = token->next;
 	}
 	make_commands(shell);
+	print_commands(shell);
 	// if(cmd->options)
 	// 	execute(cmd, shell);
 	// if (cmd->command)
@@ -238,6 +214,7 @@ int	main(int ac, char **av, char **envp)
 		if (shell->command)
 			free(shell->command);
 		print_tokens(shell);
+		printf ("past tokens\n");
 		// print_tokens_backwards(shell);
 		free_tokens(shell);
 	}
