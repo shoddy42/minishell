@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/17 15:00:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/17 15:43:20 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void	print_env(t_minishell *shell);
 
 // execute.c
 void    execute(t_command *cmd, t_minishell *shell);
+void    execute_two_electric_boogaloo(t_minishell *shell);
 // char	**get_command_options(t_token	*token);
 t_token	*get_command_options(t_token *token, t_command *cmd);
 char	*pipex_pathjoin(char const *path, char const *cmd); //doesn't need to be in here probably.

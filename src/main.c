@@ -1,4 +1,4 @@
-	/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
 /*   main.c                                             :+:    :+:            */
@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/14 18:01:36 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/17 18:31:01 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	print_commands(t_minishell *shell)
 	printf ("\nPrinting all commands:\n");
 	while(tmp)
 	{
-		printf ("\nCOMMAND (%i)\n", cmd_num);
+		printf ("\nCOMMAND (%i)    infile [%i] outfile [%i]\n", cmd_num, tmp->infile, tmp->outfile);
 		cmd_num++;
 		i = 0;
-		while (tmp && tmp->command[i])
+		while (tmp && tmp->command && tmp->command[i])
 		{
 			printf("cmd(%i) = [%s]\n", i, tmp->command[i]);
 			i++;
@@ -35,15 +35,12 @@ void	print_commands(t_minishell *shell)
 			printf ("no command next\n");
 			break;
 		}
-		if (!tmp->next)
-			break;
 		tmp = tmp->next;
 	}
 }
 
 t_token	*get_command_options(t_token *token, t_command *cmd)
 {
-	char		**commands;
 	t_token		*tmp;
 	int			i;
 
@@ -56,21 +53,18 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 		tmp = tmp->next;
 	}
 	cmd->command = ft_calloc(i + 1, sizeof(char *));
-	printf ("allocated command with [%i]\n", i + 1);
+	// printf ("allocated command with [%i]\n", i + 1);
 	tmp = token;
-	printf ("token at get_command_options = [%s]\n", token->data);
+	// printf ("token at get_command_options = [%s]\n", token->data);
 	i = 0;
 	while (tmp && tmp->type != PIPE)
 	{
 		if (tmp->type == COMMAND)
-		{
-			// printf ("adding [%s]\n", tmp->data);
 			cmd->command[i++] = ft_strdup(tmp->data);
-		}
 		if (tmp->type == INFILE || tmp->type == HEREDOC_FILE)
 			cmd->infile = tmp->fd;
 		if (tmp->type == OUTFILE)
-			cmd->infile = tmp->fd;
+			cmd->outfile = tmp->fd;
 		if (!tmp->next)
 			break;
 		tmp = tmp->next;
@@ -87,7 +81,6 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 	new->infile = STDIN_FILENO;
 	if (cmd != NULL)
 	{
-		// printf ("previous command found\n");
 		new->prev = cmd;
 		cmd->next = new;
 	}
@@ -96,14 +89,17 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 
 int	do_pipe_magic(t_minishell *shell, t_command *cmd)
 {
-	cmd->outfile = shell->tunnel[1];
-	if (cmd->prev) 
-		cmd->prev->infile = shell->tunnel[0];
-	else
-		return (-1);
+	if (cmd->prev)
+	{ 
+		if (cmd->infile == STDIN_FILENO)
+			cmd->infile = shell->tunnel[0];
+		if (cmd->prev->outfile == STDOUT_FILENO)
+			cmd->prev->outfile = shell->tunnel[1];
+	}
 	return (0);
 }
 
+//todo: FREE the commands, close the file descriptors.
 int	make_commands(t_minishell *shell)
 {
 	t_command	*cmd;
@@ -123,35 +119,15 @@ int	make_commands(t_minishell *shell)
 		{
 			printf ("PIPE FOUND \n");
 			cmd = new_command(shell, cmd);
-			// if (do_pipe_magic(shell, cmd) == -1)
-			// 	exit(75);
-			// if (token->next)
-			// {
-			// 	printf("skipping pipe? [%s]\n", token->data);
-			// 	token = token->next;
-			// }
-			// else
-			// 	printf("SOMETIN WONG\n");
+			if (do_pipe_magic(shell, cmd) == -1)
+				exit(75);
 		}
 		token = token->next;
 	}
-	// i = 0;
-	// printf ("\nCMD:\n");
-	// while (cmd && cmd->command && cmd->command[i])
-	// {
-	// 	printf("(%i)[%s]\n", i, cmd->command[i]);
-	// 	i++;
-	// }
-	// printf ("\n");
-	if (cmd && cmd->command && cmd->command[0] != NULL)
-		execute(cmd, shell);
+	// if (cmd && cmd->command && cmd->command[0] != NULL)
+	// 	execute(cmd, shell);
 	return (0);
 }
-		// move everything related to command execution to somewhere else.
-		// if (token->type == COMMAND && cmd->command == NULL)
-		// 	cmd->command = ft_strdup(token->data);
-		// if (cmd->command && cmd->options == NULL && token->type == COMMAND)
-		// 	cmd->options = get_command_options(token); //todo: free this later.
 
 // this function will have to be split into an expansion and a real parsing function
 void parse_token(t_minishell *shell)
@@ -161,12 +137,8 @@ void parse_token(t_minishell *shell)
 
 	i = 0;
 	token = shell->tokens;
-	// cmd = ft_calloc(1, sizeof(t_command));
-	// cmd->outfile = STDOUT_FILENO;
-	// cmd->infile = STDIN_FILENO;
 	while (token)
 	{
-		// print_tokens(shell); //for testing purposes.
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT)
@@ -179,11 +151,6 @@ void parse_token(t_minishell *shell)
 	}
 	make_commands(shell);
 	print_commands(shell);
-	// if(cmd->options)
-	// 	execute(cmd, shell);
-	// if (cmd->command)
-		// free (cmd->command); // not sure when to free.
-	// free (cmd); // not sure when to free.
 }
 
 // if the function is just 1 line, do we need it?
@@ -214,7 +181,7 @@ int	main(int ac, char **av, char **envp)
 		if (shell->command)
 			free(shell->command);
 		print_tokens(shell);
-		printf ("past tokens\n");
+		execute_two_electric_boogaloo(shell);
 		// print_tokens_backwards(shell);
 		free_tokens(shell);
 	}
