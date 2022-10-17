@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/17 19:00:25 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/10/17 19:58:27 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ void	print_env(t_minishell *shell);
 
 // execute.c
 void    execute(t_command *cmd, t_minishell *shell);
-char	**get_command_options(t_token	*token);
+// char	**get_command_options(t_token	*token);
+t_token	*get_command_options(t_token *token, t_command *cmd);
 char	*pipex_pathjoin(char const *path, char const *cmd); //doesn't need to be in here probably.
 
 // Builtins.c
@@ -137,6 +138,12 @@ void	sighandler(int signum);
 // redirects.c
 t_token	*handle_left(t_token *token, t_minishell *shell);
 t_token	*handle_right(t_token *token, t_minishell *shell);
+
+// quote.c
+t_token	*handle_quote(t_token *token, int type);
+
+// expand.c
+void	expand_dong(t_token *token);
 
 #endif
 
