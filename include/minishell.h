@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/17 15:43:20 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/17 20:03:20 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void	free_tokens_til(t_token *start, t_token *end);
 void	free_single_token(t_token *token);
 void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
+int		ms_strchr(const char *src, int c);
 
 
 // env
@@ -122,6 +123,9 @@ int	check_builtin(t_command *cmd, t_minishell *shell);
 int	ms_cd(t_command	*cmd);
 int	ms_echo(t_command *cmd);
 int	ms_pwd(t_command *cmd);
+int	ms_env(t_minishell	*shell, t_command	*cmd);
+int	ms_export(t_command *cmd, t_minishell	*shell);
+int ms_unset(t_minishell *shell, t_command *cmd);
 
 // heredoc.c
 t_token	*heredoc(t_token    *token, t_minishell *shell);
