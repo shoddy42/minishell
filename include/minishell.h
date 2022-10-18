@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/17 20:03:20 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/18 22:32:20 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,10 @@ typedef struct s_command
 	int					executable;
 	int					outfile;
 	int					infile;
+	
+	int					infile_deadend;
+	// int					outfile_deadend;
+	// char				outfile2;
 	struct	s_command	*next;
 	struct	s_command	*prev;	
 	// struct s_token	*used_token; //might not be needed at all?
@@ -82,11 +86,11 @@ typedef struct s_shell_data
 	t_env		*env;
 	char		**envp;		// i dont think this ever REALLY gets used?
 	char		**path;
-	char		*command;	// might not be needed
-	int			tunnel[2];
+	char		*command;
+
 	int			last_return;	//not YET in use
-	int			pipe_count;		//might not be needed.
-	int			exit;			//only for 
+	int			pipe_count;
+	int			exit;
 	int			test;
 }	t_minishell;
 

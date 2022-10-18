@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/14 11:46:00 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/18 18:13:22 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ void	set_token_type(t_minishell *shell, t_token *token, char *data)
 	// if (data[0] == ' ')
 	// 	token->type = VOID;
 	else if (data[0] == '|')
+	{
+		shell->pipe_count++;
 		token->type = PIPE;
+	}
 	else if (data[0] == '$')
 		token->type = VARIABLE;
 	// else if (data[0] == '&') //currently not needed
@@ -84,6 +87,7 @@ void	ft_tokenize(t_minishell *shell, char *command)
 
 	i = 0;
 	skip = 0;
+	shell->pipe_count = 0;
 	while (command[i])
 	{
 		while (ft_charinstr(command[i], DELIMITER) == 0 && command[i])

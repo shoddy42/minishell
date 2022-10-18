@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/17 18:31:01 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/18 22:32:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 	new = ft_calloc(1, sizeof(t_command));
 	new->outfile = STDOUT_FILENO;
 	new->infile = STDIN_FILENO;
+	// new->infile_deadend = 0;
+	// new->outfile_deadend = 0;
 	if (cmd != NULL)
 	{
 		new->prev = cmd;
@@ -89,12 +91,25 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 
 int	do_pipe_magic(t_minishell *shell, t_command *cmd)
 {
+	int tunnel[2];
+
+	if(pipe(tunnel) < 0)
+	{
+		printf ("PIPE CREATION FAILED\n");
+		exit (78);
+	}
 	if (cmd->prev)
 	{ 
 		if (cmd->infile == STDIN_FILENO)
-			cmd->infile = shell->tunnel[0];
+		{
+			cmd->infile = tunnel[0];
+			// cmd->infile_deadend = tunnel[1];
+		}
 		if (cmd->prev->outfile == STDOUT_FILENO)
-			cmd->prev->outfile = shell->tunnel[1];
+		{
+			cmd->prev->outfile = tunnel[1];
+			// cmd->prev->outfile_deadend = tunnel[0];
+		}
 	}
 	return (0);
 }
@@ -175,14 +190,15 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strcmp(shell->command, "exit") == 0)
 			shell->exit = 1;
 		ft_tokenize(shell, shell->command);
+		printf("pipe count: %i\n", shell->pipe_count);
 		parse_token(shell);
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
 		if (shell->command)
 			free(shell->command);
 		print_tokens(shell);
-		execute_two_electric_boogaloo(shell);
 		// print_tokens_backwards(shell);
+		execute_two_electric_boogaloo(shell);
 		free_tokens(shell);
 	}
 	return (0);

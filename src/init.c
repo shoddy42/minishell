@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/14 17:59:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/18 19:53:27 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ int	init_minishell(t_minishell *shell, char **envp)
 
 	// environment setup
 	shell->envp = envp;
-	if (pipe(shell->tunnel) == -1)
-		exit(69);
 	init_env(shell, envp);
 
 	//todo: add things to initialize? kek
