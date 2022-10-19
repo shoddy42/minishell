@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/10/17 20:21:49 by wkonings      ########   odam.nl          #
+#    Updated: 2022/10/19 17:46:04 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
 all: $(NAME)
 
 $(NAME):
-	gcc $(SOURCES) -I includes/minishell.h $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
+	gcc -g -fsanitize=address $(SOURCES) -I includes/minishell.h $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 
 flags:
 	gcc $(FLAGS) $(SOURCES) $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/18 22:32:20 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/19 17:45:36 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@
 // # include <sys/wait.h> // needed for WSL
 
 # define DELIMITER " |<>\t\'\"\n"
+
+typedef	enum e_pipe
+{
+	READ = 0,
+	WRITE = 1
+}	t_pipe;
 
 typedef enum e_tokentype
 {
@@ -54,20 +60,19 @@ typedef struct s_token
 	struct s_token	*prev;
 }   t_token;
 
+// adding a totall of exactly 5 ints and no other ints seems to segfault us for freeing something htat doesnt exist BUT we never free it. 
 typedef struct s_command
 {
-	// char			*command; // not required, can use options[0] instead if want?
 	char				**command;	
 	int					executable;
 	int					outfile;
-	int					infile;
-	
+	int					infile;	
+	// int					in_pipe[2];
+	// int					out_pipe[2];
 	int					infile_deadend;
-	// int					outfile_deadend;
-	// char				outfile2;
+	int					outfile_deadend;
 	struct	s_command	*next;
 	struct	s_command	*prev;	
-	// struct s_token	*used_token; //might not be needed at all?
 }   t_command;
 
 
@@ -88,6 +93,9 @@ typedef struct s_shell_data
 	char		**path;
 	char		*command;
 
+
+	int			test1;
+	int			test2;
 	int			last_return;	//not YET in use
 	int			pipe_count;
 	int			exit;
