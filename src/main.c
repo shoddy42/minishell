@@ -62,7 +62,10 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 		if (tmp->type == INFILE || tmp->type == HEREDOC_FILE)
 			cmd->infile = tmp->fd;
 		if (tmp->type == OUTFILE)
+		{
+			printf("setting outfile as [%i]\n", tmp->fd);
 			cmd->outfile = tmp->fd;
+		}
 		if (!tmp->next)
 			break;
 		tmp = tmp->next;
@@ -75,8 +78,8 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 	t_command	*new;
 
 	new = ft_calloc(1, sizeof(t_command));
-	new->outfile = STDOUT_FILENO;
 	new->infile = STDIN_FILENO;
+	new->outfile = STDOUT_FILENO;
 	if (cmd != NULL)
 	{
 		new->prev = cmd;
@@ -85,62 +88,32 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 	return (new);
 }
 
-// int	do_pipe_magic(t_minishell *shell, t_command *cmd)
-// {
-// 	int tunnel[2];
-
-// 	if(pipe(tunnel) < 0)
-// 	{
-// 		printf ("PIPE CREATION FAILED\n");
-// 		exit (78);
-// 	}
-// 	if (cmd->prev)
-// 	{ 
-// 		if (cmd->infile == STDIN_FILENO)
-// 		{
-// 			cmd->infile = tunnel[READ];
-// 			// cmd->in_pipe[0] = tunnel[0];
-// 			// cmd->in_pipe[1] = tunnel[1];
-// 			cmd->infile_deadend = tunnel[WRITE];
-// 		}
-// 		if (cmd->prev->outfile == STDOUT_FILENO)
-// 		{
-// 			cmd->prev->outfile = tunnel[WRITE];
-// 			// cmd->prev->out_pipe[0] = tunnel[0];
-// 			// cmd->prev->out_pipe[1] = tunnel[1];
-// 			cmd->prev->outfile_deadend = tunnel[READ];
-// 		}
-// 	}
-// 	return (0);
-// }
-
 //todo: FREE the commands, close the file descriptors.
 int	make_commands(t_minishell *shell)
 {
 	t_command	*cmd;
 	t_token		*token;
 	int			i;
-	// int			pipe;
 
-	cmd = new_command(shell, cmd);
+	cmd = new_command(shell, NULL);
 	shell->commands = cmd;
 	token = shell->tokens;
 	while (token)
 	{
 		token = get_command_options(token, cmd);
-		printf("returned token = [%s]\n", token->data);
+		// printf("returned token = [%s]\n", token->data);
 		i = 0;
 		if (token && token->type == PIPE)
 		{
-			printf ("PIPE FOUND \n");
+			// printf ("PIPE FOUND \n");
 			cmd = new_command(shell, cmd);
-			// if (do_pipe_magic(shell, cmd) == -1)
-			// 	exit(75);
+			if (cmd->infile == STDIN_FILENO)
+				cmd->infile = NEEDS_PIPE;
+			if (cmd->prev->outfile == STDOUT_FILENO)
+				cmd->prev->outfile = NEEDS_PIPE;
 		}
 		token = token->next;
 	}
-	// if (cmd && cmd->command && cmd->command[0] != NULL)
-	// 	execute(cmd, shell);
 	return (0);
 }
 
@@ -168,15 +141,10 @@ void parse_token(t_minishell *shell)
 	print_commands(shell);
 }
 
-// if the function is just 1 line, do we need it?
-// void	insert_prompt(t_minishell	*shell)
-// {
-// 	shell->command = readline("> ");
-// }
-
 int	main(int ac, char **av, char **envp)
 {
 	t_minishell	*shell;
+	char buff[2000];
 
 	shell = ft_calloc(1, sizeof(t_minishell));
 	init_minishell(shell, envp);
@@ -184,7 +152,7 @@ int	main(int ac, char **av, char **envp)
 	{
 		shell->command = readline("minishell> ");
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
-			exit (0);
+			ms_error("Command failed to allocate.", -1);
 		if (shell->command[0] == 'q' && ft_strlen(shell->command) == 1) //temporary exit
 			shell->exit = 1;
 		if (ft_strcmp(shell->command, "exit") == 0)
@@ -192,14 +160,13 @@ int	main(int ac, char **av, char **envp)
 		ft_tokenize(shell, shell->command);
 		printf("pipe count: %i\n", shell->pipe_count);
 		parse_token(shell);
+		execute_two_electric_boogaloo(shell);
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
 		if (shell->command)
 			free(shell->command);
-			// shell->command = NULL;
 		print_tokens(shell);
 		// print_tokens_backwards(shell);
-		execute_two_electric_boogaloo(shell);
 		free_tokens(shell);
 	}
 	return (0);

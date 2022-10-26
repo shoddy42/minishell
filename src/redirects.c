@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 17:54:49 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/26 07:56:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		tmp = token->next;
 	if (!tmp)
 	{
+		// ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5);
 		printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
 		return (token);
 	}
@@ -94,7 +95,6 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 	{
 		printf ("OPENING IN APPEND MODE\n");
 		tmp->fd = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
-		// close (tmp->fd);
 	}
 	else
 		tmp->fd = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
@@ -106,5 +106,6 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		shell->tokens = tmp;
 	}
 	free_tokens_til(token, tmp);
+	printf ("handle right return = (%s)[%s]\n", print_token_type(tmp->type), tmp->data);
 	return (tmp);
 }

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/19 17:45:36 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/26 09:30:53 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <string.h> //?
 # include <signal.h> //required
 # include <fcntl.h>
+// # include <sys/wait.h>
+# include <sys/types.h>
 # include "../libft/libft.h"
 
 // # include <sys/wait.h> // needed for WSL
@@ -30,7 +32,8 @@
 typedef	enum e_pipe
 {
 	READ = 0,
-	WRITE = 1
+	WRITE = 1,
+	NEEDS_PIPE = -42
 }	t_pipe;
 
 typedef enum e_tokentype
@@ -66,11 +69,9 @@ typedef struct s_command
 	char				**command;	
 	int					executable;
 	int					outfile;
-	int					infile;	
-	// int					in_pipe[2];
-	// int					out_pipe[2];
-	int					infile_deadend;
-	int					outfile_deadend;
+	int					infile;
+	int					tunnel[2];
+	pid_t				pid;
 	struct	s_command	*next;
 	struct	s_command	*prev;	
 }   t_command;
@@ -93,13 +94,16 @@ typedef struct s_shell_data
 	char		**path;
 	char		*command;
 
-
 	int			test1;
 	int			test2;
 	int			last_return;	//not YET in use
 	int			pipe_count;
 	int			exit;
 	int			test;
+	int					out1;
+	int					out2;
+	int					in1;
+	int					in2;
 }	t_minishell;
 
 
@@ -157,6 +161,10 @@ t_token	*handle_quote(t_token *token, int type);
 
 // expand.c
 void	expand_dong(t_token *token);
+
+// error.c 
+
+void    ms_error(char *msg, int code);
 
 #endif
 

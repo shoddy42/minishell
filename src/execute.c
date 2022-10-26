@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/19 18:38:00 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/26 10:06:46 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,27 @@ we also cant call this directly from the command generator,
 since we need to check for pipe BEFORE.
 */
 
+int		child_listen(t_command *cmd, t_minishell *shell)
+{
+
+	return (0);
+}
+
 int		child_p_1(t_command *cmd, t_minishell *shell)
 {
 	char	*path;
-	
 	int		i;
 
 	if (!cmd->command)
 		exit(-1);
+	if (cmd->infile == -42 || cmd->outfile == -42)
+		printf ("FILE ERROR!!!\n");
 	if (cmd->infile != STDIN_FILENO)
 		dup2(cmd->infile, STDIN_FILENO);
 	if (cmd->outfile != STDOUT_FILENO)
 		dup2(cmd->outfile, STDOUT_FILENO);
 	if (check_builtin(cmd, shell) == 0)
 		return (42);
-	// close(cmd->infile);
-	// close(cmd->outfile);
-	// close(cmd->infile_deadend);
-	// close(cmd->outfile_deadend);
 	i = 0;
 	if (cmd->command && access(cmd->command[0], X_OK) == 0)
 		execve(cmd->command[0], cmd->command, shell->envp);
@@ -75,15 +78,46 @@ int		child_p_1(t_command *cmd, t_minishell *shell)
 	return (0);
 }
 
-int		test_child(t_command *cmd, t_minishell *shell, pid_t child)
+int		test_child(t_command *cmd, t_minishell *shell, pid_t child, int i)
 {
 
-	printf ("\nCHILD(%i): tunnel[%i][%i]\n", child, cmd->infile, cmd->outfile);
+	printf ("\nCHILD(%i): cmd->tunnel[%i][%i]\n", i, cmd->infile, cmd->outfile);
 	child_p_1(cmd, shell);
-	close(cmd->infile);
-	close(cmd->outfile);
-
 	return (0);
+}
+
+int		tunnel_fork(t_command *cmd, t_minishell *shell)
+{
+	//creation and laying of pipes if needed.
+	pipe(cmd->tunnel);
+	printf ("created FDS [%i][%i]\n", cmd->tunnel[0], cmd->tunnel[1]);
+	if (cmd->outfile == NEEDS_PIPE)
+		cmd->outfile = cmd->tunnel[WRITE];
+	if (cmd->next) 
+		if (cmd->next->infile == NEEDS_PIPE)
+			cmd->next->infile = cmd->tunnel[READ];
+
+	// fork
+	if ((cmd->pid = fork()) < 0)
+		ms_error("Forking failed.\n", -43);
+	// parent duties. need to close a ton of file descriptors. ALL non NEEDS_PIPE and stdin.s EXCEPT cmd->tunnel[READ]
+	if (cmd->pid > 0)
+	{
+		if (cmd->tunnel[WRITE])
+			close(cmd->tunnel[WRITE]);	
+		if (cmd->outfile != STDOUT_FILENO && cmd->outfile != NEEDS_PIPE)
+			close(cmd->outfile);
+		if (cmd->infile != STDIN_FILENO && cmd->infile != NEEDS_PIPE)
+			close(cmd->infile);
+		if (cmd != shell->commands) //check its not the first command.
+			close (cmd->prev->tunnel[READ]);
+			// if (cmd->prev->tunnel[READ])
+		if (!cmd->next)
+			close(cmd->tunnel[READ]);
+	}
+	if (cmd->pid == 0)
+		close (cmd->tunnel[READ]);
+	return (cmd->pid);
 }
 
 void    execute_two_electric_boogaloo(t_minishell *shell)
@@ -96,26 +130,16 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	
 	i = 0;
 	cmd = shell->commands;
+	printf ("STARTING EXECUTE\n\n\n");
 	children = ft_calloc(shell->pipe_count + 1, sizeof(pid_t));
 	while (i <= shell->pipe_count)
 	{
-		if ((children[i] = fork()) < 0)
+		printf ("tunnelfork call #%i\n", i);
+		children[i] = tunnel_fork(cmd, shell);
+		if (children[i] == 0)
 		{
-			printf("FORKING ERROR\n");
-			exit (66);
-		}
-		else if (children[i] == 0)
-		{
-			test_child(cmd, shell, children[i]);
+			test_child(cmd, shell, children[i], i);
 			exit (1);
-		}
-		if (children[i] > 0)
-		{
-			printf ("closing fd's in parent\n");
-			if (cmd->infile != STDIN_FILENO)
-				close(cmd->infile);
-			if (cmd->outfile != STDOUT_FILENO)
-				close(cmd->outfile);
 		}
 		if (!cmd->next)
 			break;
@@ -125,7 +149,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	while (i >= 0)
 	{
 		printf("WAITING FOR PROCESS\n");
-		pid = waitpid((pid_t)0, &status, WUNTRACED);
+		pid = waitpid((pid_t)0, &status, 0);
 		printf("PROCESS [%i] ENDED WITH CODE (%i)\n", pid, status);
 		i--;
 	}
