@@ -6,22 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 13:35:20 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/27 00:33:27 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-t_env	*new_env(char *data)
-{
-	t_env *new;
-
-	new = ft_calloc(1, sizeof(t_env));
-	new->beans = ft_strdup(data);
-	new->data = fill_data(new->beans);
-	new->key = fill_key(new->beans);
-	return (new);
-}
 
 char	*fill_key(char	*beans)
 {
@@ -39,7 +28,7 @@ char	*fill_data(char	*beans)
 {
 	int		eq;
 	char	*ret;
-	
+
 	eq = ms_strchr(beans, '=');
 	if (!(eq))
 		return (NULL);
@@ -47,8 +36,28 @@ char	*fill_data(char	*beans)
 	return(ret);
 }
 
+t_env	*new_env(char *data)
+{
+	t_env *new;
+
+	new = ft_calloc(1, sizeof(t_env));
+	if (!new)
+		ms_error("Failed to allocate ENV." -1);
+	new->beans = ft_strdup(data);
+	if (!new->beans)
+		ms_error("Failed to allocate ENV->beans." -1);
+	new->data = fill_data(new->beans);
+	if (!new->data)
+		ms_error("Failed to allocate ENV->data." -1);
+	new->key = fill_key(new->beans);
+	if (!new->data)
+		ms_error("Failed to allocate ENV->key." -1);
+	return (new);
+}
+
 //todo: Make export work with quotationmarks like [export XD="lol funny"]
 //todo: Make it so we dont have duplicates, and instead overwrite the data.
+
 int	ms_export(t_command *cmd, t_minishell	*shell)
 {
 	int		i;
@@ -71,7 +80,13 @@ int	ms_export(t_command *cmd, t_minishell	*shell)
 	new->key = fill_key(new->beans);
 	new->data = fill_data(new->beans);
 	while(tmp && tmp->next)
+	{
+		if (ft_strcmp(tmp->key, new->key) == 0)
+		{
+			new->
+		}
 		tmp = tmp->next;
+	}
 	tmp->next = new;
 	return(0);
 }
@@ -113,15 +128,10 @@ void	init_env(t_minishell *shell, char  **env)
 
 	i = 0;
 	shell->env = new_env(env[i]);
-	// shell->env->key = fill_key(env[i]);
-	// shell->env->data = fill_data(env[i]);
 	tmp = shell->env;
 	while (env[++i])
 	{
 		tmp->next = new_env(env[i]);
-		// tmp->key = fill_key(env[i]);
-		// tmp->data = fill_data(env[i]);
-		// printf("Data: %s\n",shell->env->data);
 		tmp = tmp->next;
 	}
 	i = 0;
