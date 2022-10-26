@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 09:30:53 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/26 13:30:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@
 // # include <sys/wait.h> // needed for WSL
 
 # define DELIMITER " |<>\t\'\"\n"
+
+typedef enum e_from
+{
+	MINISHELL,
+	CHILD
+}	t_from;
 
 typedef	enum e_pipe
 {
@@ -51,6 +57,7 @@ typedef enum e_tokentype
 	OUTFILE = 55,
 	INFILE = 56,
 	ERROR = 57,
+	EXIT_STATUS,
 	VOID = 69,		//any whitespace.
 }   t_tokentype;
 
@@ -63,7 +70,7 @@ typedef struct s_token
 	struct s_token	*prev;
 }   t_token;
 
-// adding a totall of exactly 5 ints and no other ints seems to segfault us for freeing something htat doesnt exist BUT we never free it. 
+// adding a total of exactly 5 ints and no other ints seems to segfault us for freeing something htat doesnt exist BUT we never free it. 
 typedef struct s_command
 {
 	char				**command;	
@@ -94,16 +101,9 @@ typedef struct s_shell_data
 	char		**path;
 	char		*command;
 
-	int			test1;
-	int			test2;
 	int			last_return;	//not YET in use
 	int			pipe_count;
 	int			exit;
-	int			test;
-	int					out1;
-	int					out2;
-	int					in1;
-	int					in2;
 }	t_minishell;
 
 
@@ -126,6 +126,9 @@ int		ms_strchr(const char *src, int c);
 // env
 void	init_env(t_minishell *shell, char  **env);
 void	print_env(t_minishell *shell);
+char	*ms_getenv(char *key, t_minishell *shell);
+char	*fill_key(char	*beans);
+char	*fill_data(char	*beans);
 
 // execute.c
 void    execute(t_command *cmd, t_minishell *shell);
@@ -135,7 +138,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd);
 char	*pipex_pathjoin(char const *path, char const *cmd); //doesn't need to be in here probably.
 
 // Builtins.c
-int	check_builtin(t_command *cmd, t_minishell *shell);
+int	check_builtin(t_command *cmd, t_minishell *shell, t_from process);
 int	ms_cd(t_command	*cmd);
 int	ms_echo(t_command *cmd);
 int	ms_pwd(t_command *cmd);
@@ -157,10 +160,10 @@ t_token	*handle_left(t_token *token, t_minishell *shell);
 t_token	*handle_right(t_token *token, t_minishell *shell);
 
 // quote.c
-t_token	*handle_quote(t_token *token, int type);
+t_token	*handle_quote(t_token *token, int type, t_minishell *shell);
 
 // expand.c
-void	expand_dong(t_token *token);
+void	expand_dong(t_token *token, t_minishell *shell);
 
 // error.c 
 

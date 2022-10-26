@@ -6,16 +6,16 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/10/26 10:08:17 by wkonings      ########   odam.nl          #
+#    Updated: 2022/10/26 10:49:34 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = shell
+NAME = minishell
 SRC_DIR = src/
 OBJ_DIR = obj/
 SOURCES = $(FILES:%=$(SRC_DIR)%.c)
 OBJECTS = $(FILES:%=$(OBJ_DIR)%.o)
-DEBUG = -g -fsanitize=address
+DEBUG = #-g -fsanitize=address
 INCLUDES = libft/libft.a
 FLAGS = -Wall -Wextra -Werror
 HEADERS_DIR = include/
@@ -30,11 +30,11 @@ READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
 all: $(NAME)
 
 $(NAME):
-	gcc $(DEBUG) $(SOURCES) -I includes/minishell.h $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
+	gcc $(DEBUG) $(SOURCES) -o $(NAME) -I includes/minishell.h $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 
 flags:
 	gcc $(FLAGS) $(SOURCES) $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
-	./a.out
+	./$(NAME)
 
 
 test: re
@@ -53,7 +53,7 @@ test: re
 	@echo ⠛⠛⣿⣿⣿⣿⣿⣿⣿⠉⠛⢶⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⡇
 	@echo ⠠⣾⣿⣿⣿⣿⣿⠿⠟⠃⠀⠀⠀⠈⠲⣴⣦⣤⣤⣤⣶⡾⠁
 	@echo ⠄⠈⠉⠻⢿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠛⠛⠉
-	./a.out
+	./$(NAME)
 
 clean:
 	/bin/rm -f $(OBJECTS)

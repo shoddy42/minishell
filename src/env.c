@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 01:06:47 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/26 13:35:20 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ t_env	*new_env(char *data)
 
 	new = ft_calloc(1, sizeof(t_env));
 	new->beans = ft_strdup(data);
+	new->data = fill_data(new->beans);
+	new->key = fill_key(new->beans);
 	return (new);
 }
 
@@ -45,6 +47,8 @@ char	*fill_data(char	*beans)
 	return(ret);
 }
 
+//todo: Make export work with quotationmarks like [export XD="lol funny"]
+//todo: Make it so we dont have duplicates, and instead overwrite the data.
 int	ms_export(t_command *cmd, t_minishell	*shell)
 {
 	int		i;
@@ -88,6 +92,20 @@ int	ms_env(t_minishell	*shell, t_command *cmd)
 	return(0);
 }
 
+char	*ms_getenv(char *key, t_minishell *shell)
+{
+	t_env	*env;
+
+	env = shell->env;
+	while (env)
+	{
+		if (ft_strcmp(key, env->key) == 0)
+			return (env->data);
+		env = env->next;
+	}
+	return ("");
+}
+
 void	init_env(t_minishell *shell, char  **env)
 {
 	int i;
@@ -95,17 +113,16 @@ void	init_env(t_minishell *shell, char  **env)
 
 	i = 0;
 	shell->env = new_env(env[i]);
-	shell->env->key = fill_key(env[i]);
-	shell->env->data = fill_data(env[i]);
+	// shell->env->key = fill_key(env[i]);
+	// shell->env->data = fill_data(env[i]);
 	tmp = shell->env;
 	while (env[++i])
 	{
 		tmp->next = new_env(env[i]);
-		shell->env->key = fill_key(env[i]);
-		shell->env->data = fill_data(env[i]);
+		// tmp->key = fill_key(env[i]);
+		// tmp->data = fill_data(env[i]);
 		// printf("Data: %s\n",shell->env->data);
 		tmp = tmp->next;
-
 	}
 	i = 0;
 	while (ft_strncmp(env[i], "PATH=", 5) != 0 && env[i + 1])

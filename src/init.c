@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 09:17:41 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/26 11:27:21 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@ void	sighandler(int signum)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	// if(signum == SIGPIPE)
-	// {
-	// 	printf("SIGPIPE RECIEVED\n");
-	// }
 
 	//WHEN ALL DONE CAN REMOVING MEN
 	exit(1);
@@ -35,10 +31,10 @@ int	init_minishell(t_minishell *shell, char **envp)
 	// signal handlers
 	signal(SIGINT, sighandler);
 	signal(SIGQUIT, SIG_IGN);
-	// signal(SIGPIPE, sighandler);
 
 	// environment setup
 	shell->envp = envp;
+	// shell->last_return = 0;
 	init_env(shell, envp);
 
 	//todo: add things to initialize? kek

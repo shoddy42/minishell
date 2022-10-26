@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 07:56:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/26 10:14:22 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 	t_token *tmp;
 
 	tmp = NULL;
-	printf("\nentered handle_left on token [%s]\n", token->data);
+	//printf("\nentered handle_left on token [%s]\n", token->data);
 	if (token->next)
 		tmp = token->next;
 	if (!tmp)
 	{
 		//todo: error function, or just use perror?
-		printf("ERROR HANDLE_LEFT, NO TOKEN\n");
+		//printf("ERROR HANDLE_LEFT, NO TOKEN\n");
 		return (token);
 	}
 	if (tmp->type == LEFT && tmp->next)
@@ -51,9 +51,9 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		}
 		tmp->type = INFILE;
 	}
-	printf("returned token [%s]\n", tmp->data);
+	//printf("returned token [%s]\n", tmp->data);
 	// cmd->infile = tmp->fd;
-	// printf ("cmd->infile = [%i]\n", cmd->infile);
+	// //printf ("cmd->infile = [%i]\n", cmd->infile);
 	return (tmp);
 }
 
@@ -67,13 +67,13 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 
 	append = 0;
 	tmp = NULL;
-	printf("\nentered handle_right on token [%s]\n", token->data);
+	//printf("\nentered handle_right on token [%s]\n", token->data);
 	if (token->next)
 		tmp = token->next;
 	if (!tmp)
 	{
 		// ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5);
-		printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
+		//printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
 		return (token);
 	}
 	if (tmp->type == RIGHT)
@@ -86,26 +86,26 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		tmp = tmp->next;
 	if (tmp->type != COMMAND)
 	{
-		printf ("REDIRECT FAILURE, NO FILENAME GIVEN\n");
+		//printf ("REDIRECT FAILURE, NO FILENAME GIVEN\n");
 		return (token);
 	}
-	else
-		printf ("opening file [%s]\n", tmp->data);
+	// else
+		//printf ("opening file [%s]\n", tmp->data);
 	if (append == 1)
 	{
-		printf ("OPENING IN APPEND MODE\n");
+		//printf ("OPENING IN APPEND MODE\n");
 		tmp->fd = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
 	}
 	else
 		tmp->fd = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
-	// printf("cmd outfile fd = [%i]\n", cmd->outfile);
+	// //printf("cmd outfile fd = [%i]\n", cmd->outfile);
 	tmp->type = OUTFILE;
 	if (!token->prev) //ugly fix, but the problem is if token happens to be the HEAD (shell->tokens), we will segf.
 	{
-		printf ("NEW HEAD INSTALLED\n");
+		//printf ("NEW HEAD INSTALLED\n");
 		shell->tokens = tmp;
 	}
 	free_tokens_til(token, tmp);
-	printf ("handle right return = (%s)[%s]\n", print_token_type(tmp->type), tmp->data);
+	//printf ("handle right return = (%s)[%s]\n", print_token_type(tmp->type), tmp->data);
 	return (tmp);
 }
