@@ -10,10 +10,10 @@ void	ms_exit(t_minishell *shell)
 
 int check_builtin(t_command *cmd, t_minishell *shell, t_from process)
 {
-	// segf protec
-	if (cmd->command)
+	// segf protec missing
+	if (cmd->command && cmd->command[0])
 	{
-		if(strcmp(cmd->command[0], "cd") == 0)
+		if(ft_strcmp(cmd->command[0], "cd") == 0)
 			return(ms_cd(cmd));
 		else if(ft_strcmp(cmd->command[0], "echo") == 0)
 			return(ms_echo(cmd));
