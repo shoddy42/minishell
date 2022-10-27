@@ -171,7 +171,7 @@ int	main(int ac, char **av, char **envp)
 			add_history(shell->command);
 		if (shell->command)
 			free(shell->command);
-		// print_tokens(shell);
+		print_tokens(shell);
 		// print_tokens_backwards(shell);
 		free_tokens(shell);
 	}

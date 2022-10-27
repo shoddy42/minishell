@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/27 05:03:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/27 05:06:10 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 
 	append = 0;
 	tmp = NULL;
-	//printf("\nentered handle_right on token [%s]\n", token->data);
+	printf("\nentered handle_right on token [%s]\n", token->data);
 	if (token->next)
 		tmp = token->next;
 	if (!tmp)
@@ -86,11 +86,9 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		tmp = tmp->next;
 	if (tmp->type != COMMAND)
 	{
-		//printf ("REDIRECT FAILURE, NO FILENAME GIVEN\n");
+		printf ("REDIRECT FAILURE, NO FILENAME GIVEN\n");
 		return (token);
 	}
-	// else
-		//printf ("opening file [%s]\n", tmp->data);
 	if (append == 1)
 	{
 		//printf ("OPENING IN APPEND MODE\n");
