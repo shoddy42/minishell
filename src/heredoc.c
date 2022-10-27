@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/27 00:39:55 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/27 05:05:05 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ t_token	*heredoc(t_token    *token, t_minishell *shell)
 	while (1)
 	{
 		line = readline("heredoc> ");
-		// if (ft_charinstr('$', line); // need to add actual parsing to the text in heredoc :/ 
 		if(ft_strcmp(line, delim) == 0)
 			{
 				free(line);
