@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/27 00:33:27 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/27 01:08:57 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,31 @@ t_env	*new_env(char *data)
 
 	new = ft_calloc(1, sizeof(t_env));
 	if (!new)
-		ms_error("Failed to allocate ENV." -1);
+		ms_error("Failed to allocate ENV.", -1);
 	new->beans = ft_strdup(data);
 	if (!new->beans)
-		ms_error("Failed to allocate ENV->beans." -1);
+		ms_error("Failed to allocate ENV->beans.", -1);
 	new->data = fill_data(new->beans);
 	if (!new->data)
-		ms_error("Failed to allocate ENV->data." -1);
+		ms_error("Failed to allocate ENV->data.", -1);
 	new->key = fill_key(new->beans);
 	if (!new->data)
-		ms_error("Failed to allocate ENV->key." -1);
+		ms_error("Failed to allocate ENV->key.", -1);
 	return (new);
 }
 
 //todo: Make export work with quotationmarks like [export XD="lol funny"]
 //todo: Make it so we dont have duplicates, and instead overwrite the data.
 
-int	ms_export(t_command *cmd, t_minishell	*shell)
+// int	ms_replace_env(t_command *cmd, t_minishell *shell)
+// {
+
+
+
+// 	return()
+// }
+
+int	ms_export(t_command *cmd, t_minishell *shell)
 {
 	int		i;
 	int		eq;
@@ -75,18 +83,13 @@ int	ms_export(t_command *cmd, t_minishell	*shell)
 	eq = ms_strchr(cmd->command[1], '=');
 	if (!eq)
 		return(1);
+	// if (ms_replace_env(cmd, shell))
 	new = new_env(cmd->command[1]);
 	new->beans = ft_strdup(cmd->command[1]);
 	new->key = fill_key(new->beans);
 	new->data = fill_data(new->beans);
 	while(tmp && tmp->next)
-	{
-		if (ft_strcmp(tmp->key, new->key) == 0)
-		{
-			new->
-		}
 		tmp = tmp->next;
-	}
 	tmp->next = new;
 	return(0);
 }

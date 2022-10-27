@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/27 00:35:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/27 00:39:55 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void    heredoc_loop(t_token *token, t_minishell *shell)
 		write(fds[1], "\n", 1);
 		free(line);
 	}
-
 }
 
 void    ms_heredoc(t_token  *token, t_minishell *shell)

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 10:14:22 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/27 05:03:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 	if (!tmp)
 	{
 		// ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5);
-		//printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
+		printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
 		return (token);
 	}
 	if (tmp->type == RIGHT)

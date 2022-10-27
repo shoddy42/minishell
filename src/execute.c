@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 13:05:47 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/27 04:59:53 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,6 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	
 	i = 0;
 	cmd = shell->commands;
-	//printf ("STARTING EXECUTE\n\n\n");
 	if (!cmd)
 		return ;
 	children = ft_calloc(shell->pipe_count + 1, sizeof(pid_t));
@@ -135,7 +134,6 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		ms_error("Failed at allocating PIDs.", -1);
 	while (i <= shell->pipe_count)
 	{
-		//printf ("tunnelfork call #%i\n", i);
 		if (check_builtin(cmd, shell, MINISHELL) == 0)
 		{	
 			i++;
@@ -158,7 +156,8 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	{
 		// printf("WAITING FOR PROCESS\n");
 		pid = waitpid((pid_t)0, &status, 0);
-		// printf("PROCESS [%i] ENDED WITH CODE (%i)\n", pid, status);
+		shell->last_return = WEXITSTATUS(status);
+		// printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
 		i--;
 	}
 	// printf ("SURVIVED\n");
