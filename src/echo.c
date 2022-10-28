@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 18:42:30 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/10/26 01:07:43 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/28 11:07:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int ms_echo(t_command *command)
 	while(command->command[i])
 	{
 		ft_putstr_fd(command->command[i], command->outfile);
-		write(command->outfile, " ", 1);
+		if (command->command[i + 1])
+			write(command->outfile, " ", 1);
 		i++;
 	}
 	if (ft_strcmp(command->command[1], "-n") == 0)

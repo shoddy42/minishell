@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 10:13:44 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/28 10:46:28 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	new_token(t_minishell *shell, char *data, int len)
 }
 
 //only issue with this so far is that for the final token, it'll allocate 1 bit toomany.
+//todo: make pipe_count not go up with pipes are are in quotes.
 void	ft_tokenize(t_minishell *shell, char *command)
 {
 	int	i;
@@ -94,7 +95,6 @@ void	ft_tokenize(t_minishell *shell, char *command)
 			i++;
 		if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
 			i--;
-		// //printf ("new token [%c][%c] len = [%i]\n", *command, *(command + 1), i);
 		// command += new_token(shell, command, i + 1);
 		new_token(shell, command, i + 1);
 		command += i + 1 + skip;

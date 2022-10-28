@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/27 01:08:57 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/28 11:37:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,19 @@ t_env	*new_env(char *data)
 
 	new = ft_calloc(1, sizeof(t_env));
 	if (!new)
-		ms_error("Failed to allocate ENV.", -1);
+		ms_error("Failed to allocate ENV.", -1, TRUE, NULL);
 	new->beans = ft_strdup(data);
 	if (!new->beans)
-		ms_error("Failed to allocate ENV->beans.", -1);
+		ms_error("Failed to allocate ENV->beans.", -1, TRUE, NULL);
 	new->data = fill_data(new->beans);
 	if (!new->data)
-		ms_error("Failed to allocate ENV->data.", -1);
+		ms_error("Failed to allocate ENV->data.", -1, TRUE, NULL);
 	new->key = fill_key(new->beans);
 	if (!new->data)
-		ms_error("Failed to allocate ENV->key.", -1);
+		ms_error("Failed to allocate ENV->key.", -1, TRUE, NULL);
 	return (new);
 }
 
-//todo: Make export work with quotationmarks like [export XD="lol funny"]
-//todo: Make it so we dont have duplicates, and instead overwrite the data.
 
 // int	ms_replace_env(t_command *cmd, t_minishell *shell)
 // {
@@ -66,6 +64,10 @@ t_env	*new_env(char *data)
 // 	return()
 // }
 
+
+//todo: Make export work with quotationmarks like [export XD="lol funny"]
+//todo: Make it so we dont have duplicates, and instead overwrite the data.
+//todo: Make export able to handle multiple exports a the same time: "export a1=one a2=two" should create both a1 and a2.
 int	ms_export(t_command *cmd, t_minishell *shell)
 {
 	int		i;

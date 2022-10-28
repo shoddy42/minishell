@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 
+
+//todo: make ms_exit actually get an exit value.
 void	ms_exit(t_minishell *shell)
 {
 	exit (1);
@@ -33,6 +35,7 @@ int check_builtin(t_command *cmd, t_minishell *shell, t_from process)
 	return (0);
 }
 
+//explain why we need this function?
 int	ms_strchr(const char *src, int c)
 {
 	int		i;

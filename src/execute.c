@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/27 05:09:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/28 11:46:31 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,7 @@ char	*pipex_pathjoin(char const *path, char const *cmd)
 	return (ret);
 }
 
-/*
-this function is way too basic. we'll need split
-the forking to a different process most likely.
-we also cant call this directly from the command generator,
-since we need to check for pipe BEFORE.
-*/
-
+// basic logic, probably needs double checking.
 int		child_p_1(t_command *cmd, t_minishell *shell)
 {
 	char	*path;
@@ -77,12 +71,16 @@ int		child_p_1(t_command *cmd, t_minishell *shell)
 
 int		test_child(t_command *cmd, t_minishell *shell, pid_t child, int i)
 {
+	char *str;
 
-	//printf ("\nCHILD(%i): cmd->tunnel[%i][%i]\n", i, cmd->infile, cmd->outfile);
+	// printf ("\nCHILD(%i): cmd->tunnel[%i][%i]\n", i, cmd->infile, cmd->outfile);
+	// printf("ENTERED CHILD\n");
+	// printf ("cmd: fd_in[%i] \n", cmd->infile);
 	child_p_1(cmd, shell);
 	return (0);
 }
 
+// pipe creating and closing algorithm seems right.
 int		tunnel_fork(t_command *cmd, t_minishell *shell)
 {
 	//creation and laying of pipes if needed.
@@ -93,10 +91,9 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	if (cmd->next) 
 		if (cmd->next->infile == NEEDS_PIPE)
 			cmd->next->infile = cmd->tunnel[READ];
-
 	// fork
 	if ((cmd->pid = fork()) < 0)
-		ms_error("Forking failed.\n", -43);
+		ms_error("Forking failed.\n", -43, FALSE, shell);
 	// parent duties. need to close a ton of file descriptors. ALL non NEEDS_PIPE and stdin.s EXCEPT cmd->tunnel[READ]
 	if (cmd->pid > 0)
 	{
@@ -108,7 +105,6 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 			close(cmd->infile);
 		if (cmd != shell->commands) //check its not the first command.
 			close (cmd->prev->tunnel[READ]);
-			// if (cmd->prev->tunnel[READ])
 		if (!cmd->next)
 			close(cmd->tunnel[READ]);
 	}
@@ -119,28 +115,32 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
+	t_command	*cmd;
 	pid_t		*children;
 	pid_t		pid;
-	t_command	*cmd;
 	int			i;
 	int			status;
 	
 	i = 0;
+	if (shell->cancel_command_line == TRUE)
+		return ;
 	cmd = shell->commands;
 	if (!cmd)
 		return ;
 	children = ft_calloc(shell->pipe_count + 1, sizeof(pid_t));
 	if (!children)
-		ms_error("Failed at allocating PIDs.", -1);
-	while (i <= shell->pipe_count)
+		ms_error("Failed at allocating PIDs.", -1, FALSE, shell);
+
+	// if not not in a pipeline and is a builtin.
+	if (cmd && !cmd->next)
 	{
 		if (check_builtin(cmd, shell, MINISHELL) == 0)
-		{	
-			i++;
-			if (!cmd->next)
-				break;
-			cmd = cmd->next;
-		}
+			shell->pipe_count--; //maybe a more elegant way to skip past the next while loop?
+		// i++;
+	}
+	// pipeline logic.
+	while (i <= shell->pipe_count)
+	{
 		children[i] = tunnel_fork(cmd, shell);
 		if (children[i] == 0)
 		{
@@ -152,13 +152,16 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		cmd = cmd->next;
 		i++;
 	}
+	//gathering of latest exit status.
 	while (i >= 0)
 	{
 		// printf("WAITING FOR PROCESS\n");
 		pid = waitpid((pid_t)0, &status, 0);
-		shell->last_return = WEXITSTATUS(status);
+		if (WIFEXITED(status))
+			shell->last_return = WEXITSTATUS(status);
+		else
+			shell->last_return = -69;
 		// printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
 		i--;
 	}
-	// printf ("SURVIVED\n");
 }

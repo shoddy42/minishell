@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/13 13:31:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/28 08:18:27 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,13 @@ void	free_single_token(t_token *token)
 	free(token);
 }
 
+// void	delete_heredoc(t_token *token, t_minishell);
+// {
+
+
+	
+// }
+
 void	free_tokens(t_minishell *shell)
 {
 	t_token *list;
@@ -147,6 +154,8 @@ void	free_tokens(t_minishell *shell)
 		// printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
 		if (list->data)
 			free(list->data);
+		// if (list->type == HEREDOC_FILE)
+		
 		list = list->next;
 		if (list->prev)
 			free(list->prev);

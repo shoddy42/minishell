@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/10/26 10:49:34 by wkonings      ########   odam.nl          #
+#    Updated: 2022/10/28 11:30:33 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ INCLUDES = libft/libft.a
 FLAGS = -Wall -Wextra -Werror
 HEADERS_DIR = include/
 HEADERS = minishell.h
-FILES = main tokenize token_utils env execute heredoc builtins cd init redirects pwd echo unset expand quote error
+FILES = main tokenize token_utils env execute heredoc builtins cd init redirects pwd echo unset expand quote error commands
 
 BREW_DIR	= $(shell brew --prefix)
 LIB_READLINE	= $(BREW_DIR)/opt/readline/lib

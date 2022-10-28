@@ -6,32 +6,31 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/27 05:06:10 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/28 12:01:02 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+//todo: make error in redirect end command.
+//todo: make <<< error
+//todo: make >>> error
+//todo: will probably be fixed by the errors. but prevent creation of files like < > | /
 t_token	*handle_left(t_token *token, t_minishell *shell)
 {
 	t_token *tmp;
 
 	tmp = NULL;
-	//printf("\nentered handle_left on token [%s]\n", token->data);
+	// printf("\nentered handle_left on token [%s]\n", token->data);
 	if (token->next)
 		tmp = token->next;
 	if (!tmp)
 	{
-		//todo: error function, or just use perror?
-		//printf("ERROR HANDLE_LEFT, NO TOKEN\n");
+		ms_error("Bad redirect.", 0, FALSE, shell);
 		return (token);
 	}
 	if (tmp->type == LEFT && tmp->next)
-	{
 		tmp = heredoc(tmp, shell);
-		if (tmp->type == HEREDOC_FILE)
-			printf("heredoc success?\n");
-	}
 	else if (tmp->type == COMMAND)
 	{
 		// handling relinking the linked list. might turn this into a function of itself. OR add it to free_tokens_til.
@@ -40,13 +39,10 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		else
 			shell->tokens = tmp;
 		free_tokens_til(token, tmp);
-
-
 		tmp->fd = open(tmp->data, O_RDONLY);
 		if (tmp->fd == -1)
 		{
-			// need to somehow cancel the WHOLE command from here.
-			perror("No such file or directory.\n");
+			ms_error("Failed to open file.", 0, FALSE, shell);
 			return (token);
 		}
 		tmp->type = INFILE;
@@ -57,9 +53,8 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 	return (tmp);
 }
 
-// todo: add check for >>> and possibly other forms of wrong input.
-// todo: split function so it's norme
-
+//todo: add check for >>> and possibly other forms of wrong input.
+//todo: split function so it's norme
 t_token	*handle_right(t_token *token, t_minishell *shell)
 {
 	t_token 	*tmp;
@@ -72,7 +67,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		tmp = token->next;
 	if (!tmp)
 	{
-		// ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5);
+		// ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5, FALSE);
 		printf("ERROR HANDLE_RIGHT, NO TOKEN\n");
 		return (token);
 	}
@@ -90,10 +85,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		return (token);
 	}
 	if (append == 1)
-	{
-		//printf ("OPENING IN APPEND MODE\n");
 		tmp->fd = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
-	}
 	else
 		tmp->fd = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	// //printf("cmd outfile fd = [%i]\n", cmd->outfile);

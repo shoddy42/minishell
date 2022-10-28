@@ -24,6 +24,9 @@ int	go_home(t_command	*cmd)
 	
 // }
 
+
+//todo: make go_home dependant on the env HOME. if HOME is unset, "cd", should not take us to root.
+//todo:? make it so cd sets the ENV PWD, and OLDPWD usure if neccesary.
 int    ms_cd(t_command	*cmd)
 {
 	int cd_ret;
