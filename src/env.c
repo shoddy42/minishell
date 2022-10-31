@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/28 11:37:30 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/31 15:58:21 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,31 @@ t_env	*new_env(char *data)
 }
 
 
-// int	ms_replace_env(t_command *cmd, t_minishell *shell)
-// {
+int	ms_replace_env(char	*beans, t_minishell *shell)
+{
+	t_env	*tmp;
 
-
-
-// 	return()
-// }
-
+	tmp = shell->env;
+	while(tmp)
+	{
+		if(ft_strncmp(tmp->key, beans, ft_strlen(tmp->key)) == 0)
+		{
+			free(tmp->beans);
+			free(tmp->data);
+			tmp->beans = ft_strdup(beans);
+			if(!beans)
+				ms_error("CANNOT ALLOCATE MORE ENV", -1, FALSE, shell);
+			tmp->data = fill_data(tmp->beans);
+			return (0);
+		}
+		tmp = tmp->next;
+	}
+	return(1);
+}
 
 //todo: Make export work with quotationmarks like [export XD="lol funny"]
-//todo: Make it so we dont have duplicates, and instead overwrite the data.
-//todo: Make export able to handle multiple exports a the same time: "export a1=one a2=two" should create both a1 and a2.
-int	ms_export(t_command *cmd, t_minishell *shell)
+
+int	ms_export_loop(char	*command, t_minishell *shell)
 {
 	int		i;
 	int		eq;
@@ -80,19 +92,32 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 	eq = 0;
 	len = 0;
 	tmp = shell->env;
-	if(!cmd->command[1])
+	if(!command)
 		return (1);
-	eq = ms_strchr(cmd->command[1], '=');
-	if (!eq)
-		return(1);
-	// if (ms_replace_env(cmd, shell))
-	new = new_env(cmd->command[1]);
-	new->beans = ft_strdup(cmd->command[1]);
+	new = new_env(command);
+	new->beans = ft_strdup(command);
 	new->key = fill_key(new->beans);
 	new->data = fill_data(new->beans);
 	while(tmp && tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
+	return(0);
+}
+
+int	ms_export(t_command *cmd, t_minishell *shell)
+{
+	int	i;
+	
+	i = 1;
+	while(cmd->command[i])
+	{
+		if(ms_strchr(cmd->command[i], '=') != 0)
+		{
+			if(ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
+				ms_export_loop(cmd->command[i], shell);
+		}
+		i++;
+	}
 	return(0);
 }
 
