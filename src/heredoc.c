@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/28 11:46:48 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/31 12:09:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 	int		fd;
 
 	tmp = token->next;
+	if (tmp && tmp->type != COMMAND && tmp->type != VOID)
+	{
+		ms_error("Syntax Error near heredoc.", -7, FALSE, shell);
+		return (tmp);
+	}
 	while (tmp && tmp->type == VOID)
 		tmp = tmp->next;
 	printf ("opening [%s]\n", tmp->data);
