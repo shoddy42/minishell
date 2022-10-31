@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/28 11:52:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/31 16:45:39 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,20 +98,20 @@ int make_commands(t_minishell *shell)
 	shell->commands = cmd;
 	token = shell->tokens;
 	// printf ("token? [%s]\n", token->data);
-	while (token && shell->cancel_command_line == FALSE)
-	{
-		token = get_command_options(token, cmd);
-		// //printf("returned token = [%s]\n", token->data);
-		i = 0;
-		if (token && token->type == PIPE)
-		{
-			cmd = new_command(shell, cmd);
-			if (cmd->infile == STDIN_FILENO)
-				cmd->infile = NEEDS_PIPE;
-			if (cmd->prev->outfile == STDOUT_FILENO)
-				cmd->prev->outfile = NEEDS_PIPE;
-		}
-		token = token->next;
-	}
+	// while (token && shell->cancel_command_line == FALSE)
+	// {
+	// 	token = get_command_options(token, cmd);
+	// 	// //printf("returned token = [%s]\n", token->data);
+	// 	i = 0;
+	// 	if (token && token->type == PIPE)
+	// 	{
+	// 		cmd = new_command(shell, cmd);
+	// 		if (cmd->infile == STDIN_FILENO)
+	// 			cmd->infile = NEEDS_PIPE;
+	// 		if (cmd->prev->outfile == STDOUT_FILENO)
+	// 			cmd->prev->outfile = NEEDS_PIPE;
+	// 	}
+	// 	token = token->next;
+	// }
 	return (0);
 }

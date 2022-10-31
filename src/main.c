@@ -48,7 +48,7 @@ int	count_pipes(t_minishell *shell)
 			break;
 		tmp = tmp->next;
 	}
-	printf ("pipe count real: [%i]\n", shell->pipe_count);
+	// printf ("pipe count real: [%i]\n", shell->pipe_count);
 	return (0);
 }
 
@@ -77,6 +77,9 @@ int	free_commands(t_minishell *shell)
 	tmp = shell->commands;
 	if (!tmp)
 		return (-12);
+	if (ft_strcmp(shell->command, "") == 0)
+		return (0);
+	printf(" shell->command: [%s]\n", shell->command);
 	while (tmp)
 	{
 		i = -1;
@@ -125,16 +128,17 @@ int	main(int ac, char **av, char **envp)
 		{
 			make_commands(shell);
 			// print_commands(shell);
-			execute_two_electric_boogaloo(shell);
+			// execute_two_electric_boogaloo(shell);
 		}
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
-		if (shell->command)
-			free(shell->command);
+		rl_clear_history();
 		// print_tokens(shell);
 		// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 		free_commands(shell);
 		free_tokens(shell);
+		if (shell->command)
+			free(shell->command);
 	}
 	return (0);
 }
