@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/26 13:34:02 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/31 13:17:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	expand_dong(t_token *token, t_minishell *shell)
 	free(token->data);
 	token->type = COMMAND; //might need other types too?
 	if (!tmp)
-		token->data = ft_strdup("");
+		token->data = ft_strdup("HUH");
 	else
 		token->data = ft_strdup(tmp);
 }
