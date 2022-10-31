@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/28 11:46:31 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/10/31 14:50:02 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*pipex_pathjoin(char const *path, char const *cmd)
 	j = -1;
 	while (path[++i])
 		ret[i] = path[i];
-	while (cmd[++j] && cmd[j] != ' ')
+	while (cmd[++j]) //while (cmd[++j] && cmd[j] != ' ') old loop 
 		ret[i + j + 1] = cmd[j];
 	ret[i] = '/';
 	ret[i + j + 1] = '\0';

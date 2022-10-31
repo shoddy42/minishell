@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/10/28 11:30:33 by wkonings      ########   odam.nl          #
+#    Updated: 2022/10/31 15:39:23 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ SRC_DIR = src/
 OBJ_DIR = obj/
 SOURCES = $(FILES:%=$(SRC_DIR)%.c)
 OBJECTS = $(FILES:%=$(OBJ_DIR)%.o)
-DEBUG = #-g -fsanitize=address
+DEBUG = -g #-fsanitize=address
 INCLUDES = libft/libft.a
 FLAGS = -Wall -Wextra -Werror
 HEADERS_DIR = include/
