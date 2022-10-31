@@ -20,7 +20,7 @@ void parse_token(t_minishell *shell)
 
 	i = 0;
 	token = shell->tokens;
-	while (token)
+	while (token && shell->cancel_command_line == FALSE)
 	{
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
@@ -56,6 +56,7 @@ int	main(int ac, char **av, char **envp)
 	while (shell->exit == 0)
 	{
 		shell->command = readline("minishell> ");
+		shell->cancel_command_line = FALSE;
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
 		{
 			rl_replace_line("minishell> exit", 0);
