@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 16:05:04 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/01 18:23:33 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,36 @@
 
 char	*hd_count(t_minishell	*shell)
 {
-	int		i;
-	char	*cwd;
-	char	*ret_num;
+	char	*num;
+	char	*str;
+	char	*ret;
 
-	cwd = getcwd(NULL, 0);
+	num = ft_itoa(shell->hd_count);
+	str = ft_strjoin("heredoc_file_", num);
+	ret = ft_strjoin(shell->bin_dir, str);
+	printf("hd_count ret = [%s]\n", ret);
+	return (ret);
+}
 
-	printf("CWD : %s", cwd);
-	// if(ft_strcmp(cwd, ))
-	ret_num = ft_itoa(shell->hd_count);
-	ret_num = ft_strjoin("hd", ret_num);
-	ret_num = ft_strjoin("bin/", ret_num);
-	printf("Ret_str = %s\n", ret_num);
-	return (ret_num);
+void	delete_heredocs(t_minishell *shell)
+{
+	char	*heredoc;
+
+	printf ("heredoc count?: [%i]\n", shell->hd_count);
+	while (shell->hd_count > 0)
+	{
+		shell->hd_count--;
+		heredoc = hd_count(shell);
+		unlink(heredoc);
+		free(heredoc);
+	}
 }
 
 t_token	*heredoc(t_token *token, t_minishell *shell)
 {
 	char	*delim;
 	char	*line;
+	char	*heredoc;
 	t_token	*tmp;
 	int		fd;
 
@@ -52,7 +63,8 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 		tmp = tmp->next;
 	printf ("opening [%s]\n", tmp->data);
 
-	fd = open(hd_count(shell), O_RDWR | O_CREAT | O_TRUNC, 0644);
+	heredoc = hd_count(shell);
+	fd = open(heredoc, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 		ms_error("HEREDOC FAILED TO OPEN.", -1, FALSE, shell);
 	printf("heredoc token: [%s] FD: [%i]\n", tmp->data, fd);
@@ -71,11 +83,12 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 		free(line);
 	}
 	close (fd);
-	fd = open(tmp->data, O_RDONLY);
+	fd = open(heredoc, O_RDONLY);
 	if (fd < 0)
 		ms_error("SOMEHOW LOST THE HEREDOC KEK", -2, FALSE, shell);
 	tmp->fd = fd;
 	tmp->type = HEREDOC_FILE;
+	free(heredoc);
 	shell->hd_count++;
 	return (tmp);
 }
