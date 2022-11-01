@@ -12,6 +12,36 @@
 
 #include "../include/minishell.h"
 
+void	append_token(t_token *start, t_token *end)
+{
+	printf("appending [%s] [%s]", start->data, end->data);
+	// if (end->next)
+	// 	start->next = end->next;
+	// else
+	// 	start->next = NULL;
+	start->data = ft_strexpand(start->data, end->data);
+	printf("check? [%s]\n", start->data);
+	free_single_token(end);
+}
+
+void	parse_append(t_minishell *shell)
+{
+	t_token	*tmp;
+
+	printf ("\nappending start\n");
+	tmp = shell->tokens;
+	while(tmp && tmp->next)
+	{
+		if (tmp->type == COMMAND && tmp->next->type == COMMAND)
+			append_token(tmp, tmp->next);
+		else
+			tmp = tmp->next;
+		print_tokens(shell);
+	}
+	// start->data = ft_strexpand(start->data, end->data);
+	// free_single_token(end);
+}
+
 // this function will have to be split into an expansion and a real parsing function
 void parse_token(t_minishell *shell)
 {
@@ -22,21 +52,22 @@ void parse_token(t_minishell *shell)
 	token = shell->tokens;
 	while (token && shell->cancel_command_line == FALSE)
 	{
+		// printf("handling token [%s]\n", token->data);
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT)
 			token = handle_right(token, shell);
 		if (token->type == QUOTE || token->type == DQUOTE)
-		{
-			// if (token->prev && token->prev->type == COMMAND)
-			// 	token = handle_quote(token->prev, token->type, shell);
-			// else
 				token = handle_quote(token, token->type, shell);
-		}
 		if (token->type == VARIABLE)
 			expand_dong(token, shell);
+		// if (token->prev)
+		// {
+		// 	append_tokens(token->prev, token);
+		// }
 		token = token->next;
 	}
+	parse_append(shell);
 }
 
 int	count_pipes(t_minishell *shell)

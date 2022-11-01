@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/28 08:18:27 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 15:46:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	print_tokens(t_minishell *shell)
 	printf("\nall tokens: ");
 	while (test && test->next)
 	{
-		if (test->type && test->type != VOID)
+		if (test->type)// && test->type != VOID)
 		{
 			printf("(%s)", print_token_type(test->type));
 			printf("[%s]-", test->data);
@@ -31,7 +31,7 @@ void	print_tokens(t_minishell *shell)
 	}
 	if (test != NULL)
 	{
-		if (test->type && test->type != VOID)
+		if (test->type)// && test->type != VOID)
 		{
 			// printf("final token ");
 			printf("(%s)", print_token_type(test->type));
@@ -131,18 +131,21 @@ void	free_tokens_til(t_token *start, t_token *end)
 
 void	free_single_token(t_token *token)
 {
+	if (token->prev && token->next)
+	{
+		printf ("ESTABLISHING CONNECTION\n");
+		token->prev->next = token->next;
+		token->next->prev = token->prev;
+	}
+	else if (!token->next && token->prev)
+		token->prev->next = NULL;
+	else if (!token->prev && token->next)
+		token->next->prev = NULL;
 	free(token->data);
 	token->next = NULL;
 	token->prev = NULL;
 	free(token);
 }
-
-// void	delete_heredoc(t_token *token, t_minishell);
-// {
-
-
-	
-// }
 
 void	free_tokens(t_minishell *shell)
 {
@@ -154,8 +157,6 @@ void	free_tokens(t_minishell *shell)
 		// printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
 		if (list->data)
 			free(list->data);
-		// if (list->type == HEREDOC_FILE)
-		
 		list = list->next;
 		if (list->prev)
 			free(list->prev);

@@ -6,28 +6,30 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 12:22:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 16:47:35 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+
 void	expand_dong(t_token *token, t_minishell *shell)
 {
-	char *tmp;
+	char	*variable;
+	t_token *tmp;
 
-	if (token->data[1] && token->data[1] == '?')
+	if (token->next)
+		tmp = token->next;
+	printf ("tmp? [%s]\n", tmp->data);
+	if (tmp->type == COMMAND)
 	{
-		free(token->data);
-		token->type = COMMAND;
-		token->data = ft_itoa(shell->last_return);
-		return ;
+		variable = ms_getenv(tmp->data, shell);
+		free_single_token(tmp);
 	}
-	tmp = ms_getenv(token->data + 1, shell);
 	free(token->data);
 	token->type = COMMAND; //might need other types too?
-	if (!tmp)
+	if (!variable)
 		token->data = ft_strdup("");
 	else
-		token->data = ft_strdup(tmp);
+		token->data = ft_strdup(variable);
 }

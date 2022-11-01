@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/31 15:58:21 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/01 16:45:50 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,14 @@ char	*ms_getenv(char *key, t_minishell *shell)
 	t_env	*env;
 
 	env = shell->env;
+	printf ("key? [%s]\n", key);
 	while (env)
 	{
 		if (ft_strcmp(key, env->key) == 0)
+		{
+			printf ("returning [%s]\n", env->data);
 			return (env->data);
+		}
 		env = env->next;
 	}
 	return ("");
