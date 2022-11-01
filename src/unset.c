@@ -3,11 +3,20 @@
 int	remove_list(t_env	*env)
 {
 	if (env->beans)
+	{
 		free(env->beans);
+		env->beans = NULL;
+	}
 	if (env->key)
+	{
 		free(env->key);
+		env->key = NULL;
+	}
 	if (env->data)
+	{
 		free(env->data);
+		env->data = NULL;
+	}
 	free(env);
 	return (0);
 }

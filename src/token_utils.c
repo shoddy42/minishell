@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 15:46:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 17:16:25 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ void	free_single_token(t_token *token)
 {
 	if (token->prev && token->next)
 	{
-		printf ("ESTABLISHING CONNECTION\n");
 		token->prev->next = token->next;
 		token->next->prev = token->prev;
 	}

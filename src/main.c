@@ -14,13 +14,9 @@
 
 void	append_token(t_token *start, t_token *end)
 {
-	printf("appending [%s] [%s]", start->data, end->data);
-	// if (end->next)
-	// 	start->next = end->next;
-	// else
-	// 	start->next = NULL;
+	// printf("appending [%s] [%s]", start->data, end->data);
 	start->data = ft_strexpand(start->data, end->data);
-	printf("check? [%s]\n", start->data);
+	// printf("check? [%s]\n", start->data);
 	free_single_token(end);
 }
 
@@ -28,7 +24,6 @@ void	parse_append(t_minishell *shell)
 {
 	t_token	*tmp;
 
-	printf ("\nappending start\n");
 	tmp = shell->tokens;
 	while(tmp && tmp->next)
 	{
@@ -36,10 +31,7 @@ void	parse_append(t_minishell *shell)
 			append_token(tmp, tmp->next);
 		else
 			tmp = tmp->next;
-		print_tokens(shell);
 	}
-	// start->data = ft_strexpand(start->data, end->data);
-	// free_single_token(end);
 }
 
 // this function will have to be split into an expansion and a real parsing function
@@ -162,7 +154,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strcmp(shell->command, "exit") == 0)
 			shell->exit = 1;
 		ft_tokenize(shell, shell->command);
-		print_tokens(shell);
+		// print_tokens(shell);
 		parse_token(shell);
 		count_pipes(shell);
 		if (shell->cancel_command_line == FALSE)
@@ -174,7 +166,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
 		// rl_clear_history();
-		print_tokens(shell);
+		// print_tokens(shell);
 		// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 		free_commands(shell);
 		free_tokens(shell);
