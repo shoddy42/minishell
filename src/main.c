@@ -27,7 +27,12 @@ void parse_token(t_minishell *shell)
 		if (token->type == RIGHT)
 			token = handle_right(token, shell);
 		if (token->type == QUOTE || token->type == DQUOTE)
-			token = handle_quote(token, token->type, shell);
+		{
+			// if (token->prev && token->prev->type == COMMAND)
+			// 	token = handle_quote(token->prev, token->type, shell);
+			// else
+				token = handle_quote(token, token->type, shell);
+		}
 		if (token->type == VARIABLE)
 			expand_dong(token, shell);
 		token = token->next;
@@ -42,7 +47,7 @@ int	count_pipes(t_minishell *shell)
 	shell->pipe_count = 0;
 	while (tmp)
 	{
-		if (tmp->type == PIPE)
+		if (tmp->type == PIPE)// || tmp->type == SEMICOLON)
 			shell->pipe_count++;
 		if (!tmp->next)
 			break;
@@ -77,20 +82,24 @@ int	free_commands(t_minishell *shell)
 	tmp = shell->commands;
 	if (!tmp)
 		return (-12);
-	if (ft_strcmp(shell->command, "") == 0)
-		return (0);
-	printf(" shell->command: [%s]\n", shell->command);
-	while (tmp)
+	while (tmp && tmp->next)
 	{
 		i = -1;
-		while (tmp->command[++i])
-			free(tmp->command[i]);
-		if (!tmp->next)
-			break;
+		if (tmp->command)
+			while (tmp->command[++i])
+				free(tmp->command[i]);
 		tmp = tmp->next;
-		free(tmp->prev);
+		if (tmp->prev)
+			free(tmp->prev);
 	}
-	free(tmp);
+	if (tmp)
+	{
+		i = -1;
+		if (tmp->command)
+			while (tmp->command[++i])
+				free(tmp->command[i]);
+		free(tmp);
+	}
 	shell->commands = NULL;
 	return (0);
 }
@@ -122,18 +131,19 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strcmp(shell->command, "exit") == 0)
 			shell->exit = 1;
 		ft_tokenize(shell, shell->command);
+		print_tokens(shell);
 		parse_token(shell);
 		count_pipes(shell);
 		if (shell->cancel_command_line == FALSE)
 		{
 			make_commands(shell);
 			// print_commands(shell);
-			// execute_two_electric_boogaloo(shell);
+			execute_two_electric_boogaloo(shell);
 		}
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
-		rl_clear_history();
-		// print_tokens(shell);
+		// rl_clear_history();
+		print_tokens(shell);
 		// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 		free_commands(shell);
 		free_tokens(shell);

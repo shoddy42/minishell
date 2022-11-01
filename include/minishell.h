@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/31 13:01:55 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 11:39:06 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 
 // # include <sys/wait.h> // needed for WSL
 
-# define DELIMITER " |<>\t\'\"\n"
+# define DELIMITER " |<>;\t\'\"\n"
 
 typedef	enum e_bool
 {
@@ -60,6 +60,7 @@ typedef enum e_tokentype
     PIPE = 51,		//for |
 	HEREDOC = 53,	//for >>
 	HEREDOC_FILE = 54,
+	SEMICOLON = 60,
 	OUTFILE = 55,
 	INFILE = 56,
 	ERROR = 57,

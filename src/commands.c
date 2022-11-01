@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/31 16:45:39 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 12:02:42 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 
 	tmp = token;
 	i = 0;
-	while (tmp && tmp->type != PIPE)
+	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
 	{
 		if (tmp->type == COMMAND)
 			i++;
@@ -55,7 +55,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 	cmd->command = ft_calloc(i + 1, sizeof(char *));
 	tmp = token;
 	i = 0;
-	while (tmp && tmp->type != PIPE)
+	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
 	{
 		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(tmp->data);
@@ -98,20 +98,22 @@ int make_commands(t_minishell *shell)
 	shell->commands = cmd;
 	token = shell->tokens;
 	// printf ("token? [%s]\n", token->data);
-	// while (token && shell->cancel_command_line == FALSE)
-	// {
-	// 	token = get_command_options(token, cmd);
-	// 	// //printf("returned token = [%s]\n", token->data);
-	// 	i = 0;
-	// 	if (token && token->type == PIPE)
-	// 	{
-	// 		cmd = new_command(shell, cmd);
-	// 		if (cmd->infile == STDIN_FILENO)
-	// 			cmd->infile = NEEDS_PIPE;
-	// 		if (cmd->prev->outfile == STDOUT_FILENO)
-	// 			cmd->prev->outfile = NEEDS_PIPE;
-	// 	}
-	// 	token = token->next;
-	// }
+	while (token && shell->cancel_command_line == FALSE)
+	{
+		token = get_command_options(token, cmd);
+		// //printf("returned token = [%s]\n", token->data);
+		i = 0;
+		if (token && token->type == PIPE)
+		{
+			cmd = new_command(shell, cmd);
+			if (cmd->infile == STDIN_FILENO)
+				cmd->infile = NEEDS_PIPE;
+			if (cmd->prev->outfile == STDOUT_FILENO)
+				cmd->prev->outfile = NEEDS_PIPE;
+		}
+		else if (token && token->type == SEMICOLON)
+			cmd = new_command(shell, cmd);
+		token = token->next;
+	}
 	return (0);
 }

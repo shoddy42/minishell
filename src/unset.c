@@ -2,21 +2,21 @@
 
 int	remove_list(t_env	*env)
 {
-	printf("In remove\n");
+	// printf("In remove\n");
 	if(env->beans)
 	{
 		free(env->beans);
-		printf("Freed beans\n");
+		// printf("Freed beans\n");
 	}
 	if(env->key)
 	{
 		free(env->key);
-		printf("Freed Key \n");
+		// printf("Freed Key \n");
 	}
 	if(env->data)
 	{
 		free(env->data);
-		printf("Freed data\n");
+		// printf("Freed data\n");
 	}
 	free(env);
 	return (0);
@@ -51,7 +51,3 @@ int ms_unset(t_minishell *shell, t_command *cmd)
 	ft_putstr_fd(" does not exist\n", 1);
 	return(0);
 }
-
-		// printf("Tmp1->next = %s\n", tmp1->next->beans);
-			// printf("Tmp2 = %s\n", tmp2->beans);
-			// printf("Tmp1->next after = %s\n", tmp1->next->beans);
