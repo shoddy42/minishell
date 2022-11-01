@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/15 03:34:09 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/09/22 17:03:17 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 15:00:40 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,19 @@ char	*ft_strexpand(char *str, char const *expand)
 
 	if (!str && !expand)
 		return (NULL);
-	s = ft_calloc((ft_strlen(str) + ft_strlen(expand) + 1), sizeof(char));
 	if (!str)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
+	if (!expand)
+		return (str);
+	s = ft_calloc((ft_strlen(str) + ft_strlen(expand) + 1), sizeof(char));
+	if (!s)
+		return (NULL);
+	i = -1;
+	while (str[++i])
 		s[i] = str[i];
-		i++;
-	}
-	while (expand[j])
-	{
+	j = -1;
+	while (expand[++j])
 		s[i + j] = expand[j];
-		j++;
-	}
 	s[i + j] = '\0';
 	free(str);
 	return (s);
