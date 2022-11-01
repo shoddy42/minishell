@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/28 10:46:28 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 12:15:25 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,32 +21,20 @@ void	set_token_type(t_minishell *shell, t_token *token, char *data)
 {
 	if (ft_isspace(data[0]))
 		token->type = VOID;
-	// if (data[0] == ' ')
-	// 	token->type = VOID;
 	else if (data[0] == '|')
-	{
-		shell->pipe_count++;
 		token->type = PIPE;
-	}
 	else if (data[0] == '$')
 		token->type = VARIABLE;
-	// else if (data[0] == '&') //currently not needed
-	// 	token->type = AND;
 	else if (data[0] == '<')
 		token->type = LEFT;
-	// else if (strncmp(data, ">>", 2) == 0)
 	else if (data[0] == '>')
 		token->type = RIGHT;
-	// else if (data[0] == ';') //probably not needed
-		// token->type = VOID;
+	// else if (data[0] == ';') //supported if uncomment all SEMICOLON occurances. not fully operational
+	// 	token->type = SEMICOLON;
 	else if (data[0] == '\'')
 		token->type = QUOTE;
 	else if (data[0] == '\"')
 		token->type = DQUOTE;
-	// else if (data[0] == '\t')
-	// 	token->type = VOID;
-	// else if (data[0] == '\n')
-	// 	token->type = VOID;
 	else
 		token->type = COMMAND;
 }
@@ -101,5 +89,4 @@ void	ft_tokenize(t_minishell *shell, char *command)
 		skip = 0;
 		i = 0;
 	}
-	//printf("TOTAL PIPES: %i\n", shell->pipe_count);
 }

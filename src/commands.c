@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/28 11:52:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 12:02:42 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 
 	tmp = token;
 	i = 0;
-	while (tmp && tmp->type != PIPE)
+	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
 	{
 		if (tmp->type == COMMAND)
 			i++;
@@ -55,7 +55,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 	cmd->command = ft_calloc(i + 1, sizeof(char *));
 	tmp = token;
 	i = 0;
-	while (tmp && tmp->type != PIPE)
+	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
 	{
 		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(tmp->data);
@@ -111,6 +111,8 @@ int make_commands(t_minishell *shell)
 			if (cmd->prev->outfile == STDOUT_FILENO)
 				cmd->prev->outfile = NEEDS_PIPE;
 		}
+		else if (token && token->type == SEMICOLON)
+			cmd = new_command(shell, cmd);
 		token = token->next;
 	}
 	return (0);
