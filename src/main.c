@@ -14,13 +14,9 @@
 
 void	append_token(t_token *start, t_token *end)
 {
-	printf("appending [%s] [%s]", start->data, end->data);
-	// if (end->next)
-	// 	start->next = end->next;
-	// else
-	// 	start->next = NULL;
+	// printf("appending [%s] [%s]", start->data, end->data);
 	start->data = ft_strexpand(start->data, end->data);
-	printf("check? [%s]\n", start->data);
+	// printf("check? [%s]\n", start->data);
 	free_single_token(end);
 }
 
@@ -28,7 +24,6 @@ void	parse_append(t_minishell *shell)
 {
 	t_token	*tmp;
 
-	printf ("\nappending start\n");
 	tmp = shell->tokens;
 	while(tmp && tmp->next)
 	{
@@ -36,10 +31,7 @@ void	parse_append(t_minishell *shell)
 			append_token(tmp, tmp->next);
 		else
 			tmp = tmp->next;
-		print_tokens(shell);
 	}
-	// start->data = ft_strexpand(start->data, end->data);
-	// free_single_token(end);
 }
 
 // this function will have to be split into an expansion and a real parsing function
@@ -148,6 +140,7 @@ int	main(int ac, char **av, char **envp)
 	dash_c(shell, av);
 	while (shell->exit == 0)
 	{
+		shell->hd_count = 0;
 		shell->command = readline("minishell> ");
 		shell->cancel_command_line = FALSE;
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
@@ -180,6 +173,7 @@ int	main(int ac, char **av, char **envp)
 		free_tokens(shell);
 		if (shell->command)
 			free(shell->command);
+		delete_heredocs(shell);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/03 18:44:01 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/03 19:18:41 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,12 @@ typedef struct s_shell_data
 	char		**envp;		// i dont think this ever REALLY gets used?
 	char		**path;
 	char		*command;
+	char		*bin_dir;
 
 	int			last_return;
 	int			hd_count;
 	int			pipe_count;
+	int			hd_count;
 	int			cancel_command_line; //rename
 	int			exit;
 }	t_minishell;
@@ -159,6 +161,7 @@ int ms_unset(t_minishell *shell, t_command *cmd);
 t_token	*heredoc(t_token    *token, t_minishell *shell);
 void    heredoc_loop(t_token    *token, t_minishell *shell);
 void    ms_heredoc(t_token  *token, t_minishell *shell);
+void	delete_heredocs(t_minishell *shell);
 
 // init.c
 int		init_minishell(t_minishell *shell, char **envp);
