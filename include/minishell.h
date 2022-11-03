@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 15:32:03 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/03 18:44:01 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ typedef struct s_shell_data
 	char		*command;
 
 	int			last_return;
+	int			hd_count;
 	int			pipe_count;
 	int			cancel_command_line; //rename
 	int			exit;

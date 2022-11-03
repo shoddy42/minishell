@@ -12,32 +12,47 @@ int	remove_list(t_env	*env)
 	return (0);
 }
 
-int ms_unset(t_minishell *shell, t_command *cmd)
+int ms_unset_loop(t_minishell *shell, char *cmd, t_env *tmp)
 {
 	t_env	*tmp1;
 	t_env	*tmp2;
 
-	if (!cmd->command || !cmd->command[1])
+	printf("HERE\n");
+	if (!cmd || !tmp)
 		return (1);
-	tmp1 = shell->env;
-	if (ft_strcmp(tmp1->key, cmd->command[1]) == 0)
+	if (tmp->next)
+		printf("TMPS NEXT: %s\n", tmp->next->key);
+	if (tmp->next)
+		tmp2 = tmp->next;
+	tmp->next = tmp2->next;
+	remove_list(tmp2);
+	// write(1, cmd, ft_strlen(cmd));
+	// ft_putstr_fd(" does not exist\n", 1);
+	return (0);
+}
+
+int	ms_unset(t_minishell *shell, t_command *cmd)
+{
+	int		i;
+	t_env	*tmp;
+
+	tmp = shell->env;
+	i = 1;
+	if (ft_strcmp(tmp->key, cmd->command[i]) == 0)
 	{
 		shell->env = shell->env->next;
-		return (remove_list(tmp1));
+		return (remove_list(tmp));
 	}
-	while (tmp1 && tmp1->next)
+	while (cmd->command[i])
 	{
-		if (ft_strcmp(tmp1->next->key, cmd->command[1]) == 0)
+		while (tmp && tmp->next)
 		{
-			tmp2 = tmp1->next;
-			if (tmp2->next)
-				tmp1->next = tmp2->next;
-			if (tmp2)
-				return (remove_list(tmp2));
+			if (ft_strcmp(cmd->command[i], tmp->next->key) == 0)
+				ms_unset_loop(shell, cmd->command[i], tmp);
+			tmp = tmp->next;
 		}
-		tmp1 = tmp1->next;
+		tmp = shell->env;
+		i++;
 	}
-	write(1, cmd->command[1], ft_strlen(cmd->command[1]));
-	ft_putstr_fd(" does not exist\n", 1);
 	return (0);
 }

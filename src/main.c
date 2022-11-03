@@ -162,7 +162,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strcmp(shell->command, "exit") == 0)
 			shell->exit = 1;
 		ft_tokenize(shell, shell->command);
-		print_tokens(shell);
+		// print_tokens(shell);
 		parse_token(shell);
 		count_pipes(shell);
 		if (shell->cancel_command_line == FALSE)
@@ -174,7 +174,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
 		// rl_clear_history();
-		print_tokens(shell);
+		// print_tokens(shell);
 		// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 		free_commands(shell);
 		free_tokens(shell);
