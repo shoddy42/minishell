@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 18:19:13 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/03 19:18:41 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_shell_data
 	char		*bin_dir;
 
 	int			last_return;
+	int			hd_count;
 	int			pipe_count;
 	int			hd_count;
 	int			cancel_command_line; //rename
