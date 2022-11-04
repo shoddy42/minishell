@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/10/31 14:50:02 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/04 13:53:16 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 		if (cmd->infile != STDIN_FILENO && cmd->infile != NEEDS_PIPE)
 			close(cmd->infile);
 		if (cmd != shell->commands) //check its not the first command.
-			close (cmd->prev->tunnel[READ]);
+			close(cmd->prev->tunnel[READ]);
 		if (!cmd->next)
 			close(cmd->tunnel[READ]);
 	}

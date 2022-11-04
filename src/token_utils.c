@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 17:16:25 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 19:31:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	print_tokens_backwards(t_minishell *shell)
 	{
 		if (test->type && test->type != VOID)
 		{
-			// printf("final token ");
 			printf("(%s)", print_token_type(test->type));
 			printf("[%s]\n", test->data);
 		}
@@ -73,6 +72,8 @@ void	print_tokens_backwards(t_minishell *shell)
 	printf("\n");
 }
 
+
+// delete later
 char *print_token_type(int type)
 {
 	if (type == COMMAND)
@@ -129,6 +130,7 @@ void	free_tokens_til(t_token *start, t_token *end)
 	end->prev = replace_prev;
 }
 
+//frees a single token in the list, and relinks tokens when needed.
 void	free_single_token(t_token *token)
 {
 	if (token->prev && token->next)
@@ -141,11 +143,12 @@ void	free_single_token(t_token *token)
 	else if (!token->prev && token->next)
 		token->next->prev = NULL;
 	free(token->data);
-	token->next = NULL;
-	token->prev = NULL;
+	// token->next = NULL;
+	// token->prev = NULL;
 	free(token);
 }
 
+// frees all tokens.
 void	free_tokens(t_minishell *shell)
 {
 	t_token *list;

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 17:33:42 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 19:41:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,8 @@ int	init_minishell(t_minishell *shell, char **envp)
 	shell->envp = envp;
 	shell->bin_dir = getcwd(NULL, 0);
 	shell->bin_dir = ft_strexpand(shell->bin_dir, "/bin/");
-	printf ("shell dir: [%s]\n", shell->bin_dir);
 	// shell->last_return = 0;
 	init_env(shell, envp);
-
-	//todo: add things to initialize? kek
 
 	return (0);
 }

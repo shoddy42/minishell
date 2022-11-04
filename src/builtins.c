@@ -10,9 +10,12 @@ void	ms_exit(t_minishell *shell)
 	exit (1);
 }
 
+//todo: make all builtins always have the correct exit status for the purposes of $?
+//^ use shell->last_return for this
+
+//todo: cd -, should display the value of $OLDPWD. which means we should track and update $OLDPWD and $PWD
 int check_builtin(t_command *cmd, t_minishell *shell, t_from process)
 {
-	// segf protec missing
 	if (cmd->command && cmd->command[0])
 	{
 		if(ft_strcmp(cmd->command[0], "cd") == 0)
@@ -35,7 +38,6 @@ int check_builtin(t_command *cmd, t_minishell *shell, t_from process)
 	return (0);
 }
 
-//explain why we need this function?
 int	ms_strchr(const char *src, int c)
 {
 	int		i;

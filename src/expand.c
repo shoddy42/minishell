@@ -6,12 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 17:18:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 19:32:28 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
 
 void	expand_dong(t_token *token, t_minishell *shell)
 {
@@ -20,7 +19,7 @@ void	expand_dong(t_token *token, t_minishell *shell)
 
 	if (token->next)
 		tmp = token->next;
-	printf ("expanding (%s)[%s] \n", print_token_type(tmp->type) , tmp->data);
+	// printf ("expanding (%s)[%s] \n", print_token_type(tmp->type) , tmp->data);
 	if (tmp->type == COMMAND)
 	{
 		variable = ms_getenv(tmp->data, shell);

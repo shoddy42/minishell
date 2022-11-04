@@ -6,17 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 18:23:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/01 19:27:16 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-
-//todo: rewrite heredoc so it can handle creating multiple files with the same name.
-//todo: create a delete_heredocfiles function or smth like that to cleanup after the heredoc.
-
-
+// i think the entire heredoc is perfect now. just leave it until i get back
 char	*hd_count(t_minishell	*shell)
 {
 	char	*num;
@@ -26,7 +22,9 @@ char	*hd_count(t_minishell	*shell)
 	num = ft_itoa(shell->hd_count);
 	str = ft_strjoin("heredoc_file_", num);
 	ret = ft_strjoin(shell->bin_dir, str);
-	printf("hd_count ret = [%s]\n", ret);
+	free (num);
+	free (str);
+	// printf("hd_count ret = [%s]\n", ret);
 	return (ret);
 }
 
@@ -34,7 +32,7 @@ void	delete_heredocs(t_minishell *shell)
 {
 	char	*heredoc;
 
-	printf ("heredoc count?: [%i]\n", shell->hd_count);
+	// printf ("heredoc count?: [%i]\n", shell->hd_count);
 	while (shell->hd_count > 0)
 	{
 		shell->hd_count--;

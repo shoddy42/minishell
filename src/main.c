@@ -12,11 +12,10 @@
 
 #include "../include/minishell.h"
 
+//function simpler than i thought, probably merge with parse_apend. might not even need parse_append so im holding off
 void	append_token(t_token *start, t_token *end)
 {
-	// printf("appending [%s] [%s]", start->data, end->data);
 	start->data = ft_strexpand(start->data, end->data);
-	// printf("check? [%s]\n", start->data);
 	free_single_token(end);
 }
 
@@ -62,6 +61,7 @@ void parse_token(t_minishell *shell)
 	parse_append(shell);
 }
 
+// function should be finished. unless we want to add semicolon support.
 int	count_pipes(t_minishell *shell)
 {
 	t_token	*tmp;
@@ -80,6 +80,7 @@ int	count_pipes(t_minishell *shell)
 	return (0);
 }
 
+//not fully functional, but works for basic testing
 int	dash_c(t_minishell *shell, char **av)
 {
 	if (av[1] && ft_strcmp(av[1], "-c") == 0)

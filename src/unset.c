@@ -21,6 +21,7 @@ int	remove_list(t_env	*env)
 	return (0);
 }
 
+//todo: samething as export, "unset A B C" should unset A=test B=test C=test at the same time.
 int ms_unset(t_minishell *shell, t_command *cmd)
 {
 	t_env	*tmp1;
