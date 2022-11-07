@@ -3,49 +3,60 @@
 #                                                         ::::::::             #
 #    Makefile                                           :+:    :+:             #
 #                                                      +:+                     #
-#    By: wkonings <marvin@codam.nl>                   +#+                      #
+#    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
-#    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/09/15 03:36:56 by wkonings      ########   odam.nl          #
+#    Created: 2022/11/04 22:17:35 by wkonings      #+#    #+#                  #
+#    Updated: 2022/11/07 19:35:12 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
+# --------------- VARIABLES ---------------#
+
 NAME = libft.a
-SOURCES = $(FILES:%=ft_%.c)
-BSOURCES = $(BFILES:%=ft_%.c)
-OBJECTS = $(FILES:%=ft_%.o)
-BOBJECTS = $(BFILES:%=ft_%.o)
-FLAGS = #-Wall -Wextra -Werror
+CC = gcc
+FLAGS = -Wall -Wextra -Werror
+
+# --------------- DIRECTORIES ------------ #
+
+INCLUDE_DIR	:=	include
+LIBS_DIR	:=	libft
+OBJS_DIR	:= 	obj
+SRC_DIR		:=	src
+
+# --------------- FILES -------------------#
+
 HEADERS = libft.h
 FILES = tolower toupper isprint isascii isalnum isdigit isalpha atoi \
 		strncmp strnstr strrchr strchr strlcat strlcpy strlen memcmp \
 		memchr memmove memccpy memcpy bzero memset calloc strdup \
 		substr strjoin strtrim split itoa strmapi putchar_fd \
-		putstr_fd putendl_fd putnbr_fd
+		putstr_fd putendl_fd putnbr_fd lstnew lstadd_front lstsize \
+		lstlast lstadd_back lstdelone lstclear lstiter lstmap strcmp \
+		charinstr strexpand
 
-BFILES = lstnew lstadd_front lstsize lstlast lstadd_back lstdelone \
-		 lstclear lstiter lstmap charinstr strcmp strexpand
+SRCS		:=	$(addprefix $(SRC_DIR)/,$(FILES:%=ft_%.c))
+OBJS		:=	$(addprefix $(OBJS_DIR)/,$(notdir $(SRCS:%.c=%.o)))
 
 
 all: $(NAME)
 
-$(NAME):
-	gcc $(FLAGS) -I $(HEADERS) -c $(SOURCES)
-	ar rc $(NAME) $(OBJECTS)
+$(NAME): $(OBJS)
+	@echo "\n"
+	ar rc $(NAME) $(OBJS)
 	ranlib $(NAME)
 
+$(OBJS_DIR):
+	@mkdir -p $@
+
+$(OBJS_DIR)/%.o:$(SRC_DIR)/%.c $(HEADERS) | $(OBJS_DIR)
+	$(CC) $(FLAGS) -c $< -o $@
+
 clean:
-	/bin/rm -f $(OBJECTS) $(BOBJECTS) $(NOBJECTS)
-	/bin/rm -f bonus
+	/bin/rm -rf $(OBJS_DIR)
 
 fclean:	clean
 	/bin/rm -f $(NAME)
 
 re: fclean all
 
-bonus:
-	gcc $(FLAGS) -I $(HEADERS) -c $(BSOURCES) -c $(SOURCES)
-	ar rc $(NAME) $(OBJECTS) $(BOBJECTS)
-	touch bonus
-
-.PHONY: all clean fclean re
+.PHONY: clean fclean re
