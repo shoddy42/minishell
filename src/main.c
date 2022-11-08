@@ -93,7 +93,7 @@ int	dash_c(t_minishell *shell, char **av)
 		parse_token(shell);
 		make_commands(shell);
 		execute_two_electric_boogaloo(shell);
-		exit (0);
+		exit (shell->last_return);
 	}
 	return (0);
 }
@@ -158,6 +158,7 @@ int	main(int ac, char **av, char **envp)
 		ft_tokenize(shell, shell->command);
 		// print_tokens(shell);
 		parse_token(shell);
+		// print_tokens(shell);
 		count_pipes(shell);
 		if (shell->cancel_command_line == false)
 		{

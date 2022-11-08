@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 19:26:28 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 23:04:15 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void    cancel_commands(t_minishell *shell)
     // }
 }
 
+//later: evaluate whether this is even needed at all.
 void    ms_error(char *msg, int code, bool terminate, t_minishell *shell)
 {
     errno = code;
@@ -36,5 +37,5 @@ void    ms_error(char *msg, int code, bool terminate, t_minishell *shell)
         exit(code);
     else if (shell)
         cancel_commands(shell);
-    //todo: else, cancel current commandline.
+    //later: else, cancel current commandline.
 }

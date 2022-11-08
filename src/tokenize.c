@@ -6,12 +6,14 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 19:32:22 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 22:32:59 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+
+//todo: move this to libft lmao
 int		ft_isspace(char c)
 {
 	return(c == ' ' || c == '\t' || c == '\n');
@@ -39,20 +41,10 @@ void	set_token_type(t_minishell *shell, t_token *token, char *data)
 		token->type = COMMAND;
 }
 
-int	new_token(t_minishell *shell, char *data, int len)
+void	link_token(t_minishell *shell, t_token *new)
 {
-	int		i;
-	t_token	*new;
 	t_token	*last;
 
-	i = -1;
-	new = ft_calloc(1, sizeof(t_token));
-	set_token_type(shell, new, data);
-	new->data = ft_calloc(len + 1, sizeof(char));
-	new->fd = -1;
-	while (++i < len)
-		new->data[i] = data[i];
-	// split this part off either back into ft_tokenize, or into a new func link_token
 	last = get_last_token(shell->tokens);
 	if (last != NULL)
 	{
@@ -63,8 +55,30 @@ int	new_token(t_minishell *shell, char *data, int len)
 	{
 		new->next = NULL;
 		shell->tokens = new;
+	}	
+}
+
+t_token	*new_token(t_minishell *shell, char *data, int len, bool link)
+{
+	int		i;
+	t_token	*new;
+	// t_token	*last;
+
+	i = -1;
+	new = ft_calloc(1, sizeof(t_token));
+	set_token_type(shell, new, data);
+	new->data = ft_calloc(len + 1, sizeof(char));
+	new->fd = -1;
+	while (++i < len)
+		new->data[i] = data[i];
+	if (link == true)
+		link_token(shell, new);
+	else
+	{
+		new->next = NULL;
+		new->prev = NULL;
 	}
-	return (len);
+	return (new);
 }
 
 //only issue with this so far is that for the final token, it'll allocate 1 bit toomany.
@@ -83,7 +97,8 @@ void	ft_tokenize(t_minishell *shell, char *command)
 		if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
 			i--;
 		// command += new_token(shell, command, i + 1); //could swap back to this 1 line saver B]
-		new_token(shell, command, i + 1);
+		new_token(shell, command, i + 1, true);
+		
 		command += i + 1 + skip;
 		skip = 0;
 		i = 0;

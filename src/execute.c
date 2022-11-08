@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 19:53:18 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 21:34:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	*pipex_pathjoin(char const *path, char const *cmd)
 }
 
 // basic logic, probably needs double checking.
+//todo: protect dup2s, if one fails cancel its command.
 int		child_p_1(t_command *cmd, t_minishell *shell)
 {
 	char	*path;
@@ -81,20 +82,24 @@ int		test_child(t_command *cmd, t_minishell *shell, pid_t child, int i)
 }
 
 // pipe creating and closing algorithm seems right.
+// remove return value?
 int		tunnel_fork(t_command *cmd, t_minishell *shell)
 {
 	//creation and laying of pipes if needed.
 	if (pipe(cmd->tunnel) < 0)
 		cmd->executable = false;
-	//printf ("created FDS [%i][%i]\n", cmd->tunnel[0], cmd->tunnel[1]);
 	if (cmd->outfile == NEEDS_PIPE)
 		cmd->outfile = cmd->tunnel[WRITE];
 	if (cmd->next) 
 		if (cmd->next->infile == NEEDS_PIPE)
 			cmd->next->infile = cmd->tunnel[READ];
+
+
 	// fork
 	if ((cmd->pid = fork()) < 0)
 		ms_error("Forking failed.\n", -43, false, shell);
+
+
 	// parent duties. need to close a ton of file descriptors. ALL non NEEDS_PIPE and stdin.s EXCEPT cmd->tunnel[READ]
 	if (cmd->pid > 0)
 	{
@@ -114,10 +119,6 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	return (cmd->pid);
 }
 
-//todo: reformat pid_t* children to just use built in pid from t_command; DONE
-//todo: change last_return to be the FINAL command in the pipeline DONE ???
-// instead of the last command to exit.
-//todo: add word splitting for expanded variables.
 //todo: change the cancel command line to only cancel one of the commands, using cmd->executable
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
@@ -140,9 +141,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	// pipeline logic.
 	while (i <= shell->pipe_count)
 	{
-		// children[i] = tunnel_fork(cmd, shell);
 		tunnel_fork(cmd, shell);
-		// if (children[i] == 0)
 		if (cmd->pid == 0)
 		{
 			test_child(cmd, shell, cmd->pid, i);

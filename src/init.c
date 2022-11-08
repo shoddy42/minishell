@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 02:30:48 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 23:10:55 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,13 @@
 
 //todo: make another sighandler for children, so they exit properly when signalled.
 //todo:
+
+void	child_sig(int signum)
+{
+	if (signum == SIGINT)
+		exit(1);
+}
+
 void	sighandler(int signum)
 {
 	if(signum == SIGINT) // ctrl + C

@@ -1,13 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   builtins.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/11/08 21:21:50 by wkonings      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 
-
-//todo: make ms_exit actually get an exit value.
-void	ms_exit(t_minishell *shell)
+void	ms_exit(t_command *cmd, t_minishell *shell)
 {
-	exit (1);
+	int	status;
+
+	status = 0;
+	if (cmd && cmd->command && cmd->command[1])
+	{
+		if (ft_strisnum(cmd->command[1]) == true)
+			status = ft_atoi(cmd->command[1]);
+		else
+		{
+			write(2, "Minishell: ", 12);
+			write(2, cmd->command[1], ft_strlen(cmd->command[0]));
+			write(2, ": numeric argument required\n", 29);
+			status = 255;
+		}
+	}
+	exit (status);
 }
 
 //todo: make all builtins always have the correct exit status for the purposes of $?
@@ -30,8 +55,8 @@ int check_builtin(t_command *cmd, t_minishell *shell, t_from process)
 			ms_export(cmd, shell);
 		else if(ft_strcmp(cmd->command[0], "unset") == 0)
 			ms_unset(shell, cmd);
-		else if(ft_strcmp(cmd->command[0], "exit") == 0 && process != CHILD)
-			ms_exit(shell);
+		else if(ft_strcmp(cmd->command[0], "exit") == 0)
+			ms_exit(cmd, shell);
 		else
 			return(1);
 	}
