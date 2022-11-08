@@ -19,7 +19,7 @@ int check_builtin(t_command *cmd, t_minishell *shell, t_from process)
 	if (cmd->command && cmd->command[0])
 	{
 		if(ft_strcmp(cmd->command[0], "cd") == 0)
-			return(ms_cd(cmd));
+			return(ms_cd(cmd, shell));
 		else if(ft_strcmp(cmd->command[0], "echo") == 0)
 			return(ms_echo(cmd));
 		else if(ft_strcmp(cmd->command[0], "env") == 0)
