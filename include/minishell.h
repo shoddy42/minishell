@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/03 19:18:41 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/08 01:58:17 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ typedef struct s_command
 
 typedef struct s_env
 {
+	//int	has_key;
 	char 	*key; // not yet in use, might need.
 	char 	*beans; // not yet in use, might need.
 	char	*data;
@@ -110,7 +111,6 @@ typedef struct s_shell_data
 	char		*bin_dir;
 
 	int			last_return;
-	int			hd_count;
 	int			pipe_count;
 	int			hd_count;
 	int			cancel_command_line; //rename
@@ -140,6 +140,7 @@ void	print_env(t_minishell *shell);
 char	*ms_getenv(char *key, t_minishell *shell);
 char	*fill_key(char	*beans);
 char	*fill_data(char	*beans);
+int		ms_replace_env(char	*beans, t_minishell *shell);
 
 // execute.c
 void    execute(t_command *cmd, t_minishell *shell);
@@ -150,7 +151,7 @@ char	*pipex_pathjoin(char const *path, char const *cmd); //doesn't need to be in
 
 // Builtins.c
 int	check_builtin(t_command *cmd, t_minishell *shell, t_from process);
-int	ms_cd(t_command	*cmd);
+int	ms_cd(t_command	*cmd, t_minishell *shell);
 int	ms_echo(t_command *cmd);
 int	ms_pwd(t_command *cmd);
 int	ms_env(t_minishell	*shell, t_command	*cmd);
