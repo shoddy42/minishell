@@ -3,16 +3,16 @@
 /*                                                        ::::::::            */
 /*   env.c                                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 19:26:28 by wkonings      ########   odam.nl         */
+/*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
+/*   Updated: 2022/11/08 20:52:14 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*fill_key(char	*beans)
+char    *fill_key(char  *beans)
 {
 	int		eq;
 	char	*ret;
@@ -24,10 +24,10 @@ char	*fill_key(char	*beans)
 	return(ret);
 }
 
-char	*fill_data(char	*beans)
+char    *fill_data(char *beans)
 {
-	int		eq;
-	char	*ret;
+	int     eq;
+	char    *ret;
 
 	eq = ms_strchr(beans, '=');
 	if (!(eq))
@@ -36,7 +36,7 @@ char	*fill_data(char	*beans)
 	return(ret);
 }
 
-t_env	*new_env(char *data)
+t_env   *new_env(char *data)
 {
 	t_env *new;
 
@@ -56,58 +56,80 @@ t_env	*new_env(char *data)
 }
 
 
-int	ms_replace_env(char	*beans, t_minishell *shell)
+int	ms_replace_env(char *beans, t_minishell *shell)
 {
 	t_env	*tmp;
 
 	tmp = shell->env;
-	while(tmp)
+	while (tmp)
 	{
-		if(ft_strncmp(tmp->key, beans, ft_strlen(tmp->key)) == 0)
+		if (ft_strncmp(tmp->key, beans, ft_strlen(tmp->key)) == 0)
 		{
 			free(tmp->beans);
 			free(tmp->data);
 			tmp->beans = ft_strdup(beans);
-			if(!beans)
+			if (!beans)
 				ms_error("CANNOT ALLOCATE MORE ENV", -1, false, shell);
 			tmp->data = fill_data(tmp->beans);
 			return (0);
 		}
 		tmp = tmp->next;
 	}
-	return(1);
+	return (1);
 }
 
-int	ms_export_loop(char	*command, t_minishell *shell)
+int	ms_export_loop(char *command, t_minishell *shell)
 {
-	int		i;
-	int		eq;
-	int		len;
-	t_env	*new;
-	t_env	*tmp;
+	int     i;
+	int     eq;
+	int     len;
+	t_env   *new;
+	t_env   *tmp;
 
 	i = 0;
 	eq = 0;
 	len = 0;
 	tmp = shell->env;
-	if(!command)
+	if (!command)
 		return (1);
 	new = new_env(command);
 	new->beans = ft_strdup(command);
 	new->key = fill_key(new->beans);
 	new->data = fill_data(new->beans);
-	while(tmp && tmp->next)
+	while (tmp && tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
 	return(0);
 }
 
 //todo: Make "export" work, it should print a list of all variables, just try with bash
-int	ms_export(t_command *cmd, t_minishell *shell)
+void	ms_export_env(t_minishell   *shell)
 {
-	int	i;
+	t_env   *tmp;
+
+	if (!shell->env)
+		exit(1);
+	tmp = shell->env;
+	while (tmp)
+	{
+		ft_putstr_fd("decalre -x ", 1);
+		ft_putstr_fd(tmp->key, 1);
+		write(1, "=", 1);
+		ft_putstr_fd("\"", 1);
+		ft_putstr_fd(tmp->data, 1);
+		ft_putstr_fd("\"", 1);
+		write(1, "\n", 1);
+		tmp = tmp->next;
+	}
+}
+
+int ms_export(t_command *cmd, t_minishell *shell)
+{
+	int i;
 	
 	i = 1;
+	if (!cmd->command[i])
+		ms_export_env(shell);
 	while(cmd->command[i])
 	{
 		if(ms_strchr(cmd->command[i], '=') != 0)
@@ -120,9 +142,10 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 	return(0);
 }
 
-int	ms_env(t_minishell	*shell, t_command *cmd)
+
+int ms_env(t_minishell  *shell, t_command *cmd)
 {
-	t_env	*tmp;
+	t_env   *tmp;
 
 	if(!(shell->env))
 		return(1);
@@ -136,9 +159,9 @@ int	ms_env(t_minishell	*shell, t_command *cmd)
 	return(0);
 }
 
-char	*ms_getenv(char *key, t_minishell *shell)
+char    *ms_getenv(char *key, t_minishell *shell)
 {
-	t_env	*env;
+	t_env   *env;
 
 	env = shell->env;
 	while (env)
@@ -150,10 +173,10 @@ char	*ms_getenv(char *key, t_minishell *shell)
 	return ("");
 }
 
-void	init_env(t_minishell *shell, char  **env)
+void    init_env(t_minishell *shell, char  **env)
 {
 	int i;
-	t_env	*tmp;
+	t_env   *tmp;
 
 	i = 0;
 	shell->env = new_env(env[i]);
@@ -170,5 +193,3 @@ void	init_env(t_minishell *shell, char  **env)
 		exit (1);
 	shell->path = ft_split(env[i] + 6, ':');
 }
-
-
