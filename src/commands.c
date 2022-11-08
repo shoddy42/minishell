@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 12:02:42 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 02:23:16 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 	return (new);
 }
 
-//todo: FREE the commands after use.
 int make_commands(t_minishell *shell)
 {
 	t_command	*cmd;

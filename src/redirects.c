@@ -6,13 +6,12 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 11:35:31 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 01:55:59 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-//later: will probably be fixed by the errors. but prevent creation of files like < > | /
 t_token	*handle_left(t_token *token, t_minishell *shell)
 {
 	t_token *tmp;

@@ -167,9 +167,10 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
-		// rl_clear_history();
 		// print_tokens(shell);
 		// print_tokens_backwards(shell); //for testing whether prev is linked properly.
+
+		//america
 		free_commands(shell);
 		free_tokens(shell);
 		if (shell->command)

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 19:28:23 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 02:23:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,6 @@ int	ms_replace_env(char	*beans, t_minishell *shell)
 	return(1);
 }
 
-//todo: Make export work with quotationmarks like [export XD="lol funny"]
-//todo: Make "export" work, it should print a list of all variables, just try with bash
 int	ms_export_loop(char	*command, t_minishell *shell)
 {
 	int		i;
@@ -104,6 +102,7 @@ int	ms_export_loop(char	*command, t_minishell *shell)
 	return(0);
 }
 
+//todo: Make "export" work, it should print a list of all variables, just try with bash
 int	ms_export(t_command *cmd, t_minishell *shell)
 {
 	int	i;

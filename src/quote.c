@@ -6,15 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:58:28 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 15:08:39 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/07 22:25:53 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-//todo: make """" not become a space
-//todo: figure out why [echo "cat traveller | cat] prints twice. i think it has to do with the quote.
-//todo: "echo 192590189032" doesn't command not found.
 
 t_token	*handle_quote(t_token *token, int type, t_minishell *shell)
 {

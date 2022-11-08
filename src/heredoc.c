@@ -6,13 +6,14 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 19:27:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 02:26:45 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
 // i think the entire heredoc is perfect now. just leave it until i get back
+//later: make sure every instance where hd_count gets called, it's return value is freed before lost.
 char	*hd_count(t_minishell	*shell)
 {
 	char	*num;
@@ -42,6 +43,9 @@ void	delete_heredocs(t_minishell *shell)
 	}
 }
 
+//todo: if no bin folder, make bin folder.
+//todo: add variable expansion to heredoc.
+//todo: MAYBE make it if there's quotes in the delimiter, dont expand variables.
 t_token	*heredoc(t_token *token, t_minishell *shell)
 {
 	char	*delim;

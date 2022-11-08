@@ -6,9 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/03 19:18:41 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/08 01:53:39 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+//LATER: check if we have any headers we dont need.
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -16,12 +18,12 @@
 # include <readline/readline.h> //required
 # include <readline/history.h> //required
 # include <errno.h>
-# include <unistd.h> //prolsly?
-# include <stdlib.h> //prolly?
-# include <string.h> //?
-# include <signal.h> //required
+# include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
+# include <signal.h>
 # include <fcntl.h>
-// # include <sys/wait.h>
+# include <sys/wait.h>
 # include <sys/types.h>
 # include "../libft/libft.h"
 
@@ -29,6 +31,8 @@
 
 # define DELIMITER " |$<>;\t\'\"\n"
 
+
+//todo: replace this shitty fake boolean enum with real bools
 typedef	enum e_bool
 {
 	FALSE,
@@ -48,6 +52,7 @@ typedef	enum e_pipe
 	NEEDS_PIPE = -42
 }	t_pipe;
 
+//LATER: remove all the numbers
 typedef enum e_tokentype
 {
     COMMAND = 42,	//currently all "words" are commands. probably should be renamed "WORD"
@@ -77,7 +82,7 @@ typedef struct s_token
 	struct s_token	*prev;
 }   t_token;
 
-// adding a total of exactly 5 ints and no other ints seems to segfault us for freeing something htat doesnt exist BUT we never free it. 
+//LATER: examine whether we need ALL of these
 typedef struct s_command
 {
 	char				**command;	
@@ -90,11 +95,10 @@ typedef struct s_command
 	struct	s_command	*prev;	
 }   t_command;
 
-
 typedef struct s_env
 {
-	char 	*key; // not yet in use, might need.
-	char 	*beans; // not yet in use, might need.
+	char 	*key;
+	char 	*beans;
 	char	*data;
 	struct	s_env *next;
 } t_env;
@@ -110,7 +114,6 @@ typedef struct s_shell_data
 	char		*bin_dir;
 
 	int			last_return;
-	int			hd_count;
 	int			pipe_count;
 	int			hd_count;
 	int			cancel_command_line; //rename

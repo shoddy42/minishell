@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/04 13:53:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 01:54:33 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,11 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	return (cmd->pid);
 }
 
+//todo: reformat pid_t* children to just use built in pid from t_command;
+//todo: change last_return to be the FINAL command in the pipeline \
+// instead of the last command to exit.
+//todo: add word splitting for expanded variables.
+//todo: change the cancel command line to only cancel one of the commands, using cmd->executable
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
@@ -133,11 +138,8 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 
 	// if not not in a pipeline and is a builtin.
 	if (cmd && !cmd->next)
-	{
 		if (check_builtin(cmd, shell, MINISHELL) == 0)
-			shell->pipe_count--; //maybe a more elegant way to skip past the next while loop?
-		// i++;
-	}
+			shell->pipe_count--;
 	// pipeline logic.
 	while (i <= shell->pipe_count)
 	{

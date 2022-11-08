@@ -6,10 +6,12 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/04 23:27:57 by wkonings      ########   odam.nl          #
+#    Updated: 2022/11/08 01:51:50 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
+#todo: make Makefile always call make on library makefile to make sure ITS make is upto date.
+#todo: also make sure the header is up to date when constructing .o files i think
 # --------------- VARIABLES ---------------#
 
 NAME = minishell
@@ -23,7 +25,7 @@ SRC_DIR		:= src
 OBJ_DIR		:= obj
 BIN_DIR		:= bin
 INCLUDE_DIR	:= include
-LIB_DIR		:= lib
+LIB_DIR		:= libft
 
 INCLUDES	:= libft/libft.a
 HEADERS_DIR	:= include
@@ -31,11 +33,12 @@ INC			:= -I include
 
 # --------------- FILES -------------------#
 
-HEADER_FILES = minishell.h
+HEADER_FILES = $(INCLUDE_DIR)/minishell.h
 HEADERS		:=	$(addprefix $(INCLUDE_DIR)/, $(HEADER_FILES))
 
 FILES = main tokenize token_utils env execute heredoc builtins cd init redirects pwd echo unset expand quote error commands
 
+LIBS		:=	
 SRCS		:=	$(addprefix $(SRC_DIR)/,$(FILES:%=%.c))
 OBJS		:=	$(addprefix $(OBJ_DIR)/,$(notdir $(SRCS:%.c=%.o)))
 OBJECTS = $(FILES:%=$(OBJ_DIR)%.o)
@@ -54,7 +57,8 @@ READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
 # -----------------------------------------#
 
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBS) $(HEADER_FILES)
+	@make -C $(LIB_DIR)
 	gcc $(DEBUG) $(SRCS) -o $(NAME) -I includes/minishell.h $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 
 echo:
@@ -64,6 +68,9 @@ echo:
 
 all: $(NAME)
 
+$(LIBS):
+	@make -C $(LIB_DIR)
+	@echo "MAKING LIBFT RN YEA"
 
 $(OBJ_DIR):
 	@mkdir -p $@
