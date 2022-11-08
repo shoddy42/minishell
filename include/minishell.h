@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 02:33:29 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 19:54:54 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,11 @@
 # include <sys/wait.h>
 # include <sys/types.h>
 # include "../libft/libft.h"
+# include <stdbool.h>
 
 // # include <sys/wait.h> // needed for WSL
 
 # define DELIMITER " |$<>;\t\'\"\n"
-
-
-//todo: replace this shitty fake boolean enum with real bools
-typedef	enum e_bool
-{
-	FALSE,
-	TRUE
-}	t_bool;
 
 typedef enum e_from
 {
@@ -114,6 +107,7 @@ typedef struct s_shell_data
 	char		*command;
 	char		*bin_dir;
 
+	pid_t		last_cmd;
 	int			last_return;
 	int			pipe_count;
 	int			hd_count;
@@ -183,7 +177,7 @@ t_token	*handle_quote(t_token *token, int type, t_minishell *shell);
 void	expand_dong(t_token *token, t_minishell *shell);
 
 // error.c 
-void    ms_error(char *msg, int code, t_bool terminate, t_minishell *shell);
+void    ms_error(char *msg, int code, bool terminate, t_minishell *shell);
 
 // commands.c
 int		make_commands(t_minishell *shell);
