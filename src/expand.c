@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/01 19:32:28 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 19:37:00 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void	expand_dong(t_token *token, t_minishell *shell)
 	// printf ("expanding (%s)[%s] \n", print_token_type(tmp->type) , tmp->data);
 	if (tmp->type == COMMAND)
 	{
-		variable = ms_getenv(tmp->data, shell);
+		if (tmp->data && tmp->data[0] == '?')
+			variable = ft_itoa(shell->last_return);
+		else
+			variable = ms_getenv(tmp->data, shell);
 		free_single_token(tmp);
 	}
 	else

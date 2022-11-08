@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 01:54:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 19:53:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ int		test_child(t_command *cmd, t_minishell *shell, pid_t child, int i)
 int		tunnel_fork(t_command *cmd, t_minishell *shell)
 {
 	//creation and laying of pipes if needed.
-	pipe(cmd->tunnel);
+	if (pipe(cmd->tunnel) < 0)
+		cmd->executable = false;
 	//printf ("created FDS [%i][%i]\n", cmd->tunnel[0], cmd->tunnel[1]);
 	if (cmd->outfile == NEEDS_PIPE)
 		cmd->outfile = cmd->tunnel[WRITE];
@@ -93,7 +94,7 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 			cmd->next->infile = cmd->tunnel[READ];
 	// fork
 	if ((cmd->pid = fork()) < 0)
-		ms_error("Forking failed.\n", -43, FALSE, shell);
+		ms_error("Forking failed.\n", -43, false, shell);
 	// parent duties. need to close a ton of file descriptors. ALL non NEEDS_PIPE and stdin.s EXCEPT cmd->tunnel[READ]
 	if (cmd->pid > 0)
 	{
@@ -113,44 +114,45 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	return (cmd->pid);
 }
 
-//todo: reformat pid_t* children to just use built in pid from t_command;
-//todo: change last_return to be the FINAL command in the pipeline \
+//todo: reformat pid_t* children to just use built in pid from t_command; DONE
+//todo: change last_return to be the FINAL command in the pipeline DONE ???
 // instead of the last command to exit.
 //todo: add word splitting for expanded variables.
 //todo: change the cancel command line to only cancel one of the commands, using cmd->executable
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
-	pid_t		*children;
 	pid_t		pid;
 	int			i;
 	int			status;
+	int			last_status;
 	
 	i = 0;
-	if (shell->cancel_command_line == TRUE)
+	if (shell->cancel_command_line == true)
 		return ;
 	cmd = shell->commands;
 	if (!cmd)
 		return ;
-	children = ft_calloc(shell->pipe_count + 1, sizeof(pid_t));
-	if (!children)
-		ms_error("Failed at allocating PIDs.", -1, FALSE, shell);
 
-	// if not not in a pipeline and is a builtin.
 	if (cmd && !cmd->next)
 		if (check_builtin(cmd, shell, MINISHELL) == 0)
 			shell->pipe_count--;
 	// pipeline logic.
 	while (i <= shell->pipe_count)
 	{
-		children[i] = tunnel_fork(cmd, shell);
-		if (children[i] == 0)
+		// children[i] = tunnel_fork(cmd, shell);
+		tunnel_fork(cmd, shell);
+		// if (children[i] == 0)
+		if (cmd->pid == 0)
 		{
-			test_child(cmd, shell, children[i], i);
+			test_child(cmd, shell, cmd->pid, i);
 			exit (1);
 		}
 		if (!cmd->next)
+		{
+			shell->last_cmd = cmd->pid;
 			break;
+		}
 		cmd = cmd->next;
 		i++;
 	}
@@ -159,6 +161,9 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	{
 		// printf("WAITING FOR PROCESS\n");
 		pid = waitpid((pid_t)0, &status, 0);
+		if (pid == shell->last_cmd)
+			if (WIFEXITED(status))
+				last_status = WEXITSTATUS(status);
 		if (WIFEXITED(status))
 			shell->last_return = WEXITSTATUS(status);
 		else
@@ -166,4 +171,5 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		// printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
 		i--;
 	}
+	shell->last_return = last_status;
 }

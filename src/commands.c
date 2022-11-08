@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 02:23:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 19:26:28 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 
 	new = ft_calloc(1, sizeof(t_command));
 	if (!new)
-		ms_error("Failed at allocating command.", -1, FALSE, shell);
+		ms_error("Failed at allocating command.", -1, false, shell);
 	new->infile = STDIN_FILENO;
 	new->outfile = STDOUT_FILENO;
 	if (cmd != NULL)
@@ -97,7 +97,7 @@ int make_commands(t_minishell *shell)
 	shell->commands = cmd;
 	token = shell->tokens;
 	// printf ("token? [%s]\n", token->data);
-	while (token && shell->cancel_command_line == FALSE)
+	while (token && shell->cancel_command_line == false)
 	{
 		token = get_command_options(token, cmd);
 		// //printf("returned token = [%s]\n", token->data);

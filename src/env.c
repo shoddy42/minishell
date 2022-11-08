@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 00:57:02 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 02:23:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 19:26:28 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,16 @@ t_env	*new_env(char *data)
 
 	new = ft_calloc(1, sizeof(t_env));
 	if (!new)
-		ms_error("Failed to allocate ENV.", -1, TRUE, NULL);
+		ms_error("Failed to allocate ENV.", -1, true, NULL);
 	new->beans = ft_strdup(data);
 	if (!new->beans)
-		ms_error("Failed to allocate ENV->beans.", -1, TRUE, NULL);
+		ms_error("Failed to allocate ENV->beans.", -1, true, NULL);
 	new->data = fill_data(new->beans);
 	if (!new->data)
-		ms_error("Failed to allocate ENV->data.", -1, TRUE, NULL);
+		ms_error("Failed to allocate ENV->data.", -1, true, NULL);
 	new->key = fill_key(new->beans);
 	if (!new->data)
-		ms_error("Failed to allocate ENV->key.", -1, TRUE, NULL);
+		ms_error("Failed to allocate ENV->key.", -1, true, NULL);
 	return (new);
 }
 
@@ -69,7 +69,7 @@ int	ms_replace_env(char	*beans, t_minishell *shell)
 			free(tmp->data);
 			tmp->beans = ft_strdup(beans);
 			if(!beans)
-				ms_error("CANNOT ALLOCATE MORE ENV", -1, FALSE, shell);
+				ms_error("CANNOT ALLOCATE MORE ENV", -1, false, shell);
 			tmp->data = fill_data(tmp->beans);
 			return (0);
 		}

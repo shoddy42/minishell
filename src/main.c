@@ -41,7 +41,7 @@ void parse_token(t_minishell *shell)
 
 	i = 0;
 	token = shell->tokens;
-	while (token && shell->cancel_command_line == FALSE)
+	while (token && shell->cancel_command_line == false)
 	{
 		// printf("handling token [%s]\n", token->data);
 		if (token->type == LEFT)
@@ -88,7 +88,7 @@ int	dash_c(t_minishell *shell, char **av)
 		if (av[2])
 			shell->command = av[2];
 		else
-			ms_error("NO COMMAND STR.", -9, TRUE, shell);
+			ms_error("NO COMMAND STR.", -9, true, shell);
 		ft_tokenize(shell, shell->command);
 		parse_token(shell);
 		make_commands(shell);
@@ -136,14 +136,14 @@ int	main(int ac, char **av, char **envp)
 
 	shell = ft_calloc(1, sizeof(t_minishell));
 	if (!shell)
-		ms_error("FAILED TO ALLOCATE SHELL STRUCT, YOU HAVE LITERALLY 0 MEMORY LMAO", -1, TRUE, NULL);
+		ms_error("FAILED TO ALLOCATE SHELL STRUCT, YOU HAVE LITERALLY 0 MEMORY LMAO", -1, true, NULL);
 	init_minishell(shell, envp);
 	dash_c(shell, av);
 	while (shell->exit == 0)
 	{
 		shell->hd_count = 0;
 		shell->command = readline("minishell> ");
-		shell->cancel_command_line = FALSE;
+		shell->cancel_command_line = false;
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
 		{
 			rl_replace_line("minishell> exit", 0);
@@ -159,7 +159,7 @@ int	main(int ac, char **av, char **envp)
 		// print_tokens(shell);
 		parse_token(shell);
 		count_pipes(shell);
-		if (shell->cancel_command_line == FALSE)
+		if (shell->cancel_command_line == false)
 		{
 			make_commands(shell);
 			// print_commands(shell);

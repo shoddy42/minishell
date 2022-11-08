@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 01:55:59 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 19:26:28 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		tmp = token->next;
 	if (!tmp)
 	{
-		ms_error("Bad redirect.", 0, FALSE, shell);
+		ms_error("Bad redirect.", 0, false, shell);
 		return (token);
 	}
 	if (tmp->type == LEFT && tmp->next)
@@ -38,7 +38,7 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		tmp->fd = open(tmp->data, O_RDONLY);
 		if (tmp->fd == -1)
 		{
-			ms_error("Failed to open file.", 0, FALSE, shell);
+			ms_error("Failed to open file.", 0, false, shell);
 			return (token);
 		}
 		tmp->type = INFILE;
@@ -59,7 +59,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		tmp = token->next;
 	if (!tmp)
 	{
-		ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5, FALSE, shell);
+		ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5, false, shell);
 		return (token);
 	}
 	if (tmp->type == RIGHT)
@@ -72,7 +72,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		tmp = tmp->next;
 	if (tmp->type != COMMAND)
 	{
-		ms_error("REDIRECT FAILURE, NO FILENAME GIVEN", -6, FALSE, shell);
+		ms_error("REDIRECT FAILURE, NO FILENAME GIVEN", -6, false, shell);
 		return (token);
 	}
 	if (append == 1)
