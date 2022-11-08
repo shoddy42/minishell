@@ -6,39 +6,51 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/08 20:52:14 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/08 23:42:44 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char    *fill_key(char  *beans)
+int		fill_key(t_env	*new)
 {
 	int		eq;
-	char	*ret;
-	
-	eq = ms_strchr(beans, '=');
+
+	eq = ms_strchr(new->beans, '=');
+	if (eq)
+	{
+		new->key = ft_substr(new->beans, 0, (eq));
+		if (new->beans[eq + 1])
+		{
+			new->has_beans = true;
+			return (fill_data(new, eq));
+		}
+		else
+		{
+			new->has_beans = false;
+			return (0);
+		}
+	}
+	new->key = ft_substr(new->beans, 0, ft_strlen(new->beans));
+	if (new->key)
+		return (0);
+	return (1);
+}
+
+int		fill_data(t_env	*new, int	eq)
+{
 	if (!eq)
-		return(NULL);
-	ret = ft_substr(beans, 0, (eq));
-	return(ret);
+		eq = ms_strchr(new->beans, '=');
+	new->data = ft_substr(new->beans, (eq + 1), ft_strlen(new->beans));
+	if (new->data)
+		return (0);
+	ms_error("Failed to allocate ENV->data.", -1, true, NULL);
+	return (1);
 }
 
-char    *fill_data(char *beans)
+t_env	*new_env(char *data)
 {
-	int     eq;
-	char    *ret;
-
-	eq = ms_strchr(beans, '=');
-	if (!(eq))
-		return (NULL);
-	ret = ft_substr(beans, (eq + 1), ft_strlen(beans));
-	return(ret);
-}
-
-t_env   *new_env(char *data)
-{
-	t_env *new;
+	t_env	*new;
 
 	new = ft_calloc(1, sizeof(t_env));
 	if (!new)
@@ -46,15 +58,9 @@ t_env   *new_env(char *data)
 	new->beans = ft_strdup(data);
 	if (!new->beans)
 		ms_error("Failed to allocate ENV->beans.", -1, true, NULL);
-	new->data = fill_data(new->beans);
-	if (!new->data)
-		ms_error("Failed to allocate ENV->data.", -1, true, NULL);
-	new->key = fill_key(new->beans);
-	if (!new->data)
-		ms_error("Failed to allocate ENV->key.", -1, true, NULL);
+	fill_key(new);
 	return (new);
 }
-
 
 int	ms_replace_env(char *beans, t_minishell *shell)
 {
@@ -70,7 +76,7 @@ int	ms_replace_env(char *beans, t_minishell *shell)
 			tmp->beans = ft_strdup(beans);
 			if (!beans)
 				ms_error("CANNOT ALLOCATE MORE ENV", -1, false, shell);
-			tmp->data = fill_data(tmp->beans);
+			fill_data(tmp, 0);
 			return (0);
 		}
 		tmp = tmp->next;
@@ -94,8 +100,7 @@ int	ms_export_loop(char *command, t_minishell *shell)
 		return (1);
 	new = new_env(command);
 	new->beans = ft_strdup(command);
-	new->key = fill_key(new->beans);
-	new->data = fill_data(new->beans);
+	fill_key(new);
 	while (tmp && tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
@@ -112,7 +117,7 @@ void	ms_export_env(t_minishell   *shell)
 	tmp = shell->env;
 	while (tmp)
 	{
-		ft_putstr_fd("decalre -x ", 1);
+		ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(tmp->key, 1);
 		write(1, "=", 1);
 		ft_putstr_fd("\"", 1);
@@ -132,31 +137,30 @@ int ms_export(t_command *cmd, t_minishell *shell)
 		ms_export_env(shell);
 	while(cmd->command[i])
 	{
-		if(ms_strchr(cmd->command[i], '=') != 0)
-		{
-			if(ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
-				ms_export_loop(cmd->command[i], shell);
-		}
+		if(ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
+			ms_export_loop(cmd->command[i], shell);
 		i++;
 	}
 	return(0);
 }
 
-
 int ms_env(t_minishell  *shell, t_command *cmd)
 {
 	t_env   *tmp;
 
-	if(!(shell->env))
-		return(1);
+	if (!(shell->env))
+		return (1);
 	tmp = shell->env;
-	while(tmp)
+	while (tmp)
 	{
-		ft_putstr_fd(tmp->beans,1); 
-		write(cmd->outfile, "\n", 1);
+		if (tmp && tmp->has_beans == true)
+		{
+			ft_putstr_fd(tmp->beans, 1);
+			write(cmd->outfile, "\n", 1);
+		}
 		tmp = tmp->next;
 	}
-	return(0);
+	return (0);
 }
 
 char    *ms_getenv(char *key, t_minishell *shell)
