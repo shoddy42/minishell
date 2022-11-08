@@ -35,20 +35,18 @@ void	owd(t_command	*cmd, t_minishell *shell)
 	
 }
 
-//todo: make go_home dependant on the env HOME. if HOME is unset, "cd", should not take us to root.
 int	ms_cd(t_command	*cmd, t_minishell *shell)
 {
 	int	cd_ret;
 
 	if (!cmd->command)
 		return (1);
-
 	owd(cmd, shell);
 	cd_ret = chdir(cmd->command[1]);
 	cwd(shell);
 	if (cd_ret == 1)
 		return (1);
-	if (!cmd->command[1])
+	if (!cmd->command[1] || ft_strcmp(cmd->command[1], "~") == 0)
 		return (go_home(cmd));
 	else return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 19:54:54 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/08 22:45:56 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ typedef struct s_command
 
 typedef struct s_env
 {
-	//int	has_key;
+	bool	has_beans;
 	char 	*key; // not yet in use, might need.
 	char 	*beans; // not yet in use, might need.
 	char	*data;
@@ -131,13 +131,12 @@ void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
 int		ms_strchr(const char *src, int c);
 
-
 // env
 void	init_env(t_minishell *shell, char  **env);
 void	print_env(t_minishell *shell);
 char	*ms_getenv(char *key, t_minishell *shell);
-char	*fill_key(char	*beans);
-char	*fill_data(char	*beans);
+int		fill_key(t_env	*new);
+int		fill_data(t_env	*new, int 	eq);
 int		ms_replace_env(char	*beans, t_minishell *shell);
 
 // execute.c
