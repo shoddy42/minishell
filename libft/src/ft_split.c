@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/02 21:22:56 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/05 17:22:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 05:57:12 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	i = 0;
 	strcount = count_str(s, c);
-	split = malloc(sizeof(char *) * (strcount + 1));
+	split = ft_calloc(strcount + 1, sizeof(char *));
 	if (!split)
 		return (NULL);
 	while (i < strcount)

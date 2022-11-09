@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/09 03:40:29 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 08:06:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,8 @@ void	ms_export_env(t_minishell   *shell)
 	}
 }
 
+//todo: fix the leaks
+//todo: figure out why export test=1, then test2=1, will overwrite test=1. probably the strcmp isnt right?
 int ms_export(t_command *cmd, t_minishell *shell)
 {
 	int i;
@@ -176,7 +178,6 @@ char    *ms_getenv(char *key, t_minishell *shell)
 	return ("");
 }
 
-//todo: turn env back into a valid ENVP to pass to child processes
 void    init_env(t_minishell *shell, char  **env)
 {
 	int i;

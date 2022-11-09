@@ -209,7 +209,7 @@ int	main(int ac, char **av, char **envp)
 		ft_tokenize(shell, shell->command); //immune to error
 		// print_tokens(shell);
 		parse_token(shell); //if error, cut out everything
-		// print_tokens(shell);
+		print_tokens(shell);
 		count_pipes(shell);
 		// if (shell->cancel_command_line == false)
 		// {

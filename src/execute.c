@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 05:00:43 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 05:18:34 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,8 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	// creation of envp
 	envp = create_envp(shell->env);
 	// print_envp(envp);
-	// return ;
+
+	
 	// pipeline logic.
 	while (i <= shell->pipe_count)
 	{

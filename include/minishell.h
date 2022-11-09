@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 04:49:42 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 05:34:54 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ t_token	*handle_quote(t_token *token, int type, t_minishell *shell);
 
 // expand.c
 void	expand_dong(t_token *token, t_minishell *shell);
+t_token	*expand_two(t_token *token, t_minishell *shell);
 
 // error.c 
 void	ms_error(char *msg, int code, bool terminate, t_minishell *shell);

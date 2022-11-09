@@ -50,7 +50,3 @@ int	ms_cd(t_command	*cmd, t_minishell *shell)
 		return (go_home(cmd));
 	else return (0);
 }
-
-/*
-WIP
-*/
