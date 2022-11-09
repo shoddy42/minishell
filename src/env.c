@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/09 08:48:40 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 12:39:28 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,13 +132,15 @@ void	ms_export_env(t_minishell   *shell)
 //todo: think about whether we want "export test=yes b" to actually create b or not. bash doesnt.
 //		but i think noone cares.
 
-//todo: make "export $HOME=TEST" actually export the expanded value of $HOME. dunno whats missing yet
-//		this one is probably expand function's fault. dunno yet.
 int ms_export(t_command *cmd, t_minishell *shell)
 {
 	int i;
 	
 	i = 1;
+	printf ("export entered\n");
+	int j = -1;
+	while (cmd->command[++j])
+		printf ("cmd(%i) = [%s]\n", j, cmd->command[j]);
 	if (!cmd->command[i])
 		ms_export_env(shell);
 	while(cmd->command[i])

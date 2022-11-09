@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   cd.c                                               :+:    :+:            */
+/*   newcd.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: root <root@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 11:43:21 by root          #+#    #+#                 */
-/*   Updated: 2022/11/09 13:01:43 by root          ########   odam.nl         */
+/*   Updated: 2022/11/09 12:59:23 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	wd(t_minishell *shell, char *env)
 // refactored
 int	go_home(t_minishell *shell)
 {
-	return (chdir(ms_getenv("HOME", shell)) * -1);
+	return (chdir(ms_getenv("HOME", shell)));
 
 	// char	*home;
 	// int		ret;
@@ -74,10 +74,9 @@ int	go_back(t_minishell *shell)
 	int		ret;
 	
 	back = ms_getenv("OLDPWD", shell);
+	ret = chdir(back);
 	printf ("%s\n", back);
-	return (chdir(back) * -1);
-	// ret = chdir(back);
-	// return (ret * -1);
+	return (ret * -1);
 	// if (ret < 0)
 	// 	return (1);
 	// return (0);
@@ -94,7 +93,6 @@ int	ms_cd(t_command	*cmd, t_minishell *shell)
 		return (go_back(shell));
 	wd(shell, "OLDPWD=");
 	cd_ret = chdir(cmd->command[1]);
-	printf ("cd ret = [%i]\n", cd_ret);
 	wd(shell, "PWD=");
 	return (cd_ret * -1);
 	// if (cd_ret < 0)

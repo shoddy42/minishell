@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 05:34:54 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 12:18:17 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 // # include <sys/wait.h> // needed for WSL
 
-# define DELIMITER " |$<>;\t\'\"\n"
+# define DELIMITER " |$<>=;\t\'\"\n"
 
 typedef enum e_from
 {
@@ -146,7 +146,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd);
 // ^^^^doesn't need to be in here probably.
 
 // Builtins.c
-int		check_builtin(t_command *cmd, t_minishell *shell, t_from process);
+bool	check_builtin(t_command *cmd, t_minishell *shell, t_from process);
 int		ms_cd(t_command	*cmd, t_minishell *shell);
 int		ms_echo(t_command *cmd);
 int		ms_pwd(t_command *cmd);

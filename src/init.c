@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 05:01:59 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 10:40:38 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	init_minishell(t_minishell *shell, char **envp)
 	// environment setup
 	shell->envp = envp;
 	shell->bin_dir = getcwd(NULL, 0);
-	shell->bin_dir = ft_strexpand(shell->bin_dir, "/bin/");
+	shell->bin_dir = ft_strexpand(shell->bin_dir, "/obj/");
 	// shell->last_return = 0;
 	init_env(shell, envp);
 	ms_replace_env("SHELL=minishell", shell);
