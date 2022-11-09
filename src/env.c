@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/09 08:06:48 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 08:48:40 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_env	*new_env(char *data)
 	return (new);
 }
 
+//fixed this up so its doesnt replace when not needed.
 int	ms_replace_env(char *beans, t_minishell *shell)
 {
 	t_env	*tmp;
@@ -69,8 +70,9 @@ int	ms_replace_env(char *beans, t_minishell *shell)
 	tmp = shell->env;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->key, beans, ft_strlen(tmp->key)) == 0)
+		if (ft_strncmp(tmp->key, beans, ft_strchr_num(beans, '=')) == 0)
 		{
+			printf ("replacing! key: [%s] beans: [%s]\n", tmp->key, beans);
 			free(tmp->beans);
 			free(tmp->data);
 			tmp->beans = ft_strdup(beans);
@@ -99,8 +101,8 @@ int	ms_export_loop(char *command, t_minishell *shell)
 	if (!command)
 		return (1);
 	new = new_env(command);
-	new->beans = ft_strdup(command);
-	fill_key(new);
+	// new->beans = ft_strdup(command);
+	// fill_key(new);
 	while (tmp && tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
@@ -127,8 +129,11 @@ void	ms_export_env(t_minishell   *shell)
 	}
 }
 
-//todo: fix the leaks
-//todo: figure out why export test=1, then test2=1, will overwrite test=1. probably the strcmp isnt right?
+//todo: think about whether we want "export test=yes b" to actually create b or not. bash doesnt.
+//		but i think noone cares.
+
+//todo: make "export $HOME=TEST" actually export the expanded value of $HOME. dunno whats missing yet
+//		this one is probably expand function's fault. dunno yet.
 int ms_export(t_command *cmd, t_minishell *shell)
 {
 	int i;
