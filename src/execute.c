@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 21:34:48 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 05:00:43 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ char	*pipex_pathjoin(char const *path, char const *cmd)
 }
 
 // basic logic, probably needs double checking.
-//todo: protect dup2s, if one fails cancel its command.
-int		child_p_1(t_command *cmd, t_minishell *shell)
+int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
 {
 	char	*path;
 	int		i;
@@ -45,21 +44,23 @@ int		child_p_1(t_command *cmd, t_minishell *shell)
 	if (!cmd->command)
 		exit(-1);
 	if (cmd->infile == -42 || cmd->outfile == -42)
-		printf ("FILE ERROR!!!\n");
+		cmd->executable = false;
 	if (cmd->infile != STDIN_FILENO && cmd->infile != NEEDS_PIPE)
-		dup2(cmd->infile, STDIN_FILENO);
+		if (dup2(cmd->infile, STDIN_FILENO) == -1)
+			cmd->executable = false;
 	if (cmd->outfile != STDOUT_FILENO && cmd->outfile != NEEDS_PIPE)
-		dup2(cmd->outfile, STDOUT_FILENO);
+		if (dup2(cmd->outfile, STDOUT_FILENO) == -1)
+			cmd->executable = false;
 	if (check_builtin(cmd, shell, CHILD) == 0)
 		return (42);
 	i = 0;
 	if (cmd->command && access(cmd->command[0], X_OK) == 0)
-		execve(cmd->command[0], cmd->command, shell->envp);
+		execve(cmd->command[0], cmd->command, envp);
 	while (shell->path[i])
 	{
 		path = pipex_pathjoin(shell->path[i], cmd->command[0]);
 		if (access(path, X_OK) == 0)
-			execve(path, cmd->command, shell->envp);
+			execve(path, cmd->command, envp);
 		free(path);
 		i++;
 	}
@@ -70,14 +71,9 @@ int		child_p_1(t_command *cmd, t_minishell *shell)
 	return (0);
 }
 
-int		test_child(t_command *cmd, t_minishell *shell, pid_t child, int i)
+int		test_child(t_command *cmd, t_minishell *shell, char **envp)
 {
-	char *str;
-
-	// printf ("\nCHILD(%i): cmd->tunnel[%i][%i]\n", i, cmd->infile, cmd->outfile);
-	// printf("ENTERED CHILD\n");
-	// printf ("cmd: fd_in[%i] \n", cmd->infile);
-	child_p_1(cmd, shell);
+	child_p_1(cmd, shell, envp);
 	return (0);
 }
 
@@ -86,6 +82,8 @@ int		test_child(t_command *cmd, t_minishell *shell, pid_t child, int i)
 int		tunnel_fork(t_command *cmd, t_minishell *shell)
 {
 	//creation and laying of pipes if needed.
+	if (cmd->executable == false)
+		return (0);
 	if (pipe(cmd->tunnel) < 0)
 		cmd->executable = false;
 	if (cmd->outfile == NEEDS_PIPE)
@@ -119,7 +117,6 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	return (cmd->pid);
 }
 
-//todo: change the cancel command line to only cancel one of the commands, using cmd->executable
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
@@ -127,24 +124,28 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	int			i;
 	int			status;
 	int			last_status;
+	char		**envp;
 	
 	i = 0;
-	if (shell->cancel_command_line == true)
-		return ;
+	status = 0;
 	cmd = shell->commands;
 	if (!cmd)
 		return ;
-
-	if (cmd && !cmd->next)
+	if (cmd && !cmd->next && cmd->executable == true)
 		if (check_builtin(cmd, shell, MINISHELL) == 0)
 			shell->pipe_count--;
+
+	// creation of envp
+	envp = create_envp(shell->env);
+	// print_envp(envp);
+	// return ;
 	// pipeline logic.
 	while (i <= shell->pipe_count)
 	{
 		tunnel_fork(cmd, shell);
-		if (cmd->pid == 0)
+		if (cmd->pid == 0 && cmd->executable == true)
 		{
-			test_child(cmd, shell, cmd->pid, i);
+			test_child(cmd, shell, envp);
 			exit (1);
 		}
 		if (!cmd->next)
@@ -170,5 +171,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		// printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
 		i--;
 	}
+	if (envp)
+		free(envp);
 	shell->last_return = last_status;
 }

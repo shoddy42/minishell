@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 19:26:28 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 02:18:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 	i = 0;
 	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
 	{
+		// if (tmp->type == ERROR)
+		// 	cmd->executable = false;
 		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(tmp->data);
 		if (tmp->type == INFILE || tmp->type == HEREDOC_FILE)
@@ -67,6 +69,8 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 			break;
 		tmp = tmp->next;
 	}
+	if (cmd->executable == false)
+		printf ("error found, cancelling command [%s]\n", cmd->command[0]);
 	return (tmp);
 }
 
@@ -76,9 +80,10 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 
 	new = ft_calloc(1, sizeof(t_command));
 	if (!new)
-		ms_error("Failed at allocating command.", -1, false, shell);
+		ms_error("Failed at allocating command.", -1, true, shell);
 	new->infile = STDIN_FILENO;
 	new->outfile = STDOUT_FILENO;
+	new->executable = true;
 	if (cmd != NULL)
 	{
 		new->prev = cmd;
@@ -97,7 +102,7 @@ int make_commands(t_minishell *shell)
 	shell->commands = cmd;
 	token = shell->tokens;
 	// printf ("token? [%s]\n", token->data);
-	while (token && shell->cancel_command_line == false)
+	while (token)
 	{
 		token = get_command_options(token, cmd);
 		// //printf("returned token = [%s]\n", token->data);

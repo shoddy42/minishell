@@ -6,14 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 23:10:55 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 05:01:59 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
 //todo: make another sighandler for children, so they exit properly when signalled.
-//todo:
 
 void	child_sig(int signum)
 {
@@ -35,22 +34,33 @@ void	sighandler(int signum)
 	exit(1);
 }
 
+void	increase_shlvl(t_minishell *shell)
+{
+	char	*shlvl;
+	char	*num;
+	
+	num = ft_itoa(1 + ft_atoi(ms_getenv("SHLVL", shell)));
+	shlvl = ft_strjoin("SHLVL=", num);
+	ms_replace_env(shlvl, shell);
+	free(shlvl);
+	free(num);
+}
 
-//todo: replace SHELL=minishell and test it
-//todo: Keep track of SHLVL, and increment it by 1 each time a shell is called.
 int	init_minishell(t_minishell *shell, char **envp)
 {
 	// signal handlers
-	signal(SIGINT, sighandler);
-	signal(SIGQUIT, SIG_IGN);
+	if (signal(SIGINT, sighandler) == SIG_ERR)
+		exit (55);
+	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		exit (56);
 
 	// environment setup
-	// ms_replace_env("SHELL=minishell", shell);
 	shell->envp = envp;
 	shell->bin_dir = getcwd(NULL, 0);
 	shell->bin_dir = ft_strexpand(shell->bin_dir, "/bin/");
 	// shell->last_return = 0;
 	init_env(shell, envp);
-
+	ms_replace_env("SHELL=minishell", shell);
+	increase_shlvl(shell);
 	return (0);
 }

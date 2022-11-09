@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 19:26:28 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 02:06:13 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 	t_token *tmp;
 
 	tmp = NULL;
-	// printf("\nentered handle_left on token [%s]\n", token->data);
 	if (token->next)
 		tmp = token->next;
+	//weird error?
 	if (!tmp)
 	{
 		ms_error("Bad redirect.", 0, false, shell);
+		tmp->type = ERROR;
 		return (token);
 	}
 	if (tmp->type == LEFT && tmp->next)
@@ -38,8 +39,9 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		tmp->fd = open(tmp->data, O_RDONLY);
 		if (tmp->fd == -1)
 		{
-			ms_error("Failed to open file.", 0, false, shell);
-			return (token);
+			ms_error("Failed to open infile.", 0, false, shell);
+			tmp->type = ERROR;
+			return (tmp);
 		}
 		tmp->type = INFILE;
 	}
@@ -60,6 +62,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 	if (!tmp)
 	{
 		ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5, false, shell);
+		token->type = ERROR;
 		return (token);
 	}
 	if (tmp->type == RIGHT)
@@ -73,12 +76,21 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 	if (tmp->type != COMMAND)
 	{
 		ms_error("REDIRECT FAILURE, NO FILENAME GIVEN", -6, false, shell);
+		token->type = ERROR;
 		return (token);
 	}
 	if (append == 1)
 		tmp->fd = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
 	else
 		tmp->fd = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
+	if (tmp->fd < 0)
+	{
+		write (2, "minishell: ", 12);
+		write (2, tmp->data, ft_strlen(tmp->data));
+		write (2, ": Permission denied\n", 20);
+		tmp->type = ERROR;
+		return (tmp);
+	}
 	tmp->type = OUTFILE;
 	if (!token->prev) //ugly fix, but the problem is if token happens to be the HEAD (shell->tokens), we will segf.
 		shell->tokens = tmp;

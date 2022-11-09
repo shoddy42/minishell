@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/08 21:08:28 by wkonings      ########   odam.nl          #
+#    Updated: 2022/11/09 03:54:44 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,10 @@ INC			:= -I include
 HEADER_FILES = $(INCLUDE_DIR)/minishell.h
 HEADERS		:=	$(addprefix $(INCLUDE_DIR)/, $(HEADER_FILES))
 
-FILES = main tokenize token_utils env execute heredoc builtins cd init redirects pwd echo unset expand quote error commands
+FILES = main tokenize token_utils env execute \
+		heredoc builtins cd init redirects pwd \
+		echo unset expand quote error commands \
+		env_utils \
 
 LIBS		:=	
 SRCS		:=	$(addprefix $(SRC_DIR)/,$(FILES:%=%.c))

@@ -39,7 +39,7 @@ int	ms_cd(t_command	*cmd, t_minishell *shell)
 {
 	int	cd_ret;
 
-	if (!cmd->command)
+	if (!cmd->command || !cmd->command[1])
 		return (1);
 	owd(cmd, shell);
 	cd_ret = chdir(cmd->command[1]);

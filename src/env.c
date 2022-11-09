@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/08 23:42:44 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/09 03:40:29 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ int	ms_export_loop(char *command, t_minishell *shell)
 	return(0);
 }
 
-//todo: Make "export" work, it should print a list of all variables, just try with bash
 void	ms_export_env(t_minishell   *shell)
 {
 	t_env   *tmp;
@@ -177,6 +176,7 @@ char    *ms_getenv(char *key, t_minishell *shell)
 	return ("");
 }
 
+//todo: turn env back into a valid ENVP to pass to child processes
 void    init_env(t_minishell *shell, char  **env)
 {
 	int i;

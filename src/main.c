@@ -27,10 +27,55 @@ void	parse_append(t_minishell *shell)
 	while(tmp && tmp->next)
 	{
 		if (tmp->type == COMMAND && tmp->next->type == COMMAND)
-			append_token(tmp, tmp->next);
+		{
+			// append_token(tmp, tmp->next); //replaced?
+			tmp->data = ft_strexpand(tmp->data, tmp->next->data);
+			free_single_token(tmp->next);
+		}
 		else
 			tmp = tmp->next;
 	}
+}
+
+t_token	*find_start_of_command(t_token *token, t_minishell *shell)
+{
+	t_token	*tmp;
+
+	tmp = token;
+	while (tmp && tmp->type != PIPE)
+	{
+		if (!tmp->prev)
+			break;
+		tmp = tmp->prev;
+	}
+	// printf ("start? (%s) [%s]\n", print_token_type(tmp->type), tmp->data);
+	return (tmp);
+}
+
+t_token	*find_end_of_command(t_token *token, t_minishell *shell)
+{
+	t_token	*tmp;
+
+	tmp = token;
+	while (tmp && tmp->type != PIPE)
+	{
+		if (!tmp->next)
+			break;
+		tmp = tmp->next;
+	}
+	// printf ("end? (%s) [%s]\n", print_token_type(tmp->type), tmp->data);
+	return (tmp);
+}
+
+t_token	*remove_command(t_token *token, t_minishell *shell)
+{
+	t_token	*start;
+	t_token *end;
+
+	start = find_start_of_command(token, shell);
+	end = find_end_of_command(token, shell);
+	free_tokens_til(start, end);
+	return (end);
 }
 
 // this function will have to be split into an expansion and a real parsing function
@@ -41,7 +86,7 @@ void parse_token(t_minishell *shell)
 
 	i = 0;
 	token = shell->tokens;
-	while (token && shell->cancel_command_line == false)
+	while (token)
 	{
 		// printf("handling token [%s]\n", token->data);
 		if (token->type == LEFT)
@@ -49,13 +94,13 @@ void parse_token(t_minishell *shell)
 		if (token->type == RIGHT)
 			token = handle_right(token, shell);
 		if (token->type == QUOTE || token->type == DQUOTE)
-				token = handle_quote(token, token->type, shell);
+			token = handle_quote(token, token->type, shell);
 		if (token->type == VARIABLE)
 			expand_dong(token, shell);
-		// if (token->prev)
-		// {
-		// 	append_tokens(token->prev, token);
-		// }
+		if (token->type == ERROR)
+			token = remove_command(token, shell);
+		if (!token)
+			break;
 		token = token->next;
 	}
 	parse_append(shell);
@@ -110,8 +155,11 @@ int	free_commands(t_minishell *shell)
 	{
 		i = -1;
 		if (tmp->command)
+		{
 			while (tmp->command[++i])
 				free(tmp->command[i]);
+			free (tmp->command);
+		}
 		tmp = tmp->next;
 		if (tmp->prev)
 			free(tmp->prev);
@@ -120,16 +168,19 @@ int	free_commands(t_minishell *shell)
 	{
 		i = -1;
 		if (tmp->command)
+		{
 			while (tmp->command[++i])
 				free(tmp->command[i]);
+			free(tmp->command);
+		}
 		free(tmp);
 	}
 	shell->commands = NULL;
 	return (0);
 }
 
-//todo: make more test cases and more todos :)
-//todo: make sure EVERY alloc is protected properly.
+//later: make more test cases and more todos :)
+//later: make sure EVERY alloc is protected properly.
 int	main(int ac, char **av, char **envp)
 {
 	t_minishell	*shell;
@@ -143,7 +194,7 @@ int	main(int ac, char **av, char **envp)
 	{
 		shell->hd_count = 0;
 		shell->command = readline("minishell> ");
-		shell->cancel_command_line = false;
+		// shell->cancel_command = false;
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
 		{
 			rl_replace_line("minishell> exit", 0);
@@ -152,20 +203,20 @@ int	main(int ac, char **av, char **envp)
 			exit (1);
 		}
 		if (shell->command[0] == 'q' && ft_strlen(shell->command) == 1) //temporary exits
-			shell->exit = 1;
+			exit (0);
 		if (ft_strcmp(shell->command, "exit") == 0)
 			shell->exit = 1;
-		ft_tokenize(shell, shell->command);
+		ft_tokenize(shell, shell->command); //immune to error
 		// print_tokens(shell);
-		parse_token(shell);
+		parse_token(shell); //if error, cut out everything
 		// print_tokens(shell);
 		count_pipes(shell);
-		if (shell->cancel_command_line == false)
-		{
+		// if (shell->cancel_command_line == false)
+		// {
 			make_commands(shell);
 			// print_commands(shell);
 			execute_two_electric_boogaloo(shell);
-		}
+		// }
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
 		// print_tokens(shell);
