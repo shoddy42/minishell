@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 13:02:47 by root          ########   odam.nl         */
+/*   Updated: 2022/11/09 13:30:24 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,6 @@ void	ms_exit(t_command *cmd, t_minishell *shell)
 	exit (status);
 }
 
-//todo: make all builtins always have the correct exit status for the purposes of $?
-//^ use shell->last_return for this
-
-//todo: cd -, chdir to $OLDPWD. and update $OLDPWD to it.
 bool	check_builtin(t_command *cmd, t_minishell *shell, t_from process)
 {
 	int ret;
