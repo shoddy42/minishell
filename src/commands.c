@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 02:18:30 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/10 05:00:01 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	print_commands(t_minishell *shell)
 	printf ("\nPrinting all commands:\n");
 	while(tmp)
 	{
-		printf ("\nCOMMAND (%i)    infile [%i] outfile [%i]\n", cmd_num, tmp->infile, tmp->outfile);
+		printf ("\nCOMMAND (%i) infile [%i] outfile [%i]\n", cmd_num, tmp->infile, tmp->outfile);
 		cmd_num++;
 		i = 0;
 		while (tmp && tmp->command && tmp->command[i])
@@ -46,6 +46,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 
 	tmp = token;
 	i = 0;
+	// printf ("i: [%i]\n", i);
 	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
 	{
 		if (tmp->type == COMMAND)
@@ -57,8 +58,6 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 	i = 0;
 	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
 	{
-		// if (tmp->type == ERROR)
-		// 	cmd->executable = false;
 		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(tmp->data);
 		if (tmp->type == INFILE || tmp->type == HEREDOC_FILE)
@@ -101,11 +100,16 @@ int make_commands(t_minishell *shell)
 	cmd = new_command(shell, NULL);
 	shell->commands = cmd;
 	token = shell->tokens;
+	if (!token)
+	{
+		cmd->executable = false;
+		return (1);
+	}
 	// printf ("token? [%s]\n", token->data);
 	while (token)
 	{
 		token = get_command_options(token, cmd);
-		// //printf("returned token = [%s]\n", token->data);
+		printf("returned token = [%s]\n", token->data);
 		i = 0;
 		if (token && token->type == PIPE)
 		{

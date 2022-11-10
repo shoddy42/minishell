@@ -6,7 +6,7 @@
 /*   By: root <root@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 11:43:21 by root          #+#    #+#                 */
-/*   Updated: 2022/11/09 13:01:43 by root          ########   odam.nl         */
+/*   Updated: 2022/11/10 03:26:36 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	ms_cd(t_command	*cmd, t_minishell *shell)
 		return (go_back(shell));
 	wd(shell, "OLDPWD=");
 	cd_ret = chdir(cmd->command[1]);
-	printf ("cd ret = [%i]\n", cd_ret);
+	// printf ("cd ret = [%i]\n", cd_ret);
 	wd(shell, "PWD=");
 	return (cd_ret * -1);
 	// if (cd_ret < 0)

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 13:26:48 by root          ########   odam.nl         */
+/*   Updated: 2022/11/10 04:59:24 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
 	write(2, "minishell: ", 12);
 	write(2, cmd->command[0], ft_strlen(cmd->command[0]));
 	write(2, ": command not found\n", 20);
-	return (0);
+	return (127);
 }
 
 int		test_child(t_command *cmd, t_minishell *shell, char **envp)
 {
 	// printf ("cmd [%s] exe? [%i]\n", cmd->command[0], cmd->executable);
-	child_p_1(cmd, shell, envp);
+	return (child_p_1(cmd, shell, envp));
 	return (0);
 }
 
@@ -132,7 +132,10 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	last_status = -42;
 	cmd = shell->commands;
 	if (!cmd)
+	{
+		printf ("no cmd!\n");
 		return ;
+	}
 	if (cmd && !cmd->next && cmd->executable == true)
 		if (check_builtin(cmd, shell, MINISHELL) == true)
 			return ;
@@ -148,20 +151,22 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	while (i <= shell->pipe_count)
 	{
 		printf ("creating fok\n");
-		tunnel_fork(cmd, shell);
+		if (cmd->executable == true)
+		{
+			tunnel_fork(cmd, shell);
+			i++;
+		}
 		if (cmd->pid == 0 && cmd->executable == true)
 		{
-			test_child(cmd, shell, envp);
-			exit (1);
+			exit (test_child(cmd, shell, envp));
 		}
 		if (!cmd->next)
 			break;
 		cmd = cmd->next;
-		i++;
 	}
 	shell->last_cmd = cmd->pid;
 	//gathering of latest exit status.
-	while (i >= 0)
+	while (i > 0)
 	{
 		printf("WAITING FOR [%i] PROCESS\n", i);
 		pid = waitpid((pid_t)0, &status, 0);
@@ -172,7 +177,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 			shell->last_return = WEXITSTATUS(status);
 		else
 			shell->last_return = -69;
-		printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
+		// printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
 		i--;
 	}
 	if (envp)
