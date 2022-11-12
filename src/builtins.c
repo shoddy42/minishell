@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 13:30:24 by root          ########   odam.nl         */
+/*   Updated: 2022/11/12 05:22:07 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ bool	check_builtin(t_command *cmd, t_minishell *shell, t_from process)
 	if (ft_strcmp(cmd->command[0], "cd") == 0)
 	{
 		shell->last_return = ms_cd(cmd, shell);
-		printf ("cd ret? [%i]\n", shell->last_return);
+		// printf ("cd ret? [%i]\n", shell->last_return);
 	}
 	else if(ft_strcmp(cmd->command[0], "echo") == 0)
 		shell->last_return = ms_echo(cmd);

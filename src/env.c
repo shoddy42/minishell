@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/09 12:39:28 by root          ########   odam.nl         */
+/*   Updated: 2022/11/10 05:13:46 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,9 +128,6 @@ void	ms_export_env(t_minishell   *shell)
 		tmp = tmp->next;
 	}
 }
-
-//todo: think about whether we want "export test=yes b" to actually create b or not. bash doesnt.
-//		but i think noone cares.
 
 int ms_export(t_command *cmd, t_minishell *shell)
 {

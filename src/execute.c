@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/10 04:59:24 by root          ########   odam.nl         */
+/*   Updated: 2022/11/12 02:09:14 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	return (cmd->pid);
 }
 
-
 //todo: if cmd->exe == false, dont wait for child cuz it was never forked.
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
@@ -127,6 +126,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	int			status;
 	int			last_status;
 	char		**envp;
+	
 	
 	status = 0;
 	last_status = -42;
@@ -150,9 +150,9 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	i = 0;
 	while (i <= shell->pipe_count)
 	{
-		printf ("creating fok\n");
 		if (cmd->executable == true)
 		{
+			// printf ("creating fok\n");
 			tunnel_fork(cmd, shell);
 			i++;
 		}
@@ -168,7 +168,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	//gathering of latest exit status.
 	while (i > 0)
 	{
-		printf("WAITING FOR [%i] PROCESS\n", i);
+		// printf("WAITING FOR [%i] PROCESS\n", i);
 		pid = waitpid((pid_t)0, &status, 0);
 		if (pid == shell->last_cmd)
 			if (WIFEXITED(status))

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 12:18:17 by root          ########   odam.nl         */
+/*   Updated: 2022/11/12 02:26:49 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include "../libft/libft.h"
 # include <stdbool.h>
+# include <limits.h>
 
 // # include <sys/wait.h> // needed for WSL
 

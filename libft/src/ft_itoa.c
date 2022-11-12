@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/03 21:46:59 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/05 17:21:27 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/12 05:05:23 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static size_t	ft_numlen(long n)
 	size_t	len;
 
 	len = 0;
-	if (n == 0 || n == -0)
+	if (n == 0)
 		return (1);
 	while (n > 0)
 	{
@@ -27,6 +27,12 @@ static size_t	ft_numlen(long n)
 	return (len);
 }
 
+/**
+ * @brief Takes an integer and turns it into a string.
+ * 
+ * @param n Number to be converted.
+ * @return Allocated string containing the number. Or NULL incase of faillure
+ */
 char	*ft_itoa(int n)
 {
 	char	*res;
