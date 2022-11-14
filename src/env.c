@@ -6,15 +6,15 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/14 06:27:06 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 11:12:14 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int		fill_key(t_env	*new)
+int	fill_key(t_env	*new)
 {
-	int		eq;
+	int	eq;
 
 	eq = ms_strchr(new->beans, '=');
 	if (eq)
@@ -132,26 +132,26 @@ int ms_export(t_command *cmd, t_minishell *shell)
 	int i;
 	
 	i = 1;
-	printf ("export entered\n");
+	// printf ("export entered\n");
 	int j = -1;
-	while (cmd->command[++j])
-		printf ("cmd(%i) = [%s]\n", j, cmd->command[j]);
+	// while (cmd->command[++j])
+	// 	printf ("cmd(%i) = [%s]\n", j, cmd->command[j]);
 	if (!cmd->command[i])
 		ms_export_env(shell);
-	while(cmd->command[i])
+	while (cmd->command[i])
 	{
-		if(ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
+		if (ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
 			ms_export_loop(cmd->command[i], shell);
 		i++;
 	}
-	return(0);
+	return (0);
 }
 
-int ms_env(t_minishell  *shell, t_command *cmd)
+int	ms_env(t_minishell *shell, t_command *cmd)
 {
-	t_env   *tmp;
+	t_env	*tmp;
 
-	if (!(shell->env))
+	if (!shell->env)
 		return (1);
 	tmp = shell->env;
 	while (tmp)
@@ -166,9 +166,9 @@ int ms_env(t_minishell  *shell, t_command *cmd)
 	return (0);
 }
 
-char    *ms_getenv(char *key, t_minishell *shell)
+char	*ms_getenv(char *key, t_minishell *shell)
 {
-	t_env   *env;
+	t_env	*env;
 
 	env = shell->env;
 	while (env)
@@ -180,10 +180,10 @@ char    *ms_getenv(char *key, t_minishell *shell)
 	return ("");
 }
 
-void    init_env(t_minishell *shell, char  **env)
+void	init_env(t_minishell *shell, char **env)
 {
-	int i;
-	t_env   *tmp;
+	int		i;
+	t_env	*tmp;
 
 	i = 0;
 	shell->env = new_env(env[i]);

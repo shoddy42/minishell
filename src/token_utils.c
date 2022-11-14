@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/04 14:02:36 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 11:25:19 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	free_single_token(t_token *token)
 // frees all tokens.
 void	free_tokens(t_minishell *shell)
 {
-	t_token *list;
+	t_token	*list;
 
 	list = shell->tokens;
 	while (list && list->next)
@@ -176,7 +176,7 @@ void	free_tokens(t_minishell *shell)
 
 t_token	*get_last_token(t_token *list)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	tmp = list;
 	while (tmp && tmp->next)

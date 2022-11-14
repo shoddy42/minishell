@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 12:25:59 by root          ########   odam.nl         */
+/*   Updated: 2022/11/14 11:16:01 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 t_token	*word_adding(char *variable, t_token *token, t_minishell *shell)
 {
-	t_token *new;
-	t_token *space;
+	t_token	*new;
+	t_token	*space;
 
 	new = new_token(shell, variable, ft_strlen(variable), false);
 	if (!new)
@@ -25,10 +25,8 @@ t_token	*word_adding(char *variable, t_token *token, t_minishell *shell)
 	if (!space)
 		ms_error ("Failed to allocate token for split word", -24, true, shell);
 	token->next = space;
-
 	space->prev = token;
 	space->next = new;
-	
 	new->prev = space;
 	return (new);
 }
@@ -36,7 +34,7 @@ t_token	*word_adding(char *variable, t_token *token, t_minishell *shell)
 t_token	*word_splitting(char *variable, t_token *token, t_minishell *shell)
 {
 	char	**words;
-	t_token *test;
+	t_token	*test;
 	t_token	*tmp;
 	int		i;
 
@@ -64,8 +62,8 @@ t_token	*word_splitting(char *variable, t_token *token, t_minishell *shell)
 void	expand_dong(t_token *token, t_minishell *shell)
 {
 	char	*variable;
-	t_token *tmp;
-	t_token *next;
+	t_token	*tmp;
+	t_token	*next;
 
 	token->type = COMMAND;
 	if (token->next && token->next->type == COMMAND)

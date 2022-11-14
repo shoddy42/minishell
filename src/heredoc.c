@@ -6,14 +6,15 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 11:22:24 by root          ########   odam.nl         */
+/*   Updated: 2022/11/14 11:20:45 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
 // i think the entire heredoc is perfect now. just leave it until i get back
-//later: make sure every instance where hd_count gets called, it's return value is freed before lost.
+//later: make sure every instance where
+//hd_count gets called, it's return value is freed before lost.
 char	*hd_count(t_minishell	*shell)
 {
 	char	*num;
@@ -25,7 +26,6 @@ char	*hd_count(t_minishell	*shell)
 	ret = ft_strjoin(shell->bin_dir, str);
 	free (num);
 	free (str);
-	// printf("hd_count ret = [%s]\n", ret);
 	return (ret);
 }
 
@@ -33,7 +33,6 @@ void	delete_heredocs(t_minishell *shell)
 {
 	char	*heredoc;
 
-	// printf ("heredoc count?: [%i]\n", shell->hd_count);
 	while (shell->hd_count > 0)
 	{
 		shell->hd_count--;
@@ -44,7 +43,6 @@ void	delete_heredocs(t_minishell *shell)
 }
 
 //todo: leaks and protection.
-//consideration: redo tokenizing so that we can do variable expansion as well as the normal commands do.
 char	*hd_var_exp(char *line, t_minishell *shell)
 {
 	char	**split;
@@ -65,7 +63,7 @@ char	*hd_var_exp(char *line, t_minishell *shell)
 			free(split[i]);
 			split[i] = ft_strdup(var);
 		}
-		ret = ft_strexpand(ret, split[i]); 
+		ret = ft_strexpand(ret, split[i]);
 		ret = ft_strexpand(ret, " ");
 		free(split[i]);
 	}
@@ -84,7 +82,6 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 	int		fd;
 
 	tmp = token->next;
-	// printf ("hd = %s\n", tmp->data);
 	if (tmp && tmp->type != COMMAND && tmp->type != VOID && tmp->type != VARIABLE)
 	{
 		ms_error("Syntax Error near heredoc.", -7, false, shell);
@@ -93,8 +90,6 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 	}
 	while (tmp && tmp->type == VOID)
 		tmp = tmp->next;
-	// printf ("opening [%s]\n", tmp->data);
-
 	heredoc = hd_count(shell);
 	fd = open(heredoc, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
@@ -102,18 +97,17 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 		tmp->type = ERROR;
 		ms_error("HEREDOC FAILED TO OPEN.", -1, false, shell);
 	}
-	// printf("heredoc token: [%s] FD: [%i]\n", tmp->data, fd);
 	delim = ft_strdup(tmp->data);
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if(ft_strcmp(line, delim) == 0)
+		if (ft_strcmp(line, delim) == 0)
 		{
 			free(line);
 			free(delim);
-			break;
+			break ;
 		}
-		if (ft_charinstr('$', line));
+		if (ft_charinstr('$', line))
 			line = hd_var_exp(line, shell);
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);

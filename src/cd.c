@@ -6,7 +6,7 @@
 /*   By: root <root@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 11:43:21 by root          #+#    #+#                 */
-/*   Updated: 2022/11/12 09:12:02 by root          ########   odam.nl         */
+/*   Updated: 2022/11/14 11:01:39 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ int	go_back(t_minishell *shell)
 int	ms_cd(t_command	*cmd, t_minishell *shell)
 {
 	int	cd_ret;
-	
-	if (!cmd->command[1] || (cmd->command[1] && ft_strcmp(cmd->command[1], "~") == 0))
+
+	if (!cmd->command[1] || ft_strcmp(cmd->command[1], "~") == 0)
 		return (chdir(ms_getenv("HOME", shell)) * -1);
 	if (cmd->command[1] && ft_strcmp(cmd->command[1], "-") == 0)
 		return (go_back(shell));
