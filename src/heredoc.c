@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 11:22:24 by root          ########   odam.nl         */
+/*   Updated: 2022/11/14 11:33:41 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 			free(delim);
 			break;
 		}
-		if (ft_charinstr('$', line));
+		if (ft_charinstr('$', line))
 			line = hd_var_exp(line, shell);
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);

@@ -211,7 +211,7 @@ int	main(int ac, char **av, char **envp)
 		parse_token(shell); //if error, cut out everything
 		// print_tokens(shell);
 		count_pipes(shell);
-		if (make_commands(shell) == 0);
+		if (make_commands(shell) == 0)
 			execute_two_electric_boogaloo(shell);
 		// print_commands(shell);
 		if (ft_strlen(shell->command) > 0)
