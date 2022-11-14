@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 05:18:34 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/12 02:09:14 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
 	if (cmd->outfile != STDOUT_FILENO && cmd->outfile != NEEDS_PIPE)
 		if (dup2(cmd->outfile, STDOUT_FILENO) == -1)
 			cmd->executable = false;
-	if (check_builtin(cmd, shell, CHILD) == 0)
-		return (42);
+	if (check_builtin(cmd, shell, CHILD))
+		return (42); //change this?
 	i = 0;
 	if (cmd->command && access(cmd->command[0], X_OK) == 0)
 		execve(cmd->command[0], cmd->command, envp);
@@ -67,13 +67,13 @@ int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
 	write(2, "minishell: ", 12);
 	write(2, cmd->command[0], ft_strlen(cmd->command[0]));
 	write(2, ": command not found\n", 20);
-	// printf ("%s: command not found.\n", cmd->command[0]);
-	return (0);
+	return (127);
 }
 
 int		test_child(t_command *cmd, t_minishell *shell, char **envp)
 {
-	child_p_1(cmd, shell, envp);
+	// printf ("cmd [%s] exe? [%i]\n", cmd->command[0], cmd->executable);
+	return (child_p_1(cmd, shell, envp));
 	return (0);
 }
 
@@ -117,6 +117,7 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	return (cmd->pid);
 }
 
+//todo: if cmd->exe == false, dont wait for child cuz it was never forked.
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
@@ -126,14 +127,19 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	int			last_status;
 	char		**envp;
 	
-	i = 0;
+	
 	status = 0;
+	last_status = -42;
 	cmd = shell->commands;
 	if (!cmd)
+	{
+		printf ("no cmd!\n");
 		return ;
+	}
 	if (cmd && !cmd->next && cmd->executable == true)
-		if (check_builtin(cmd, shell, MINISHELL) == 0)
-			shell->pipe_count--;
+		if (check_builtin(cmd, shell, MINISHELL) == true)
+			return ;
+	// printf ("cmd count = [%i]\n", shell->pipe_count);
 
 	// creation of envp
 	envp = create_envp(shell->env);
@@ -141,26 +147,28 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 
 	
 	// pipeline logic.
+	i = 0;
 	while (i <= shell->pipe_count)
 	{
-		tunnel_fork(cmd, shell);
+		if (cmd->executable == true)
+		{
+			// printf ("creating fok\n");
+			tunnel_fork(cmd, shell);
+			i++;
+		}
 		if (cmd->pid == 0 && cmd->executable == true)
 		{
-			test_child(cmd, shell, envp);
-			exit (1);
+			exit (test_child(cmd, shell, envp));
 		}
 		if (!cmd->next)
-		{
-			shell->last_cmd = cmd->pid;
 			break;
-		}
 		cmd = cmd->next;
-		i++;
 	}
+	shell->last_cmd = cmd->pid;
 	//gathering of latest exit status.
-	while (i >= 0)
+	while (i > 0)
 	{
-		// printf("WAITING FOR PROCESS\n");
+		// printf("WAITING FOR [%i] PROCESS\n", i);
 		pid = waitpid((pid_t)0, &status, 0);
 		if (pid == shell->last_cmd)
 			if (WIFEXITED(status))
@@ -174,5 +182,6 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	}
 	if (envp)
 		free(envp);
-	shell->last_return = last_status;
+	if (last_status != -42)
+		shell->last_return = last_status;
 }

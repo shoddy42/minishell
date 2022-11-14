@@ -209,16 +209,14 @@ int	main(int ac, char **av, char **envp)
 		ft_tokenize(shell, shell->command); //immune to error
 		// print_tokens(shell);
 		parse_token(shell); //if error, cut out everything
-		print_tokens(shell);
+		// print_tokens(shell);
 		count_pipes(shell);
-		// if (shell->cancel_command_line == false)
-		// {
-			make_commands(shell);
-			// print_commands(shell);
+		if (make_commands(shell) == 0);
 			execute_two_electric_boogaloo(shell);
-		// }
+		// print_commands(shell);
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
+		printf("$? [%i]\n", shell->last_return);
 		// print_tokens(shell);
 		// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 

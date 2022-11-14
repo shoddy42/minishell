@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 08:02:06 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/09 12:25:59 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,10 @@ void	expand_dong(t_token *token, t_minishell *shell)
 	if (tmp->next)
 		next = tmp->next;
 	if (tmp->data && tmp->data[0] == '?')
+	{
+		printf ("number? = [%i]\n", shell->last_return);
 		variable = ft_itoa(shell->last_return);
+	}
 	else
 		variable = ft_strdup(ms_getenv(tmp->data, shell));
 	free_single_token(tmp);
