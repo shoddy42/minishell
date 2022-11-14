@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:35:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 11:37:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,10 +144,8 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 	return (0);
 }
 
-int	ms_env(t_minishell  *shell, t_command *cmd)
 int	ms_env(t_minishell *shell, t_command *cmd)
 {
-	t_env	*tmp;
 	t_env	*tmp;
 
 	if (!shell->env)
@@ -166,7 +164,6 @@ int	ms_env(t_minishell *shell, t_command *cmd)
 }
 
 char	*ms_getenv(char *key, t_minishell *shell)
-char	*ms_getenv(char *key, t_minishell *shell)
 {
 	t_env	*env;
 
@@ -180,11 +177,8 @@ char	*ms_getenv(char *key, t_minishell *shell)
 	return ("");
 }
 
-void	init_env(t_minishell *shell, char  **env)
 void	init_env(t_minishell *shell, char **env)
 {
-	int		i;
-	t_env	*tmp;
 	int		i;
 	t_env	*tmp;
 
