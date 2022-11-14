@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/09 08:48:40 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/11 19:47:09 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,25 +88,17 @@ int	ms_replace_env(char *beans, t_minishell *shell)
 
 int	ms_export_loop(char *command, t_minishell *shell)
 {
-	int     i;
-	int     eq;
-	int     len;
 	t_env   *new;
 	t_env   *tmp;
 
-	i = 0;
-	eq = 0;
-	len = 0;
 	tmp = shell->env;
 	if (!command)
 		return (1);
 	new = new_env(command);
-	// new->beans = ft_strdup(command);
-	// fill_key(new);
 	while (tmp && tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
-	return(0);
+	return (0);
 }
 
 void	ms_export_env(t_minishell   *shell)
@@ -136,7 +128,7 @@ void	ms_export_env(t_minishell   *shell)
 //		this one is probably expand function's fault. dunno yet.
 int ms_export(t_command *cmd, t_minishell *shell)
 {
-	int i;
+	int	i;
 	
 	i = 1;
 	if (!cmd->command[i])
