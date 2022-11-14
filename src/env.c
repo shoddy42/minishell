@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/10 05:13:46 by root          ########   odam.nl         */
+/*   Updated: 2022/11/14 06:27:06 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,9 @@ int	ms_export_loop(char *command, t_minishell *shell)
 	eq = 0;
 	len = 0;
 	tmp = shell->env;
-	if (!command)
+	if (!command || !tmp) //added || !tmp?
 		return (1);
 	new = new_env(command);
-	// new->beans = ft_strdup(command);
-	// fill_key(new);
 	while (tmp && tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
