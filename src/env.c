@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:37:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 13:06:54 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	ms_replace_env(char *beans, t_minishell *shell)
 	{
 		if (ft_strncmp(tmp->key, beans, ft_strchr_num(beans, '=')) == 0)
 		{
-			printf ("replacing! key: [%s] beans: [%s]\n", tmp->key, beans);
+			// printf ("replacing! key: [%s] beans: [%s]\n", tmp->key, beans);
 			free(tmp->beans);
 			free(tmp->data);
 			tmp->beans = ft_strdup(beans);
@@ -128,8 +128,8 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 
 	i = 1;
 	j = -1;
-	while (cmd->command[++j])
-		printf ("cmd(%i) = [%s]\n", j, cmd->command[j]);
+	// while (cmd->command[++j])
+	// 	printf ("cmd(%i) = [%s]\n", j, cmd->command[j]);
 	if (!cmd->command[i])
 		ms_export_env(shell);
 	while (cmd->command[i])

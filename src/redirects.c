@@ -6,12 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:24:31 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 12:54:03 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+//todo: fix segfault on 
 t_token	*handle_left(t_token *token, t_minishell *shell)
 {
 	t_token	*tmp;
@@ -23,7 +24,7 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 	if (!tmp)
 	{
 		ms_error("Bad redirect.", 0, false, shell);
-		tmp->type = ERROR;
+		token->type = ERROR;
 		return (token);
 	}
 	if (tmp->type == LEFT && tmp->next)
@@ -41,7 +42,7 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		{
 			ms_error("Failed to open infile.", 0, false, shell);
 			tmp->type = ERROR;
-			return (tmp);
+			return (tmp); //segfault here?
 		}
 		tmp->type = INFILE;
 	}

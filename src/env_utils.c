@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 05:00:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 12:32:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	print_envp(char **envp)
 	printf ("\n");
 }
 
+//todo: change envp creation and freeing to whenever the env linked list changes.
 char	**create_envp(t_env *env_head)
 {
 	t_env	*env;

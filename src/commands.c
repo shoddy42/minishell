@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:06:58 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 13:50:19 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,17 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 			cmd->infile = tmp->fd;
 		if (tmp->type == OUTFILE)
 			cmd->outfile = tmp->fd;
+		if (tmp->type == ERROR)
+		{
+			printf ("command terminated.");
+			cmd->executable = false;
+		}
 		if (!tmp->next)
 			break ;
 		tmp = tmp->next;
 	}
+	if (!cmd->command[0])
+		cmd->executable = false;
 	return (tmp);
 }
 	// if (cmd->executable == false)
