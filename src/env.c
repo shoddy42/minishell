@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:12:14 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 11:35:05 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	fill_key(t_env	*new)
 	return (1);
 }
 
-int		fill_data(t_env	*new, int	eq)
+int	fill_data(t_env	*new, int eq)
 {
 	if (!eq)
 		eq = ms_strchr(new->beans, '=');
@@ -88,26 +88,20 @@ int	ms_replace_env(char *beans, t_minishell *shell)
 
 int	ms_export_loop(char *command, t_minishell *shell)
 {
-	int     i;
-	int     eq;
-	int     len;
-	t_env   *new;
-	t_env   *tmp;
+	t_env	*new;
+	t_env	*tmp;
 
-	i = 0;
-	eq = 0;
-	len = 0;
 	tmp = shell->env;
-	if (!command || !tmp) //added || !tmp?
+	if (!command || !tmp)
 		return (1);
 	new = new_env(command);
 	while (tmp && tmp->next)
 		tmp = tmp->next;
 	tmp->next = new;
-	return(0);
+	return (0);
 }
 
-void	ms_export_env(t_minishell   *shell)
+void	ms_export_env(t_minishell	*shell)
 {
 	t_env   *tmp;
 
@@ -127,28 +121,33 @@ void	ms_export_env(t_minishell   *shell)
 	}
 }
 
-int ms_export(t_command *cmd, t_minishell *shell)
+int	ms_export(t_command *cmd, t_minishell *shell)
 {
-	int i;
-	
+	int	i;
+	int	j;
+
 	i = 1;
-	// printf ("export entered\n");
-	int j = -1;
-	// while (cmd->command[++j])
-	// 	printf ("cmd(%i) = [%s]\n", j, cmd->command[j]);
+	j = -1;
+	while (cmd->command[++j])
+		printf ("cmd(%i) = [%s]\n", j, cmd->command[j]);
 	if (!cmd->command[i])
 		ms_export_env(shell);
 	while (cmd->command[i])
+	while (cmd->command[i])
 	{
+		if (ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
 		if (ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
 			ms_export_loop(cmd->command[i], shell);
 		i++;
 	}
 	return (0);
+	return (0);
 }
 
+int	ms_env(t_minishell  *shell, t_command *cmd)
 int	ms_env(t_minishell *shell, t_command *cmd)
 {
+	t_env	*tmp;
 	t_env	*tmp;
 
 	if (!shell->env)
@@ -167,6 +166,7 @@ int	ms_env(t_minishell *shell, t_command *cmd)
 }
 
 char	*ms_getenv(char *key, t_minishell *shell)
+char	*ms_getenv(char *key, t_minishell *shell)
 {
 	t_env	*env;
 
@@ -180,8 +180,11 @@ char	*ms_getenv(char *key, t_minishell *shell)
 	return ("");
 }
 
+void	init_env(t_minishell *shell, char  **env)
 void	init_env(t_minishell *shell, char **env)
 {
+	int		i;
+	t_env	*tmp;
 	int		i;
 	t_env	*tmp;
 
