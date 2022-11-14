@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/10 05:00:01 by root          ########   odam.nl         */
+/*   Updated: 2022/11/14 11:06:58 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,25 @@
 void	print_commands(t_minishell *shell)
 {
 	t_command	*tmp;
-	int	cmd_num = 0;
-	int i = 0;
+	int			cmd_num;	
+	int			i;
 
+	i = 0;
+	cmd_num = 0;
 	tmp = shell->commands;
 	printf ("\nPrinting all commands:\n");
-	while(tmp)
+	while (tmp)
 	{
-		printf ("\nCOMMAND (%i) infile [%i] outfile [%i]\n", cmd_num, tmp->infile, tmp->outfile);
+		printf ("\nCMD (%i) infile [%i] outfile [%i]\n",
+			cmd_num, tmp->infile, tmp->outfile);
 		cmd_num++;
-		i = 0;
-		while (tmp && tmp->command && tmp->command[i])
-		{
+		i = -1;
+		while (tmp && tmp->command && tmp->command[++i])
 			printf("cmd(%i) = [%s]\n", i, tmp->command[i]);
-			i++;
-		}
 		if (!tmp->next)
 		{
 			printf ("no command next\n");
-			break;
+			break ;
 		}
 		tmp = tmp->next;
 	}
@@ -46,8 +46,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 
 	tmp = token;
 	i = 0;
-	// printf ("i: [%i]\n", i);
-	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
+	while (tmp && tmp->type != PIPE) // && tmp->type != SEMICOLON)
 	{
 		if (tmp->type == COMMAND)
 			i++;
@@ -56,7 +55,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 	cmd->command = ft_calloc(i + 1, sizeof(char *));
 	tmp = token;
 	i = 0;
-	while (tmp && tmp->type != PIPE)// && tmp->type != SEMICOLON)
+	while (tmp && tmp->type != PIPE) // && tmp->type != SEMICOLON)
 	{
 		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(tmp->data);
@@ -65,13 +64,13 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 		if (tmp->type == OUTFILE)
 			cmd->outfile = tmp->fd;
 		if (!tmp->next)
-			break;
+			break ;
 		tmp = tmp->next;
 	}
-	if (cmd->executable == false)
-		printf ("error found, cancelling command [%s]\n", cmd->command[0]);
 	return (tmp);
 }
+	// if (cmd->executable == false)
+	// 	printf ("error found, cancelling command [%s]\n", cmd->command[0]);
 
 t_command	*new_command(t_minishell *shell, t_command *cmd)
 {
@@ -91,11 +90,10 @@ t_command	*new_command(t_minishell *shell, t_command *cmd)
 	return (new);
 }
 
-int make_commands(t_minishell *shell)
+int	make_commands(t_minishell *shell)
 {
 	t_command	*cmd;
 	t_token		*token;
-	int			i;
 
 	cmd = new_command(shell, NULL);
 	shell->commands = cmd;
@@ -109,8 +107,7 @@ int make_commands(t_minishell *shell)
 	while (token)
 	{
 		token = get_command_options(token, cmd);
-		printf("returned token = [%s]\n", token->data);
-		i = 0;
+		// printf("returned token = [%s]\n", token->data);
 		if (token && token->type == PIPE)
 		{
 			cmd = new_command(shell, cmd);

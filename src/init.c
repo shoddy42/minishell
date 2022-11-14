@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/10 04:43:17 by root          ########   odam.nl         */
+/*   Updated: 2022/11/14 11:22:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,21 @@ void	child_sig(int signum)
 
 void	sighandler(int signum)
 {
-	if(signum == SIGINT) // ctrl + C
+	if (signum == SIGINT) // ctrl + C
 	{
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-
-	//WHEN ALL DONE CAN REMOVING MEN
-	exit(1);
+	exit(1); //later: remove
 }
 
 void	increase_shlvl(t_minishell *shell)
 {
 	char	*shlvl;
 	char	*num;
-	
+
 	num = ft_itoa(1 + ft_atoi(ms_getenv("SHLVL", shell)));
 	shlvl = ft_strjoin("SHLVL=", num);
 	ms_replace_env(shlvl, shell);
@@ -53,7 +51,6 @@ int	init_minishell(t_minishell *shell, char **envp)
 		exit (55);
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		exit (56);
-
 	// environment setup
 	shell->last_return = 0;
 	shell->envp = envp;

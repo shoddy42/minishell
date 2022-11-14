@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/09 02:06:13 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 11:24:31 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_token	*handle_left(t_token *token, t_minishell *shell)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	tmp = NULL;
 	if (token->next)
@@ -51,7 +51,7 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 //later: split function so it's norme
 t_token	*handle_right(t_token *token, t_minishell *shell)
 {
-	t_token 	*tmp;
+	t_token		*tmp;
 	int			append;
 
 	append = 0;

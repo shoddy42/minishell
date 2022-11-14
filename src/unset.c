@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   unset.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/11/14 11:26:52 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/11/14 11:27:04 by wkonings      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/minishell.h"
 
 int	remove_list(t_env	*env)
@@ -21,7 +33,7 @@ int	remove_list(t_env	*env)
 	return (0);
 }
 
-int ms_unset_loop(t_minishell *shell, char *cmd, t_env *tmp)
+int	ms_unset_loop(t_minishell *shell, char *cmd, t_env *tmp)
 {
 	t_env	*tmp1;
 	t_env	*tmp2;

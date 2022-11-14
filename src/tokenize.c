@@ -6,17 +6,16 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/08 22:32:59 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 11:26:41 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-
 //todo: move this to libft lmao
 int		ft_isspace(char c)
 {
-	return(c == ' ' || c == '\t' || c == '\n');
+	return (c == ' ' || c == '\t' || c == '\n');
 }
 
 void	set_token_type(t_minishell *shell, t_token *token, char *data)
@@ -98,7 +97,6 @@ void	ft_tokenize(t_minishell *shell, char *command)
 			i--;
 		// command += new_token(shell, command, i + 1); //could swap back to this 1 line saver B]
 		new_token(shell, command, i + 1, true);
-		
 		command += i + 1 + skip;
 		skip = 0;
 		i = 0;
