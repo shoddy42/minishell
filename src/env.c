@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:37:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 12:06:34 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,20 @@ int	ms_replace_env(char *beans, t_minishell *shell)
 	tmp = shell->env;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->key, beans, ft_strchr_num(beans, '=')) == 0)
+		if (ft_strncmp(tmp->key, beans, ft_strlen(tmp->key)) == 0)
 		{
-			printf ("replacing! key: [%s] beans: [%s]\n", tmp->key, beans);
+			// printf ("replacing! key: [%s] beans: [%s]\n", tmp->key, beans);
+			printf("yo in rep\n");
 			free(tmp->beans);
 			free(tmp->data);
 			tmp->beans = ft_strdup(beans);
 			if (!beans)
 				ms_error("CANNOT ALLOCATE MORE ENV", -1, false, shell);
 			fill_data(tmp, 0);
+			if (ft_strlen(tmp->data) == 0)
+				tmp->has_beans = false;
+			else
+				tmp->has_beans = true;
 			return (0);
 		}
 		tmp = tmp->next;
@@ -128,14 +133,10 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 
 	i = 1;
 	j = -1;
-	while (cmd->command[++j])
-		printf ("cmd(%i) = [%s]\n", j, cmd->command[j]);
 	if (!cmd->command[i])
 		ms_export_env(shell);
 	while (cmd->command[i])
-	while (cmd->command[i])
 	{
-		if (ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
 		if (ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
 			ms_export_loop(cmd->command[i], shell);
 		i++;

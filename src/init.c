@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:22:08 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/14 11:41:00 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	sighandler(int signum)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	exit(1); //later: remove
+	// exit(1); //later: remove
 }
 
 void	increase_shlvl(t_minishell *shell)
