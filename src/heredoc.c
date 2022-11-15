@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 09:55:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 19:35:09 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,19 @@ char	*hd_var_exp(char *line, t_minishell *shell)
 	return (ret);
 }
 
+void	heredoc_sig(int signum)
+{
+
+	if (signum == SIGINT)
+	{
+		printf ("sig int recieved\n");
+		exit (1);
+	}
+}
+
 //todo: MAYBE make it if there's quotes in the delimiter, dont expand variables.
 //todo: check for potential segfaults if malloc fails.
+//todo: if there is no (atm its obj, but it should be bin) folder, gotta make one.
 t_token	*heredoc(t_token *token, t_minishell *shell)
 {
 	char	*delim;
@@ -98,20 +109,43 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 		ms_error("HEREDOC FAILED TO OPEN.", -1, false, shell);
 	}
 	delim = ft_strdup(tmp->data);
+	pid_t doc;
+
+	//todo: for the love of god refactor heredoc..
+
+	doc = fork();
+	if (doc == 0)
+		signal(SIGINT, heredoc_sig);
+	else
+		signal(SIGINT, SIG_IGN);
 	while (1)
 	{
-		line = readline("heredoc> ");
-		if (ft_strcmp(line, delim) == 0)
+		if (doc == 0)
 		{
+			line = readline("heredoc> ");
+			if (!line)
+				break ;
+			if (ft_strcmp(line, delim) == 0)
+			{
+				free(line);
+				free(delim);
+				break ;
+			}
+			if (ft_charinstr('$', line))
+				line = hd_var_exp(line, shell);
+			write(fd, line, ft_strlen(line));
+			write(fd, "\n", 1);
 			free(line);
-			free(delim);
-			break ;
 		}
-		if (ft_charinstr('$', line))
-			line = hd_var_exp(line, shell);
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
+		else
+			break ;
+	}
+	if (doc == 0)
+		exit (0);
+	else
+	{
+		waitpid(doc, NULL, 0);
+		signal(SIGINT, sighandler);
 	}
 	close (fd);
 	fd = open(heredoc, O_RDONLY);
@@ -121,5 +155,6 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 	tmp->type = HEREDOC_FILE;
 	free(heredoc);
 	shell->hd_count++;
+	// printf ("hd ret = [%s]\n", tmp->data);
 	return (tmp);
 }

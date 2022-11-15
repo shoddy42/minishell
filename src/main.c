@@ -32,7 +32,7 @@ void	parse_append(t_minishell *shell)
 	tmp = shell->tokens;
 	while(tmp && tmp->next)
 	{
-		if (tmp->type == COMMAND && tmp->next->type == COMMAND)
+		if (tmp->type == COMMAND && tmp->next->type == COMMAND && tmp->data)
 		{
 			// append_token(tmp, tmp->next); //replaced?
 			tmp->data = ft_strexpand(tmp->data, tmp->next->data);
@@ -120,6 +120,8 @@ int	count_pipes(t_minishell *shell)
 
 //not fully functional, but works for basic testing
 
+
+//condense this.. last half of it should not be needed.
 int	free_commands(t_minishell *shell)
 {
 	t_command	*tmp;
@@ -183,6 +185,7 @@ int	dash_c(t_minishell *shell, char **av)
 	}
 	return (0);
 }
+
 //later: make more test cases and more todos :)
 //later: make sure EVERY alloc is protected properly.
 int	main(int ac, char **av, char **envp)
@@ -235,7 +238,7 @@ int	main(int ac, char **av, char **envp)
 				exit (55);
 		}
 		else
-			printf ("SYNTAXICAL ERROR NEAR '|'\n"); //todo: make actual syntax error reporter, which will also work with <<<<< and >>>>>
+			printf ("SYNTAXICAL ERROR\n"); //todo: make actual syntax error reporter, which will also work with <<<<< and >>>>>
 		delete_heredocs(shell);
 		free_tokens(shell);
 		if (ft_strlen(shell->command) > 0)

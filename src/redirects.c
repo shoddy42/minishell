@@ -6,15 +6,18 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 17:42:12 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 19:41:22 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
 //todo: fix segfault on 
-//todo: WAY MORE ERROR HANDLING!!! <<<<<<<<<<< >>>>>>>>>>>> <><><>
 //todo:  < ls  echo > wc should create "wc"
+
+//todo: maybe? "ls > FAKE_FOLDER/test" gives "permission denied", rather than no such file or dir?
+
+//todo: also allow us to find variables and quotes, and subsequent command. "<< $PATH is legal and should not expand."
 t_token	*handle_left(t_token *token, t_minishell *shell)
 {
 	t_token	*tmp;
@@ -52,8 +55,9 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		}
 		tmp->type = INFILE;
 	}
-	else
+	else if (tmp->type != HEREDOC_FILE)
 	{
+		shell->cancel_all_commands = true;
 		tmp->type = ERROR;
 		printf ("syntax error near '<'\n");
 	}
@@ -86,6 +90,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		tmp = tmp->next;
 	if (tmp->type != COMMAND)
 	{
+		shell->cancel_all_commands = true;
 		ms_error("syntax error near '>'", -6, false, shell);
 		token->type = ERROR;
 		return (token);
