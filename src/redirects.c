@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 11:01:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 16:02:03 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 //todo: fix segfault on 
 //todo: WAY MORE ERROR HANDLING!!! <<<<<<<<<<< >>>>>>>>>>>> <><><>
+//todo:  < ls  echo > wc should create "wc"
 t_token	*handle_left(t_token *token, t_minishell *shell)
 {
 	t_token	*tmp;

@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/15 14:36:07 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/15 15:33:12 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,6 @@ int	ms_replace_env(char *beans, t_minishell *shell)
 			if (!beans)
 				ms_error("CANNOT ALLOCATE MORE ENV", -1, false, shell);
 			fill_data(tmp, 0);
-			if (ft_strlen(tmp->data) == 0)
-				tmp->has_beans = false;
-			else
-				tmp->has_beans = true;
 			return (0);
 		}
 		tmp = tmp->next;
@@ -176,7 +172,7 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 		ms_export_env(shell);
 	while (cmd->command[i])
 	{
-		if (ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
+		if (ft_strchr_num(cmd->command[i], '=') != -1 && ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
 			ms_export_loop(cmd->command[i], shell);
 		i++;
 	}
