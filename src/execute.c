@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 08:21:00 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 08:49:31 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,7 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	}
 	if (cmd->pid == 0)
 	{
-		signal(SIGQUIT, child_sig); // probably useless.
-		// signal(SIG)
-		// printf ("child signal in place!\n");
+		// signal(SIGQUIT, child_sig); // probably useless.
 		close (cmd->tunnel[READ]);
 	}
 	return (cmd->pid);

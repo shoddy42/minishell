@@ -13,11 +13,11 @@
 #include "../include/minishell.h"
 
 //function simpler than i thought, probably merge with parse_apend. might not even need parse_append so im holding off
-void	append_token(t_token *start, t_token *end)
-{
-	start->data = ft_strexpand(start->data, end->data);
-	free_single_token(end);
-}
+// void	append_token(t_token *start, t_token *end)
+// {
+// 	start->data = ft_strexpand(start->data, end->data);
+// 	free_single_token(end);
+// }
 
 void	parse_append(t_minishell *shell)
 {
@@ -36,47 +36,6 @@ void	parse_append(t_minishell *shell)
 			tmp = tmp->next;
 	}
 }
-
-t_token	*find_start_of_command(t_token *token, t_minishell *shell)
-{
-	t_token	*tmp;
-
-	tmp = token;
-	while (tmp && tmp->type != PIPE)
-	{
-		if (!tmp->prev)
-			break;
-		tmp = tmp->prev;
-	}
-	// printf ("start? (%s) [%s]\n", print_token_type(tmp->type), tmp->data);
-	return (tmp);
-}
-
-t_token	*find_end_of_command(t_token *token, t_minishell *shell)
-{
-	t_token	*tmp;
-
-	tmp = token;
-	while (tmp && tmp->type != PIPE)
-	{
-		if (!tmp->next)
-			break;
-		tmp = tmp->next;
-	}
-	// printf ("end? (%s) [%s]\n", print_token_type(tmp->type), tmp->data);
-	return (tmp);
-}
-
-// t_token	*remove_command(t_token *token, t_minishell *shell)
-// {
-// 	t_token	*start;
-// 	t_token *end;
-
-// 	start = find_start_of_command(token, shell);
-// 	end = find_end_of_command(token, shell);
-// 	free_tokens_til(start, end);
-// 	return (end);
-// }
 
 // this function will have to be split into an expansion and a real parsing function
 void parse_token(t_minishell *shell)
@@ -97,8 +56,6 @@ void parse_token(t_minishell *shell)
 			token = handle_quote(token, token->type, shell);
 		if (token->type == VARIABLE)
 			expand_dong(token, shell);
-		// if (token->type == ERROR)
-		// 	token = remove_command(token, shell);
 		if (!token || !token->next)
 			break;
 		token = token->next;
@@ -107,6 +64,7 @@ void parse_token(t_minishell *shell)
 }
 
 // function should be finished. unless we want to add semicolon support.
+// incorperate this into parse_token, and change the function to check for syntax errors near |
 int	count_pipes(t_minishell *shell)
 {
 	t_token	*tmp;

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/14 15:22:15 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 08:31:32 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ void	child_sig(int signum)
 
 void	sighandler(int signum)
 {
-	printf ("PARENT SIGNAL ");
+	printf ("PARENT SIGNAL: ");
 	if (signum == SIGINT) // ctrl + C
 	{
+		printf ("SIG INT\n");
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);

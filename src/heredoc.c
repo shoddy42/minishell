@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:40:02 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/15 09:55:16 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,14 @@ t_token	*heredoc(t_token *token, t_minishell *shell)
 	int		fd;
 
 	tmp = token->next;
-	if (tmp && tmp->type != COMMAND && tmp->type != VOID && tmp->type != VARIABLE)
+	while (tmp && tmp->next && tmp->type == VOID)
+		tmp = tmp->next;
+	if (tmp->type != COMMAND && tmp->type != VARIABLE) //can it even be a variable here?
 	{
 		ms_error("Syntax Error near heredoc.", -7, false, shell);
 		tmp->type = ERROR;
 		return (tmp);
 	}
-	while (tmp && tmp->type == VOID)
-		tmp = tmp->next;
 	heredoc = hd_count(shell);
 	fd = open(heredoc, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)

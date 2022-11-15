@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 18:42:30 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/14 15:42:17 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 09:44:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,11 @@ int	ms_echo(t_command *command)
 
 	if (!(command->command))
 		return (1);
-	if (!command->command[1])
-		return (0);
+	// if (!command->command[1])
+	// {
+	// 	printf ("early return on echo\n");
+	// 	return (0);
+	// }
 	i = 1;
 	no_nl = false;
 	while (dash_n(command->command[i]))
