@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 08:49:31 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 16:54:54 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,6 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	// parent duties. need to close a ton of file descriptors. ALL non NEEDS_PIPE and stdin.s EXCEPT cmd->tunnel[READ]
 	if (cmd->pid > 0)
 	{
-		// if (signal(SIGQUIT, child_sig) == SIG_ERR)
-		// 	exit (-92);
 		signal(SIGINT, child_sig);
 		if (cmd->tunnel[WRITE])
 			close(cmd->tunnel[WRITE]);	
@@ -119,7 +117,7 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	}
 	if (cmd->pid == 0)
 	{
-		// signal(SIGQUIT, child_sig); // probably useless.
+		signal(SIGQUIT, SIG_DFL);
 		close (cmd->tunnel[READ]);
 	}
 	return (cmd->pid);

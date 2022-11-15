@@ -19,6 +19,12 @@
 // 	free_single_token(end);
 // }
 
+/**
+ * @brief Loops through all tokens after parsing. 
+ * 		  Will append neighboring tokens of type COMMAND to eachother.
+ * 
+ * @param shell The shell.
+ */
 void	parse_append(t_minishell *shell)
 {
 	t_token	*tmp;
@@ -37,15 +43,42 @@ void	parse_append(t_minishell *shell)
 	}
 }
 
+/**
+ * @brief Checks infront of, and behind the pipe to check whether there is a syntax error.
+ * 
+ * @param token A token of which token->type == PIPE 
+ * @param shell The shell.
+ */
+void	check_pipe(t_token *token, t_minishell *shell)
+{
+	t_token	*forward;
+	t_token	*behind;
+
+	forward = token->next;
+	behind = token->prev;
+	if (!forward || !behind)
+	{
+		shell->cancel_all_commands = true;
+		return ;
+	}
+	while (forward && forward->next && forward->type != COMMAND && forward->type != PIPE)
+		forward = forward->next;
+	while (behind && behind->next && behind->type != COMMAND && forward->type != PIPE)
+		behind = behind->next;
+	// printf ("forward = (%s)[%s]\n", print_token_type(forward->type), forward->data);
+	// printf ("behind = (%s)[%s]\n", print_token_type(behind->type), behind->data);
+	if (forward->type != COMMAND || behind->type != COMMAND)
+		shell->cancel_all_commands = true;
+	// printf ("cancel? [%i]\n", shell->cancel_all_commands);
+}
+
 // this function will have to be split into an expansion and a real parsing function
 void parse_token(t_minishell *shell)
 {
 	t_token		*token;
-	int			i;
 
-	i = 0;
 	token = shell->tokens;
-	while (token)
+	while (token && shell->cancel_all_commands == false)
 	{
 		// printf("handling token [%s]\n", token->data);
 		if (token->type == LEFT)
@@ -56,6 +89,8 @@ void parse_token(t_minishell *shell)
 			token = handle_quote(token, token->type, shell);
 		if (token->type == VARIABLE)
 			expand_dong(token, shell);
+		if (token->type == PIPE)
+			check_pipe(token, shell);
 		if (!token || !token->next)
 			break;
 		token = token->next;
@@ -84,22 +119,6 @@ int	count_pipes(t_minishell *shell)
 }
 
 //not fully functional, but works for basic testing
-int	dash_c(t_minishell *shell, char **av)
-{
-	if (av[1] && ft_strcmp(av[1], "-c") == 0)
-	{
-		if (av[2])
-			shell->command = av[2];
-		else
-			ms_error("NO COMMAND STR.", -9, true, shell);
-		ft_tokenize(shell, shell->command);
-		parse_token(shell);
-		make_commands(shell);
-		execute_two_electric_boogaloo(shell);
-		exit (shell->last_return);
-	}
-	return (0);
-}
 
 int	free_commands(t_minishell *shell)
 {
@@ -137,6 +156,33 @@ int	free_commands(t_minishell *shell)
 	return (0);
 }
 
+/**
+ * @brief		Executes a single commandline in minishell, then exits the whole shell.
+ * 
+ * @param shell The shell.
+ * @param av	The arg variables of the call to ./minishell.
+ * @returns 0 on success. 1 on failure (currently doesnt happen.)
+ */
+int	dash_c(t_minishell *shell, char **av)
+{
+	if (av[1] && ft_strcmp(av[1], "-c") == 0)
+	{
+		if (av[2])
+			shell->command = av[2];
+		else
+			ms_error("NO COMMAND STR.", -9, true, shell);
+		ft_tokenize(shell, shell->command);
+		parse_token(shell);
+		count_pipes(shell);
+		make_commands(shell);
+		execute_two_electric_boogaloo(shell);
+		free_commands(shell);
+		free_tokens(shell);
+		delete_heredocs(shell);
+		exit (shell->last_return);
+	}
+	return (0);
+}
 //later: make more test cases and more todos :)
 //later: make sure EVERY alloc is protected properly.
 int	main(int ac, char **av, char **envp)
@@ -169,27 +215,36 @@ int	main(int ac, char **av, char **envp)
 		parse_token(shell); //if error, cut out everything
 		// print_tokens(shell);
 		count_pipes(shell);
-		if (make_commands(shell) == 0)
+		if (shell->cancel_all_commands == false)
 		{
-			// print_commands(shell);
-			execute_two_electric_boogaloo(shell);
+			if (make_commands(shell) == 0)
+			{
+				// print_commands(shell);
+
+				execute_two_electric_boogaloo(shell);
+			}
+			// printf("$? [%i]\n", shell->last_return); //print last cmd return
+			// print_tokens(shell);
+			// print_tokens_backwards(shell); //for testing whether prev is linked properly.
+
+			//america AKA freeing all that needs freeing, resetting all that needs resetting.
+			free_commands(shell);
+
+			// reset signals after changing them in exe
+			if (signal(SIGINT, sighandler) == SIG_ERR)
+				exit (55);
 		}
+		else
+			printf ("SYNTAXICAL ERROR NEAR '|'\n"); //todo: make actual syntax error reporter, which will also work with <<<<< and >>>>>
+		delete_heredocs(shell);
+		free_tokens(shell);
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
-		// printf("$? [%i]\n", shell->last_return); //print last cmd return
-		// print_tokens(shell);
-		// print_tokens_backwards(shell); //for testing whether prev is linked properly.
-
-		//america
-		free_commands(shell);
-		free_tokens(shell);
 		if (shell->command)
 			free(shell->command);
-		delete_heredocs(shell);
-		if (signal(SIGINT, sighandler) == SIG_ERR)
-			exit (55);
-		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-			exit (56);
+		shell->cancel_all_commands = false;
+		// if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		// 	exit (56);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 08:34:19 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 12:41:47 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,19 +99,20 @@ typedef struct s_env
 
 typedef struct s_shell_data
 {
-	t_token		*tokens;
-	t_command	*commands;
-	t_env		*env;
-	char		**envp;
-	char		**path;
+	t_token		*tokens;	//rename to head?
+	t_command	*commands;	//rename to head?
+	t_env		*env;		//rename to head?
+	char		**envp;			//repurpose after init.
+	char		**path;			//probably dont store this.
 	char		*command;
-	char		*bin_dir;
+	char		*bin_dir;		//check requirement
 
 	pid_t		last_cmd;
-	int			last_return;
+	int			last_return;	//rename
 	int			pipe_count;
 	int			hd_count;
-	int			cancel_command;
+	int			cancel_command; //change to bool
+	bool		cancel_all_commands;
 	int			exit;
 }	t_minishell;
 
@@ -187,20 +188,5 @@ void	print_commands(t_minishell *shell); //remove later
 //env_utils.c
 char    **create_envp(t_env *env_head);
 void    print_envp(char **envp);
+
 #endif
-
-// void rl_replace_line (const char *text, int clear_undo);
-/**
- * minishell steps
-
-init minishell:
-
-1: get input
-2: tokenize input
-3: expand input
-4: resolve heredoc
-5: prep execution
-6: execute
-7: return?
-
- **/

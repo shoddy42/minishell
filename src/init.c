@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 14:36:37 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/15 17:14:26 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,17 @@
 
 void	child_sig(int signum)
 {
-	printf ("KID SIGNAL HANDLED\n");
+	// printf ("KID SIGNAL HANDLED\n");
 	if (signum == SIGINT)
 		rl_redisplay();
-	if (signum == SIGQUIT)
-		exit (1);
 }
 
 void	sighandler(int signum)
 {
-	printf ("PARENT SIGNAL: ");
+	// printf ("PARENT SIGNAL: ");
 	if (signum == SIGINT) // ctrl + C
 	{
-		printf ("SIG INT\n");
+		// printf ("SIG INT\n");
 		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -36,7 +34,7 @@ void	sighandler(int signum)
 		// rl_redisplay();
 		// write(1, "\n", 1);
 	}
-	exit(1); //later: remove
+	// exit(1); //later: remove
 }
 
 void	increase_shlvl(t_minishell *shell)
@@ -59,6 +57,7 @@ int	init_minishell(t_minishell *shell, char **envp)
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		exit (56);
 	// environment setup
+	shell->cancel_all_commands = false;
 	shell->last_return = 0;
 	shell->envp = envp;
 	shell->bin_dir = getcwd(NULL, 0);
