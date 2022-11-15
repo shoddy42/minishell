@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/14 13:06:54 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 08:26:58 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,13 @@ void	ms_export_env(t_minishell	*shell)
 	{
 		ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(tmp->key, 1);
-		write(1, "=", 1);
-		ft_putstr_fd("\"", 1);
-		ft_putstr_fd(tmp->data, 1);
-		ft_putstr_fd("\"", 1);
+		if (tmp->data && ft_strcmp(tmp->data, "") != 0)
+		{
+			write(1, "=", 1);
+			ft_putstr_fd("\"", 1);
+			ft_putstr_fd(tmp->data, 1);
+			ft_putstr_fd("\"", 1);
+		}
 		write(1, "\n", 1);
 		tmp = tmp->next;
 	}
@@ -133,14 +136,11 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 	if (!cmd->command[i])
 		ms_export_env(shell);
 	while (cmd->command[i])
-	while (cmd->command[i])
 	{
-		if (ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
 		if (ms_replace_env(cmd->command[i], shell) != EXIT_SUCCESS)
 			ms_export_loop(cmd->command[i], shell);
 		i++;
 	}
-	return (0);
 	return (0);
 }
 

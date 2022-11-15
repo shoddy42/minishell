@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/14 13:50:19 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 08:13:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 			cmd->outfile = tmp->fd;
 		if (tmp->type == ERROR)
 		{
-			printf ("command terminated.");
+			printf ("command [%s] terminated. due to error found in commands.c\n", cmd->command[0]);
 			cmd->executable = false;
 		}
 		if (!tmp->next)
