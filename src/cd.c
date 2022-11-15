@@ -6,21 +6,26 @@
 /*   By: root <root@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 11:43:21 by root          #+#    #+#                 */
-/*   Updated: 2022/11/14 11:01:39 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 11:12:35 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 #include <sys/param.h>
 
+
+//todo: find leak in cd?
 void	change_pwd(t_minishell *shell, char *env)
 {
 	char	*pwd;
+	char	*cwd;
 
-	pwd = ft_strjoin(env, getcwd(NULL, 0));
+	cwd = getcwd(NULL, 0);
+	pwd = ft_strjoin(env, cwd);
 	if (!pwd)
 		ms_error("getcwd call failed\n", 0, true, shell);
 	ms_replace_env(pwd, shell);
+	free(cwd);
 	free(pwd);
 }
 

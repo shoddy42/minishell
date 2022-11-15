@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:14:47 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 08:49:31 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*pipex_pathjoin(char const *path, char const *cmd)
 	j = -1;
 	while (path[++i])
 		ret[i] = path[i];
-	while (cmd[++j]) //while (cmd[++j] && cmd[j] != ' ') old loop 
+	while (cmd[++j])
 		ret[i + j + 1] = cmd[j];
 	ret[i] = '/';
 	ret[i + j + 1] = '\0';
@@ -51,6 +51,8 @@ int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
 	if (cmd->outfile != STDOUT_FILENO && cmd->outfile != NEEDS_PIPE)
 		if (dup2(cmd->outfile, STDOUT_FILENO) == -1)
 			cmd->executable = false;
+	if (cmd->executable == false)
+		exit(-66);
 	if (check_builtin(cmd, shell, CHILD))
 		return (42); //change this?
 	i = 0;
@@ -82,8 +84,8 @@ int		test_child(t_command *cmd, t_minishell *shell, char **envp)
 int		tunnel_fork(t_command *cmd, t_minishell *shell)
 {
 	//creation and laying of pipes if needed.
-	if (cmd->executable == false)
-		return (0);
+	// if (cmd->executable == false)
+	// 	return (0);
 	if (pipe(cmd->tunnel) < 0)
 		cmd->executable = false;
 	if (cmd->outfile == NEEDS_PIPE)
@@ -101,6 +103,9 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	// parent duties. need to close a ton of file descriptors. ALL non NEEDS_PIPE and stdin.s EXCEPT cmd->tunnel[READ]
 	if (cmd->pid > 0)
 	{
+		// if (signal(SIGQUIT, child_sig) == SIG_ERR)
+		// 	exit (-92);
+		signal(SIGINT, child_sig);
 		if (cmd->tunnel[WRITE])
 			close(cmd->tunnel[WRITE]);	
 		if (cmd->outfile != STDOUT_FILENO && cmd->outfile != NEEDS_PIPE)
@@ -113,11 +118,13 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 			close(cmd->tunnel[READ]);
 	}
 	if (cmd->pid == 0)
+	{
+		// signal(SIGQUIT, child_sig); // probably useless.
 		close (cmd->tunnel[READ]);
+	}
 	return (cmd->pid);
 }
 
-//todo: if cmd->exe == false, dont wait for child cuz it was never forked.
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
@@ -139,10 +146,8 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	if (cmd && !cmd->next && cmd->executable == true)
 		if (check_builtin(cmd, shell, MINISHELL) == true)
 			return ;
-	// printf ("cmd count = [%i]\n", shell->pipe_count);
-
 	// creation of envp
-	envp = create_envp(shell->env);
+	envp = create_envp(shell->env); //move
 	// print_envp(envp);
 
 	
@@ -150,13 +155,9 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	i = 0;
 	while (i <= shell->pipe_count)
 	{
-		if (cmd->executable == true)
-		{
-			// printf ("creating fok\n");
-			tunnel_fork(cmd, shell);
-			i++;
-		}
-		if (cmd->pid == 0 && cmd->executable == true)
+		tunnel_fork(cmd, shell);
+		i++;
+		if (cmd->pid == 0)
 		{
 			exit (test_child(cmd, shell, envp));
 		}
@@ -176,7 +177,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		if (WIFEXITED(status))
 			shell->last_return = WEXITSTATUS(status);
 		else
-			shell->last_return = -69;
+			shell->last_return = 258;
 		// printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
 		i--;
 	}

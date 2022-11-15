@@ -13,11 +13,11 @@
 #include "../include/minishell.h"
 
 //function simpler than i thought, probably merge with parse_apend. might not even need parse_append so im holding off
-void	append_token(t_token *start, t_token *end)
-{
-	start->data = ft_strexpand(start->data, end->data);
-	free_single_token(end);
-}
+// void	append_token(t_token *start, t_token *end)
+// {
+// 	start->data = ft_strexpand(start->data, end->data);
+// 	free_single_token(end);
+// }
 
 void	parse_append(t_minishell *shell)
 {
@@ -35,47 +35,6 @@ void	parse_append(t_minishell *shell)
 		else
 			tmp = tmp->next;
 	}
-}
-
-t_token	*find_start_of_command(t_token *token, t_minishell *shell)
-{
-	t_token	*tmp;
-
-	tmp = token;
-	while (tmp && tmp->type != PIPE)
-	{
-		if (!tmp->prev)
-			break;
-		tmp = tmp->prev;
-	}
-	// printf ("start? (%s) [%s]\n", print_token_type(tmp->type), tmp->data);
-	return (tmp);
-}
-
-t_token	*find_end_of_command(t_token *token, t_minishell *shell)
-{
-	t_token	*tmp;
-
-	tmp = token;
-	while (tmp && tmp->type != PIPE)
-	{
-		if (!tmp->next)
-			break;
-		tmp = tmp->next;
-	}
-	// printf ("end? (%s) [%s]\n", print_token_type(tmp->type), tmp->data);
-	return (tmp);
-}
-
-t_token	*remove_command(t_token *token, t_minishell *shell)
-{
-	t_token	*start;
-	t_token *end;
-
-	start = find_start_of_command(token, shell);
-	end = find_end_of_command(token, shell);
-	free_tokens_til(start, end);
-	return (end);
 }
 
 // this function will have to be split into an expansion and a real parsing function
@@ -97,9 +56,7 @@ void parse_token(t_minishell *shell)
 			token = handle_quote(token, token->type, shell);
 		if (token->type == VARIABLE)
 			expand_dong(token, shell);
-		if (token->type == ERROR)
-			token = remove_command(token, shell);
-		if (!token)
+		if (!token || !token->next)
 			break;
 		token = token->next;
 	}
@@ -107,6 +64,7 @@ void parse_token(t_minishell *shell)
 }
 
 // function should be finished. unless we want to add semicolon support.
+// incorperate this into parse_token, and change the function to check for syntax errors near |
 int	count_pipes(t_minishell *shell)
 {
 	t_token	*tmp;
@@ -194,9 +152,9 @@ int	main(int ac, char **av, char **envp)
 	{
 		shell->hd_count = 0;
 		shell->command = readline("minishell> ");
-		// shell->cancel_command = false;
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
 		{
+			// printf ("test\n");
 			rl_replace_line("minishell> exit", 0);
 			rl_on_new_line();
 			rl_redisplay();
@@ -212,11 +170,13 @@ int	main(int ac, char **av, char **envp)
 		// print_tokens(shell);
 		count_pipes(shell);
 		if (make_commands(shell) == 0)
+		{
+			// print_commands(shell);
 			execute_two_electric_boogaloo(shell);
-		// print_commands(shell);
+		}
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
-		printf("$? [%i]\n", shell->last_return);
+		// printf("$? [%i]\n", shell->last_return); //print last cmd return
 		// print_tokens(shell);
 		// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 
@@ -226,6 +186,10 @@ int	main(int ac, char **av, char **envp)
 		if (shell->command)
 			free(shell->command);
 		delete_heredocs(shell);
+		if (signal(SIGINT, sighandler) == SIG_ERR)
+			exit (55);
+		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+			exit (56);
 	}
 	return (0);
 }

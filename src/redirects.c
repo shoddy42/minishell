@@ -6,16 +6,19 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/14 11:24:31 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/15 11:01:51 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+//todo: fix segfault on 
+//todo: WAY MORE ERROR HANDLING!!! <<<<<<<<<<< >>>>>>>>>>>> <><><>
 t_token	*handle_left(t_token *token, t_minishell *shell)
 {
 	t_token	*tmp;
 
+	// printf ("enter handle left on tok (%s)[%s]\n", print_token_type(token->type), token->data);
 	tmp = NULL;
 	if (token->next)
 		tmp = token->next;
@@ -23,12 +26,15 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 	if (!tmp)
 	{
 		ms_error("Bad redirect.", 0, false, shell);
-		tmp->type = ERROR;
+		token->type = ERROR;
 		return (token);
 	}
 	if (tmp->type == LEFT && tmp->next)
 		tmp = heredoc(tmp, shell);
-	else if (tmp->type == COMMAND)
+	// printf ("here!\n");
+	while (tmp && tmp->next && tmp->type == VOID)
+		tmp = tmp->next;
+	if (tmp->type == COMMAND)
 	{
 		// handling relinking the linked list. might turn this into a function of itself. OR add it to free_tokens_til.
 		if (token->prev)
@@ -41,14 +47,18 @@ t_token	*handle_left(t_token *token, t_minishell *shell)
 		{
 			ms_error("Failed to open infile.", 0, false, shell);
 			tmp->type = ERROR;
-			return (tmp);
+			return (tmp); //segfault here?
 		}
 		tmp->type = INFILE;
+	}
+	else
+	{
+		tmp->type = ERROR;
+		printf ("syntax error near '<'\n");
 	}
 	return (tmp);
 }
 
-//later: split function so it's norme
 t_token	*handle_right(t_token *token, t_minishell *shell)
 {
 	t_token		*tmp;

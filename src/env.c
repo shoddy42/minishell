@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/14 12:06:34 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/15 14:36:07 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,31 @@ int	fill_data(t_env	*new, int eq)
 	return (1);
 }
 
+bool	legal_env(char *data)
+{
+	int	i;
+	char legal[] = "_=";
+	char legal_last[] = "+";
+	char illegal[] = "~@#%%^&*()-|[]{};:\"\'$";
+	char first_illegal[] = "+=";
+
+	if (!data || (ft_isalpha(data[0]) == false && data[0] != '_')) //block all illegal characters.
+	{
+		printf ("ILLEGAL FIRST CHAR [%s] c = [%c]\n", data, data[0]);
+		return (false);
+	}
+	i = -1;
+	while (data[++i] && data[i] != '=') //skim until key
+	{
+		if (ft_isalnum(data[i]) == false && data[i] != '_' && data[i] != '=') //block all illegal characters
+		{
+			printf ("ILLEGAL ENV [%s] c = [%c]\n", data, data[i]);
+			return (false);
+		}	
+	}
+	return (true);
+}
+
 t_env	*new_env(char *data)
 {
 	t_env	*new;
@@ -68,12 +93,17 @@ int	ms_replace_env(char *beans, t_minishell *shell)
 	t_env	*tmp;
 
 	tmp = shell->env;
+	printf ("attempting to beans [%s]\n", beans);
+	if (!legal_env(beans))
+	{
+		printf ("illegal env.\n");
+		return (0);
+	}
 	while (tmp)
 	{
 		if (ft_strncmp(tmp->key, beans, ft_strlen(tmp->key)) == 0)
 		{
-			// printf ("replacing! key: [%s] beans: [%s]\n", tmp->key, beans);
-			printf("yo in rep\n");
+			printf ("replacing! key: [%s] beans: [%s]\n", tmp->key, beans);
 			free(tmp->beans);
 			free(tmp->data);
 			tmp->beans = ft_strdup(beans);
@@ -99,6 +129,12 @@ int	ms_export_loop(char *command, t_minishell *shell)
 	tmp = shell->env;
 	if (!command || !tmp)
 		return (1);
+	printf ("Attempting to create env: [%s]\n", command);
+	if (!legal_env(command))
+	{
+		printf ("illegal env.\n");
+		return (1);
+	}
 	new = new_env(command);
 	while (tmp && tmp->next)
 		tmp = tmp->next;
@@ -117,10 +153,13 @@ void	ms_export_env(t_minishell	*shell)
 	{
 		ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(tmp->key, 1);
-		write(1, "=", 1);
-		ft_putstr_fd("\"", 1);
-		ft_putstr_fd(tmp->data, 1);
-		ft_putstr_fd("\"", 1);
+		if (tmp->data && ft_strcmp(tmp->data, "") != 0)
+		{
+			write(1, "=", 1);
+			ft_putstr_fd("\"", 1);
+			ft_putstr_fd(tmp->data, 1);
+			ft_putstr_fd("\"", 1);
+		}
 		write(1, "\n", 1);
 		tmp = tmp->next;
 	}
@@ -141,7 +180,6 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 			ms_export_loop(cmd->command[i], shell);
 		i++;
 	}
-	return (0);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/12 02:26:49 by root          ########   odam.nl         */
+/*   Updated: 2022/11/15 08:34:19 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void	delete_heredocs(t_minishell *shell);
 // init.c
 int		init_minishell(t_minishell *shell, char **envp);
 void	sighandler(int signum);
+void	child_sig(int signum);
 
 // redirects.c
 t_token	*handle_left(t_token *token, t_minishell *shell);
