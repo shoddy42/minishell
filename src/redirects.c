@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 16:02:03 by auzochuk      ########   odam.nl         */
+/*   Updated: 2022/11/15 17:42:12 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_token	*handle_right(t_token *token, t_minishell *shell)
 		tmp = tmp->next;
 	if (tmp->type != COMMAND)
 	{
-		ms_error("REDIRECT FAILURE, NO FILENAME GIVEN", -6, false, shell);
+		ms_error("syntax error near '>'", -6, false, shell);
 		token->type = ERROR;
 		return (token);
 	}
