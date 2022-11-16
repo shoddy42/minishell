@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   error.c                                            :+:    :+:            */
+/*   ft_putendl_fd.c                                    :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*   By: wkonings <wkonings@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Created: 2019/11/03 22:28:03 by wkonings       #+#    #+#                */
+/*   Updated: 2019/12/19 14:34:20 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "libft.h"
+#include <unistd.h>
 
-//later: evaluate whether this is even needed at all.
-void	ms_error(char *msg, int code, bool terminate, t_minishell *shell)
+void	ft_putendl_fd(char *s, int fd)
 {
-	if (code != 0)
-		errno = code;
-	perror(msg);
-	if (terminate == true)
-		exit(code);
+	if (s)
+	{
+		write(fd, s, ft_strlen(s));
+		ft_putchar_fd('\n', fd);
+	}
 }

@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   error.c                                            :+:    :+:            */
+/*   ft_lstclear.c                                      :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*   By: wkonings <wkonings@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Created: 2019/11/18 07:00:42 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/02/24 15:14:34 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "libft.h"
 
-//later: evaluate whether this is even needed at all.
-void	ms_error(char *msg, int code, bool terminate, t_minishell *shell)
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	if (code != 0)
-		errno = code;
-	perror(msg);
-	if (terminate == true)
-		exit(code);
+	t_list	*next;
+
+	while (*lst)
+	{
+		next = (*lst)->next;
+		ft_lstdelone(*lst, del);
+		*lst = next;
+	}
+	*lst = NULL;
 }

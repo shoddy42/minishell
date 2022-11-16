@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   error.c                                            :+:    :+:            */
+/*   ft_toupper.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*   By: wkonings <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Created: 2019/04/04 05:03:02 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/02/24 14:49:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
-
-//later: evaluate whether this is even needed at all.
-void	ms_error(char *msg, int code, bool terminate, t_minishell *shell)
+int	ft_toupper(int c)
 {
-	if (code != 0)
-		errno = code;
-	perror(msg);
-	if (terminate == true)
-		exit(code);
+	if (c >= 'a' && c <= 'z')
+		return (c - ('a' - 'A'));
+	return (c);
 }

@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   error.c                                            :+:    :+:            */
+/*   ft_memset.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*   By: wkonings <marvin@codam.nl>                   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Created: 2019/04/02 21:42:53 by wkonings       #+#    #+#                */
+/*   Updated: 2019/12/16 22:50:53 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "libft.h"
 
-//later: evaluate whether this is even needed at all.
-void	ms_error(char *msg, int code, bool terminate, t_minishell *shell)
+void	*ft_memset(void *b, int c, size_t len)
 {
-	if (code != 0)
-		errno = code;
-	perror(msg);
-	if (terminate == true)
-		exit(code);
+	size_t			i;
+	unsigned char	*tmp;
+
+	tmp = (unsigned char *)b;
+	i = 0;
+	while (i < len)
+	{
+		tmp[i] = (unsigned char)c;
+		i++;
+	}
+	return (b);
 }

@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   error.c                                            :+:    :+:            */
+/*   ft_lstadd_back.c                                   :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
+/*   By: wkonings <wkonings@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Created: 2019/11/12 12:02:26 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/02/24 15:19:37 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "libft.h"
 
-//later: evaluate whether this is even needed at all.
-void	ms_error(char *msg, int code, bool terminate, t_minishell *shell)
+void	ft_lstadd_back(t_list **alst, t_list *new)
 {
-	if (code != 0)
-		errno = code;
-	perror(msg);
-	if (terminate == true)
-		exit(code);
+	t_list	*back;
+
+	if (!new)
+		return ;
+	back = ft_lstlast(*alst);
+	if (!back)
+		*alst = new;
+	else
+		back->next = new;
 }

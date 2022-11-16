@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   error.c                                            :+:    :+:            */
+/*   ft_charinstr.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Created: 2022/09/09 16:31:51 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/09/20 11:48:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
-
-//later: evaluate whether this is even needed at all.
-void	ms_error(char *msg, int code, bool terminate, t_minishell *shell)
+int	ft_charinstr(char c, const char *str)
 {
-	if (code != 0)
-		errno = code;
-	perror(msg);
-	if (terminate == true)
-		exit(code);
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != c)
+		i++;
+	if (str[i] == c)
+		return (1);
+	return (0);
 }

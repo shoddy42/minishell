@@ -10,14 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
-
-//function simpler than i thought, probably merge with parse_apend. might not even need parse_append so im holding off
-// void	append_token(t_token *start, t_token *end)
-// {
-// 	start->data = ft_strexpand(start->data, end->data);
-// 	free_single_token(end);
-// }
+#include "include/minishell.h"
 
 /**
  * @brief Loops through all tokens after parsing. 
@@ -32,9 +25,8 @@ void	parse_append(t_minishell *shell)
 	tmp = shell->tokens;
 	while(tmp && tmp->next)
 	{
-		if (tmp->type == COMMAND && tmp->next->type == COMMAND && tmp->data)
+		if (tmp->type == COMMAND && tmp->next->type == COMMAND && tmp->data && tmp->next->data)
 		{
-			// append_token(tmp, tmp->next); //replaced?
 			tmp->data = ft_strexpand(tmp->data, tmp->next->data);
 			free_single_token(tmp->next);
 		}
@@ -73,6 +65,14 @@ void	check_pipe(t_token *token, t_minishell *shell)
 }
 
 // this function will have to be split into an expansion and a real parsing function
+
+/**
+ * @brief	Reads through all tokens and their types. Calls all relevant handle functions in order of:
+ * 			Currently supported token->types: [LEFT] <, [RIGHT] >, ([QUOTE] ', [DQUOTE] "), [VARIABLE] $, [PIPE] |,
+ * 			Quote and DQuote are handled in the same step.
+ * 
+ * @param shell The shell.
+ */
 void parse_token(t_minishell *shell)
 {
 	t_token		*token;
@@ -80,7 +80,6 @@ void parse_token(t_minishell *shell)
 	token = shell->tokens;
 	while (token && shell->cancel_all_commands == false)
 	{
-		// printf("handling token [%s]\n", token->data);
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT)
@@ -223,7 +222,6 @@ int	main(int ac, char **av, char **envp)
 			if (make_commands(shell) == 0)
 			{
 				// print_commands(shell);
-
 				execute_two_electric_boogaloo(shell);
 			}
 			// printf("$? [%i]\n", shell->last_return); //print last cmd return
