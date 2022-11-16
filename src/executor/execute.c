@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 19:14:08 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/16 20:54:55 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	return (cmd->pid);
 }
 
+
+//todo: FIX FDS LEAKING PLS
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
