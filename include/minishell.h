@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/15 12:41:47 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/16 18:38:06 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@
 # include "../libft/libft.h"
 # include <stdbool.h>
 # include <limits.h>
+# include <dirent.h>
 
 // # include <sys/wait.h> // needed for WSL
 
+// should =; be tokens? are tabs actually getting set to void?
 # define DELIMITER " |$<>=;\t\'\"\n"
 
 typedef enum e_from
@@ -106,12 +108,13 @@ typedef struct s_shell_data
 	char		**path;			//probably dont store this.
 	char		*command;
 	char		*bin_dir;		//check requirement
+	DIR			*bin;
 
 	pid_t		last_cmd;
 	int			last_return;	//rename
 	int			pipe_count;
 	int			hd_count;
-	int			cancel_command; //change to bool
+	bool		cancel_command; //change to bool
 	bool		cancel_all_commands;
 	int			exit;
 }	t_minishell;
@@ -125,7 +128,7 @@ void	ft_tokenize(t_minishell *shell, char *command);
 void	print_tokens(t_minishell *shell); //REMOVE LATER
 void	print_tokens_backwards(t_minishell *shell); //REMOVE LATER
 char	*print_token_type(int type); // REMOVE LATER
-void	free_tokens_til(t_token *start, t_token *end);
+void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell);
 void	free_single_token(t_token *token);
 void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
@@ -180,6 +183,7 @@ t_token	*expand_two(t_token *token, t_minishell *shell);
 
 // error.c 
 void	ms_error(char *msg, int code, bool terminate, t_minishell *shell);
+t_token	*token_error(t_token *token, char *msg, bool print_token);
 
 // commands.c
 int		make_commands(t_minishell *shell);
@@ -189,4 +193,7 @@ void	print_commands(t_minishell *shell); //remove later
 char    **create_envp(t_env *env_head);
 void    print_envp(char **envp);
 
+
+// oblivion of main.c
+void	parse_append(t_minishell *shell);
 #endif

@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/16 16:26:12 by wkonings      ########   odam.nl          #
+#    Updated: 2022/11/16 19:15:18 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@
 # ----------------------------------------- #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror
+FLAGS = #-Wall -Wextra -Werror //todo: RENABLE FLAGS WHEN HANDING IN FOR THE LOVE OF GOD
 DEBUG = -g #-fsanitize=address
 CC = gcc
 
@@ -88,7 +88,7 @@ READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
 $(NAME): $(OBJS) $(LIBS) $(HEADER_FILES)
 	@make -C $(LIB_DIR)
 	@echo COMPILING EXECUTABLE
-	@gcc $(DEBUG) $(SRCS) -o $(NAME) -I include/minishell.h $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
+	@gcc $(FLAGS) $(DEBUG) $(SRCS) -o $(NAME) -I include/minishell.h $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 
 echo:
 	@echo $(SRCS)
@@ -108,7 +108,7 @@ $(OBJ_DIR): | $(OBJ_SUB)
 
 $(OBJ_DIR)/%.o:$(SRC_DIR)/%.c | $(OBJ_DIR)
 	@echo Compiling $@ from $< 
-	@$(CC) -I include/minishell.h $(INCLUDE_READLINE) -c $< -o $@
+	@$(CC) $(FLAGS) -I include/minishell.h $(INCLUDE_READLINE) -c $< -o $@
 # -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 
 flags:

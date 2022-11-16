@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/16 17:15:15 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,11 @@ char *print_token_type(int type)
 	return ("TYPELESS ERROR!!!");
 }
 
+
+//todo: IF there is no token, prev SET HEAD AGAIN
 // maybe rename to REMOVE_tokens_til?
 // free tokens starting from START, up to END, does NOT free END. IF there is a prev token, it will relink. so far it only links  start->prev to end 
-void	free_tokens_til(t_token *start, t_token *end)
+void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell)
 {
 	t_token	*tmp;
 	t_token	*replace_prev;
@@ -119,6 +121,8 @@ void	free_tokens_til(t_token *start, t_token *end)
 		start->prev->next = end;
 		replace_prev = start->prev;
 	}
+	else
+		shell->tokens = end; //late addition 
 	while (start != end)
 	{
 		tmp = start;

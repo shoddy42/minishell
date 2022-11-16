@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/16 19:49:19 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,121 +18,83 @@
 //todo: maybe? "ls > FAKE_FOLDER/test" gives "permission denied", rather than no such file or dir?
 
 //todo: also allow us to find variables and quotes, and subsequent command. "<< $PATH is legal and should not expand."
-
-
-/*
-
-The pseudo code of handle right.
-
-Get given a token, of type RIGHT.
-see if heredoc is called for.
-
-Skip past all voids, and get the name of the file.
-
-
-
-
-
-
-
-
-
-
-*/
-
-
-t_token	*handle_left(t_token *token, t_minishell *shell)
+t_token	*handle_left(t_token *start, t_minishell *shell)
 {
-	t_token	*tmp;
+	t_token	*token;
 
-	// printf ("enter handle left on tok (%s)[%s]\n", print_token_type(token->type), token->data);
-	tmp = NULL;
-	if (token->next)
-		tmp = token->next;
-	//weird error?
-	if (!tmp)
+	if (start->next)
+		token = start->next;
+	else
+		token = start;
+	if (token->type == LEFT && token != start)
+		return (heredoc(token, shell));
+	// skip void + handle variable + quotes if needed can turn this block into a function for redir.
+	while (token && token->next && token->type == VOID)
+		token = token->next;
+	if (token->type == VARIABLE)
+		expand_dong(token, shell);
+	if (token->type == QUOTE || token->type == DQUOTE)
 	{
-		ms_error("Bad redirect.", 0, false, shell);
-		token->type = ERROR;
-		return (token);
+		token = handle_quote(token, token->type, shell);
+		parse_append(shell);
 	}
-	if (tmp->type == LEFT && tmp->next)
-		tmp = heredoc(tmp, shell);
-	// printf ("here!\n");
-	while (tmp && tmp->next && tmp->type == VOID)
-		tmp = tmp->next;
-	if (tmp->type == COMMAND)
+	
+	if (token->type == COMMAND)
 	{
-		// handling relinking the linked list. might turn this into a function of itself. OR add it to free_tokens_til.
-		if (token->prev)
-			tmp->prev = token->prev;
-		else
-			shell->tokens = tmp;
-		free_tokens_til(token, tmp);
-		tmp->fd = open(tmp->data, O_RDONLY);
-		if (tmp->fd == -1)
-		{
-			ms_error("Failed to open infile.", 0, false, shell);
-			tmp->type = ERROR;
-			return (tmp); //segfault here?
-		}
-		tmp->type = INFILE;
+		free_tokens_til(start, token, shell);
+		token->fd = open(token->data, O_RDONLY);
+		token->type = INFILE;
+		if (token->fd == -1)
+			return(token_error(token, "Failed to open infile: [", true));
 	}
-	else if (tmp->type != HEREDOC_FILE)
+	else
 	{
 		shell->cancel_all_commands = true;
-		tmp->type = ERROR;
-		printf ("syntax error near '<'\n");
+		return (token_error(token, "Syntax error near '<'; Unexpected token: [", true));
 	}
-	return (tmp);
+	return (token);
 }
 
-t_token	*handle_right(t_token *token, t_minishell *shell)
+t_token	*handle_right(t_token *start, t_minishell *shell)
 {
-	t_token		*tmp;
-	int			append;
+	t_token	*token;
+	bool	append;
 
-	append = 0;
-	tmp = NULL;
-	// printf("\nentered handle_right on token [%s]\n", token->data);
-	if (token->next)
-		tmp = token->next;
-	if (!tmp)
+	append = false;
+	if (start->next)
+		token = start->next;
+	else
+		token = start;
+	if (token->type == RIGHT && token != start)
 	{
-		ms_error("ERROR HANDLE_RIGHT, NO TOKEN", -5, false, shell);
-		token->type = ERROR;
-		return (token);
+		append = true;
+		if (token->next)
+			token = token->next;
 	}
-	if (tmp->type == RIGHT)
+	// skip void, handle expansion and quotes when needed.
+	while (token && token->next && token->type == VOID)
+		token = token->next;
+	if (token->type == VARIABLE)
+		expand_dong(token, shell);
+	if (token->type == QUOTE || token->type == DQUOTE)
 	{
-		append = 1;
-		if (tmp->next)
-			tmp = tmp->next;
+		token = handle_quote(token, token->type, shell);
+		parse_append(shell);
 	}
-	while (tmp->type == VOID && tmp->next)
-		tmp = tmp->next;
-	if (tmp->type != COMMAND)
+	// error
+	if (token->type != COMMAND)
 	{
 		shell->cancel_all_commands = true;
-		ms_error("syntax error near '>'", -6, false, shell);
-		token->type = ERROR;
-		return (token);
+		return (token_error(token, "Syntax error near '>'; Unexpected token: [", true));
 	}
-	if (append == 1)
-		tmp->fd = open(tmp->data, O_RDWR | O_APPEND | O_CREAT, 0644);
+	// actual open + error
+	if (append)
+		token->fd = open(token->data, O_RDWR | O_APPEND | O_CREAT, 0644);
 	else
-		tmp->fd = open(tmp->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
-	if (tmp->fd < 0)
-	{
-		write (2, "minishell: ", 12);
-		write (2, tmp->data, ft_strlen(tmp->data));
-		write (2, ": Permission denied\n", 20);
-		tmp->type = ERROR;
-		return (tmp);
-	}
-	tmp->type = OUTFILE;
-	if (!token->prev) //ugly fix, but the problem is if token happens to be the HEAD (shell->tokens), we will segf.
-		shell->tokens = tmp;
-	free_tokens_til(token, tmp);
-	return (tmp);
+		token->fd = open(token->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
+	if (token->fd < 0)
+		return (token_error(token, "Redirect '>'; Permission denied for file: [", true));
+	token->type = OUTFILE;
+	free_tokens_til(start, token, shell);
+	return (token);
 }

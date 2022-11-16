@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/16 20:16:35 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*hd_count(t_minishell	*shell)
 	return (ret);
 }
 
+
+//move to cleanup
 void	delete_heredocs(t_minishell *shell)
 {
 	char	*heredoc;
@@ -73,7 +75,6 @@ char	*hd_var_exp(char *line, t_minishell *shell)
 
 void	heredoc_sig(int signum)
 {
-
 	if (signum == SIGINT)
 	{
 		printf ("sig int recieved\n");
@@ -81,80 +82,101 @@ void	heredoc_sig(int signum)
 	}
 }
 
+
 //todo: MAYBE make it if there's quotes in the delimiter, dont expand variables.
 //todo: check for potential segfaults if malloc fails.
 //todo: if there is no (atm its obj, but it should be bin) folder, gotta make one.
-t_token	*heredoc(t_token *token, t_minishell *shell)
+
+// void	hd_delim()
+t_token	*heredoc(t_token *start, t_minishell *shell)
 {
+	t_token	*token;
+	char	*heredoc;
 	char	*delim;
 	char	*line;
-	char	*heredoc;
-	t_token	*tmp;
 	int		fd;
 
-	tmp = token->next;
-	while (tmp && tmp->next && tmp->type == VOID)
-		tmp = tmp->next;
-	if (tmp->type != COMMAND && tmp->type != VARIABLE) //can it even be a variable here?
-	{
-		ms_error("Syntax Error near heredoc.", -7, false, shell);
-		tmp->type = ERROR;
-		return (tmp);
-	}
+	token = start;
+	while (token && token->next && token->type == VOID)
+		token = token->next;
+	if (token->type != COMMAND && token->type != QUOTE && token->type != DQUOTE && token->type != VARIABLE)
+		return (token_error(token, "Syntax error near '<<'; No valid delimiter for heredoc. [", true));
 	heredoc = hd_count(shell);
 	fd = open(heredoc, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (fd < 0)
-	{
-		tmp->type = ERROR;
-		ms_error("HEREDOC FAILED TO OPEN.", -1, false, shell);
-	}
-	delim = ft_strdup(tmp->data);
-	pid_t doc;
-
-	//todo: for the love of god refactor heredoc..
-
-	doc = fork();
-	if (doc == 0)
-		signal(SIGINT, heredoc_sig);
-	else
-		signal(SIGINT, SIG_IGN);
-	while (1)
-	{
-		if (doc == 0)
-		{
-			line = readline("heredoc> ");
-			if (!line)
-				break ;
-			if (ft_strcmp(line, delim) == 0)
-			{
-				free(line);
-				free(delim);
-				break ;
-			}
-			if (ft_charinstr('$', line))
-				line = hd_var_exp(line, shell);
-			write(fd, line, ft_strlen(line));
-			write(fd, "\n", 1);
-			free(line);
-		}
-		else
-			break ;
-	}
-	if (doc == 0)
-		exit (0);
-	else
-	{
-		waitpid(doc, NULL, 0);
-		signal(SIGINT, sighandler);
-	}
-	close (fd);
-	fd = open(heredoc, O_RDONLY);
-	if (fd < 0)
-		ms_error("SOMEHOW LOST THE HEREDOC KEK", -2, false, shell);
-	tmp->fd = fd;
-	tmp->type = HEREDOC_FILE;
-	free(heredoc);
-	shell->hd_count++;
-	// printf ("hd ret = [%s]\n", tmp->data);
-	return (tmp);
+		return (token_error(token, ""))
+	return (token);
 }
+
+// t_token	*heredoc(t_token *token, t_minishell *shell)
+// {
+// 	char	*delim;
+// 	char	*line;
+// 	char	*heredoc;
+// 	t_token	*tmp;
+// 	int		fd;
+
+// 	tmp = token->next;
+// 	while (tmp && tmp->next && tmp->type == VOID)
+// 		tmp = tmp->next;
+// 	if (tmp->type != COMMAND && tmp->type != VARIABLE) //can it even be a variable here?
+// 	{
+// 		ms_error("Syntax Error near heredoc.", -7, false, shell);
+// 		tmp->type = ERROR;
+// 		return (tmp);
+// 	}
+// 	heredoc = hd_count(shell);
+// 	fd = open(heredoc, O_RDWR | O_CREAT | O_TRUNC, 0644);
+// 	if (fd < 0)
+// 	{
+// 		tmp->type = ERROR;
+// 		ms_error("HEREDOC FAILED TO OPEN.", -1, false, shell);
+// 	}
+// 	delim = ft_strdup(tmp->data);
+// 	pid_t doc;
+
+// 	//todo: for the love of god refactor heredoc..
+// 	doc = fork();
+// 	if (doc == 0)
+// 		signal(SIGINT, heredoc_sig);
+// 	else
+// 		signal(SIGINT, SIG_IGN);
+// 	while (1)
+// 	{
+// 		if (doc == 0)
+// 		{
+// 			line = readline("heredoc> ");
+// 			if (!line)
+// 				break ;
+// 			if (ft_strcmp(line, delim) == 0)
+// 			{
+// 				free(line);
+// 				free(delim);
+// 				break ;
+// 			}
+// 			if (ft_charinstr('$', line))
+// 				line = hd_var_exp(line, shell);
+// 			write(fd, line, ft_strlen(line));
+// 			write(fd, "\n", 1);
+// 			free(line);
+// 		}
+// 		else
+// 			break ;
+// 	}
+// 	if (doc == 0)
+// 		exit (0);
+// 	else
+// 	{
+// 		waitpid(doc, NULL, 0);
+// 		signal(SIGINT, sighandler);
+// 	}
+// 	close (fd);
+// 	fd = open(heredoc, O_RDONLY);
+// 	if (fd < 0)
+// 		ms_error("SOMEHOW LOST THE HEREDOC KEK", -2, false, shell);
+// 	tmp->fd = fd;
+// 	tmp->type = HEREDOC_FILE;
+// 	free(heredoc);
+// 	shell->hd_count++;
+// 	// printf ("hd ret = [%s]\n", tmp->data);
+// 	return (tmp);
+// }

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 14:30:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/16 19:14:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		i++;
 		if (cmd->pid == 0)
 		{
+			printf ("in fd [%i] out fd [%i]\n", cmd->infile, cmd->outfile);
 			exit (test_child(cmd, shell, envp));
 		}
 		if (!cmd->next)

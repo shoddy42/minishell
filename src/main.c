@@ -61,6 +61,7 @@ void	check_pipe(t_token *token, t_minishell *shell)
 	// printf ("behind = (%s)[%s]\n", print_token_type(behind->type), behind->data);
 	if (forward->type != COMMAND || behind->type != COMMAND)
 		shell->cancel_all_commands = true;
+	shell->cancel_command = false;
 	// printf ("cancel? [%i]\n", shell->cancel_all_commands);
 }
 
@@ -82,7 +83,7 @@ void parse_token(t_minishell *shell)
 	{
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
-		if (token->type == RIGHT)
+		if (token->type == RIGHT && shell->cancel_command == false)
 			token = handle_right(token, shell);
 		if (token->type == QUOTE || token->type == DQUOTE)
 			token = handle_quote(token, token->type, shell);
@@ -90,6 +91,8 @@ void parse_token(t_minishell *shell)
 			expand_dong(token, shell);
 		if (token->type == PIPE)
 			check_pipe(token, shell);
+		if (token->type == ERROR)
+			shell->cancel_command = true;
 		if (!token || !token->next)
 			break;
 		token = token->next;
@@ -194,6 +197,10 @@ int	main(int ac, char **av, char **envp)
 	shell = ft_calloc(1, sizeof(t_minishell));
 	if (!shell)
 		ms_error("FAILED TO ALLOCATE SHELL STRUCT, YOU HAVE LITERALLY 0 MEMORY LMAO", -1, true, NULL);
+	shell->bin = opendir("./bin");
+	printf ("open bins\n");
+	if (!shell->bin)
+		perror("no bins lmao");
 	init_minishell(shell, envp);
 	dash_c(shell, av);
 	while (shell->exit == 0)
