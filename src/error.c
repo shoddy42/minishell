@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 08:53:37 by root          ########   odam.nl         */
+/*   Updated: 2022/11/18 19:34:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
  * @param msg	The message to be printed on the STDERR.
  * @param print_token When @b [true]: prints the data of @b [token]. When @b [false]: does nothing.
  * @return The passed @b [token] after being set to error.
+ * //todo: remove the bool print_token, its useless. just swap to if (token->data) instead.
  */
 t_token	*token_error(t_token *token, char *msg, bool print_token)
 {

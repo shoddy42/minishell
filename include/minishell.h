@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 11:25:34 by root          ########   odam.nl         */
+/*   Updated: 2022/11/18 20:55:12 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@
 // should ; be token? are tabs actually getting set to void?
 # define DELIMITER " |$<>=;\t\'\"\n"
 
-typedef enum e_from
-{
-	MINISHELL,
-	CHILD
-}	t_from;
+// typedef enum e_from
+// {
+// 	MINISHELL,
+// 	CHILD
+// }	t_from;
 
 typedef enum e_pipe
 {
@@ -106,6 +106,7 @@ typedef struct s_shell_data
 	t_command	*commands;	//rename to head?
 	t_env		*env;		//rename to head?
 	char		**envp;			//repurpose after init.
+	char		**ms_environment;
 	char		**path;			//probably dont store this.
 	char		*command;
 	char		*bin_dir;		//check requirement
@@ -138,11 +139,12 @@ t_token	*merge_tokens(t_token *start, t_token *end, t_minishell *shell);
 
 // env
 void	init_env(t_minishell *shell, char **env);
-void	print_env(t_minishell *shell);
 char	*ms_getenv(char *key, t_minishell *shell);
 int		fill_key(t_env	*new);
 int		fill_data(t_env	*new, int eq);
-int		ms_replace_env(char	*beans, t_minishell *shell);
+t_env	*new_env(char *data);
+bool	ms_replace_env(char *beans, t_minishell *shell);
+bool	legal_env(char *data);
 
 // execute.c
 void	execute(t_command *cmd, t_minishell *shell);
@@ -153,11 +155,11 @@ t_token	*get_command_options(t_token *token, t_command *cmd);
 // ^^^^doesn't need to be in here probably.
 
 // Builtins.c
-bool	check_builtin(t_command *cmd, t_minishell *shell, t_from process);
+bool	is_builtin(t_command *cmd, t_minishell *shell);
 int		ms_cd(t_command	*cmd, t_minishell *shell);
 int		ms_echo(t_command *cmd);
 int		ms_pwd(t_command *cmd);
-int		ms_env(t_minishell	*shell, t_command	*cmd);
+int		print_env(t_minishell	*shell, t_command	*cmd);
 int		ms_export(t_command *cmd, t_minishell	*shell);
 int		ms_unset(t_minishell *shell, t_command *cmd);
 
@@ -171,6 +173,7 @@ void	delete_heredocs(t_minishell *shell);
 int		init_minishell(t_minishell *shell, char **envp);
 void	sighandler(int signum);
 void	child_sig(int signum);
+void	init_env(t_minishell *shell, char **envp);
 
 // redirects.c
 t_token	*handle_left(t_token *token, t_minishell *shell);

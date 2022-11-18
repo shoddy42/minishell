@@ -81,6 +81,7 @@ void parse_token(t_minishell *shell)
 	token = shell->tokens;
 	while (token && shell->cancel_all_commands == false)
 	{
+		// printf ("p (%s)[%s]\n", print_token_type(token->type), token->data);
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT && shell->cancel_command == false)
@@ -161,7 +162,7 @@ int	free_commands(t_minishell *shell)
 }
 
 /**
- * @brief		Executes a single commandline in minishell, then exits the whole shell.
+ * @brief		Executes a single commandline in minishell, then exits minishell.
  * 
  * @param shell The shell.
  * @param av	The arg variables of the call to ./minishell.
@@ -224,6 +225,7 @@ int	main(int ac, char **av, char **envp)
 		parse_token(shell); //if error, cut out everything
 		// print_tokens(shell);
 		count_pipes(shell);
+		// printf ("how many?: [%i]\n", shell->hd_count);
 		if (shell->cancel_all_commands == false)
 		{
 			if (make_commands(shell) == 0)
@@ -231,7 +233,7 @@ int	main(int ac, char **av, char **envp)
 				// print_commands(shell);
 				execute_two_electric_boogaloo(shell);
 			}
-			// printf("$? [%i]\n", shell->last_return); //print last cmd return
+			printf("$? [%i]\n", shell->last_return); //print last cmd return
 			// print_tokens(shell);
 			// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 
@@ -251,6 +253,7 @@ int	main(int ac, char **av, char **envp)
 		if (shell->command)
 			free(shell->command);
 		shell->cancel_all_commands = false;
+		shell->cancel_command = false;
 		// if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		// 	exit (56);
 	}

@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/17 09:00:55 by root          ########   odam.nl          #
+#    Updated: 2022/11/18 21:09:49 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -85,7 +85,7 @@ READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
 # ----------------------------------------- #
 
 
-$(NAME): $(OBJS) $(LIBS) $(HEADER_FILES)
+$(NAME): $(OBJS) $(LIBS) $(HEADER_FILES) | $(BIN_DIR)
 	@make -C $(LIB_DIR)
 	@echo COMPILING EXECUTABLE
 	@gcc $(FLAGS) $(DEBUG) $(SRCS) -o $(NAME) -I include $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
@@ -99,6 +99,10 @@ $(LIBS):
 	@echo making libft
 	@make -C $(LIB_DIR)
 	@echo "MAKING LIBFT RN YEA"
+
+$(BIN_DIR):
+	@echo "\n"Creating /$@/ directory.
+	@mkdir -p $@
 
 $(OBJ_SUB):
 	@mkdir -p $@
@@ -120,6 +124,9 @@ clean:
 
 fclean:	clean
 	/bin/rm -f $(NAME)
+
+mrclean: fclean
+	@make fclean -C $(LIB_DIR)
 
 re: fclean all
 

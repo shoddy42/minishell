@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 08:53:41 by root          ########   odam.nl         */
+/*   Updated: 2022/11/18 20:24:40 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,27 @@ void	increase_shlvl(t_minishell *shell)
 	free(num);
 }
 
+void	init_env(t_minishell *shell, char **envp)
+{
+	int		i;
+	t_env	*tmp;
+
+	i = 0;
+	shell->env = new_env(envp[i]);
+	tmp = shell->env;
+	while (envp[++i])
+	{
+		tmp->next = new_env(envp[i]);
+		tmp = tmp->next;
+	}
+	i = 0;
+	while (ft_strncmp(envp[i], "PATH=", 5) != 0 && envp[i + 1])
+		i++;
+	if (ft_strncmp(envp[i], "PATH=", 5) != 0)
+		exit (1);
+	shell->path = ft_split(envp[i] + 6, ':');
+}
+
 int	init_minishell(t_minishell *shell, char **envp)
 {
 	// signal handlers
@@ -61,7 +82,7 @@ int	init_minishell(t_minishell *shell, char **envp)
 	shell->last_return = 0;
 	shell->envp = envp;
 	shell->bin_dir = getcwd(NULL, 0);
-	shell->bin_dir = ft_strexpand(shell->bin_dir, "/obj/");
+	shell->bin_dir = ft_strexpand(shell->bin_dir, "/bin/");
 	// shell->last_return = 0;
 	init_env(shell, envp);
 	ms_replace_env("SHELL=minishell", shell);

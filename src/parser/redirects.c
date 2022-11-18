@@ -6,18 +6,14 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 09:08:31 by root          ########   odam.nl         */
+/*   Updated: 2022/11/18 20:36:06 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-//todo: fix segfault on 
-//todo:  < ls  echo > wc should create "wc"
-
 //todo: maybe? "ls > FAKE_FOLDER/test" gives "permission denied", rather than no such file or dir?
-
-//todo: also allow us to find variables and quotes, and subsequent command. "<< $PATH is legal and should not expand."
+//todo: maybe Failed to open should be on perror instead of a write but eh.
 t_token	*handle_left(t_token *start, t_minishell *shell)
 {
 	t_token	*token;
@@ -38,7 +34,7 @@ t_token	*handle_left(t_token *start, t_minishell *shell)
 		token = handle_quote(token, token->type, shell);
 		parse_append(shell);
 	}
-	
+	// actually open.
 	if (token->type == COMMAND)
 	{
 		free_tokens_til(start, token, shell);
@@ -46,6 +42,7 @@ t_token	*handle_left(t_token *start, t_minishell *shell)
 		token->type = INFILE;
 		if (token->fd == -1)
 			return(token_error(token, "Failed to open infile: [", true));
+		close (token->fd);
 	}
 	else
 	{
@@ -55,6 +52,8 @@ t_token	*handle_left(t_token *start, t_minishell *shell)
 	return (token);
 }
 
+
+//todo: all of this tbh
 t_token	*handle_right(t_token *start, t_minishell *shell)
 {
 	t_token	*token;
@@ -93,8 +92,10 @@ t_token	*handle_right(t_token *start, t_minishell *shell)
 	else
 		token->fd = open(token->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (token->fd < 0)
-		return (token_error(token, "Redirect '>'; Permission denied for file: [", true));
+		return (token_error(token, "Redirect '>' failed; Permission denied for file: [", true));
+	// printf ("handling right\n");
 	token->type = OUTFILE;
+	close (token->fd);
 	free_tokens_til(start, token, shell);
 	return (token);
 }

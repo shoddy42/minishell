@@ -6,12 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:58:28 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 08:53:24 by root          ########   odam.nl         */
+/*   Updated: 2022/11/18 18:47:31 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+//redo so it doesnt return starter token but scrolled token.
 t_token	*handle_quote(t_token *token, int type, t_minishell *shell)
 {
 	t_token	*tmp;
@@ -37,11 +38,7 @@ t_token	*handle_quote(t_token *token, int type, t_minishell *shell)
 		tmp = tmp->next;
 	}
 	if (tmp->type == type && tmp->next)
-	{
-		tmp = tmp->next;
-		free_tokens_til(token->next, tmp, shell);
-		token->next = tmp;
-	}
+		free_tokens_til(token->next, tmp->next, shell);
 	else //incase there is no token past "
 	{
 		if (tmp->type != type)

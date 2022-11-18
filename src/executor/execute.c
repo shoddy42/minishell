@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 12:11:57 by root          ########   odam.nl         */
+/*   Updated: 2022/11/18 20:25:45 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,9 @@ char	*pipex_pathjoin(char const *path, char const *cmd)
 }
 
 // basic logic, probably needs double checking.
-int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
-{
-	char	*path;
-	int		i;
 
+void	cmd_child_reopen(t_command *cmd, t_minishell *shell)
+{
 	if (!cmd->command)
 		exit(-1);
 	if (cmd->in_name)
@@ -50,8 +48,10 @@ int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
 	}
 	if (cmd->out_name)
 	{
-		printf ("opening infile [%s]\n", cmd->out_name);
-		cmd->infile = open(cmd->out_name, O_WRONLY);
+		printf ("opening outfile [%s]\n", cmd->out_name);
+		cmd->outfile = open(cmd->out_name, O_WRONLY);
+		if (cmd->outfile < 0)
+			printf(" OUT BAD \n");
 	}
 	if (cmd->infile == -42 || cmd->outfile == -42 || cmd->infile < 0 || cmd->outfile < 0)
 		cmd->executable = false;
@@ -62,31 +62,32 @@ int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
 		if (dup2(cmd->outfile, STDOUT_FILENO) == -1)
 			cmd->executable = false;
 	if (cmd->executable == false)
-		exit(-66);
-	if (check_builtin(cmd, shell, CHILD))
-		return (42); //change this?
-	i = 0;
-	if (cmd->command && access(cmd->command[0], X_OK) == 0)
+		exit(1);
+}
+
+void	cmd_execute(t_command *cmd, t_minishell *shell, char **envp)
+{
+	char	*path;
+	int		i;
+
+	cmd_child_reopen(cmd, shell);
+	if (is_builtin(cmd, shell) == true)
+		exit(0); //change this?
+	if (access(cmd->command[0], X_OK) == 0)
 		execve(cmd->command[0], cmd->command, envp);
-	while (shell->path[i])
+	i = -1;
+	while (shell->path[++i])
 	{
 		path = pipex_pathjoin(shell->path[i], cmd->command[0]);
 		if (access(path, X_OK) == 0)
 			execve(path, cmd->command, envp);
 		free(path);
-		i++;
+		// i++;
 	}
 	write(2, "minishell: ", 12);
 	write(2, cmd->command[0], ft_strlen(cmd->command[0]));
 	write(2, ": command not found\n", 20);
-	return (127);
-}
-
-int		test_child(t_command *cmd, t_minishell *shell, char **envp)
-{
-	// printf ("cmd [%s] exe? [%i]\n", cmd->command[0], cmd->executable);
-	return (child_p_1(cmd, shell, envp));
-	return (0);
+	exit (127);
 }
 
 // pipe creating and closing algorithm seems right.
@@ -134,7 +135,6 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 }
 
 
-//todo: FIX FDS LEAKING PLS
 void    execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
@@ -154,7 +154,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		return ;
 	}
 	if (cmd && !cmd->next && cmd->executable == true)
-		if (check_builtin(cmd, shell, MINISHELL) == true)
+		if (is_builtin(cmd, shell) == true)
 			return ;
 	// creation of envp
 	envp = create_envp(shell->env); //move
@@ -168,10 +168,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		tunnel_fork(cmd, shell);
 		i++;
 		if (cmd->pid == 0)
-		{
-			printf ("in fd [%i] out fd [%i]\n", cmd->infile, cmd->outfile);
-			exit (test_child(cmd, shell, envp));
-		}
+			cmd_execute(cmd, shell, envp);
 		if (!cmd->next)
 			break;
 		cmd = cmd->next;
@@ -183,10 +180,19 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		// printf("WAITING FOR [%i] PROCESS\n", i);
 		pid = waitpid((pid_t)0, &status, 0);
 		if (pid == shell->last_cmd)
+		{
 			if (WIFEXITED(status))
+			{
 				last_status = WEXITSTATUS(status);
+				// printf ("Last CMD Status [%i]\n", last_status);
+			}
+		}
 		if (WIFEXITED(status))
+		{
 			shell->last_return = WEXITSTATUS(status);
+			// printf ("Status [%i]\n", last_status);
+
+		}
 		else
 			shell->last_return = 258;
 		// printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
@@ -196,4 +202,6 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		free(envp);
 	if (last_status != -42)
 		shell->last_return = last_status;
+	// printf ("LAST Status [%i]\n", shell->last_return);
+	
 }

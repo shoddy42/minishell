@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 12:06:25 by root          ########   odam.nl         */
+/*   Updated: 2022/11/18 20:36:35 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,15 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(tmp->data);
 		if (tmp->type == INFILE || tmp->type == HEREDOC)
-		{
 			cmd->in_name = tmp->data;
-			printf ("in: [%s]\n", cmd->in_name);
-			// cmd->infile = tmp->fd;
-		}
 		if (tmp->type == OUTFILE)
 		{
+			printf ("OUTFOUND [%s]\n", tmp->data);
 			cmd->out_name = tmp->data;
-			printf ("out: [%s]\n", cmd->out_name);
-			// cmd->outfile = tmp->fd;
 		}
 		if (tmp->type == ERROR)
 		{
-			printf ("command [%s] terminated. due to error found in commands.c\n", cmd->command[0]);
+			// printf ("command [%s] terminated. due to error found in commands.c\n", cmd->command[0]);
 			cmd->executable = false;
 		}
 		if (!tmp->next)
