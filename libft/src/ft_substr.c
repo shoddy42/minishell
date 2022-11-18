@@ -6,12 +6,20 @@
 /*   By: wkonings <wkonings@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/02 18:07:08 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/05 17:22:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/18 22:26:26 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
+/**
+ * @brief 
+ * 
+ * @param s 
+ * @param start 
+ * @param len 
+ * @return char* 
+ */
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*str;

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 20:55:12 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/18 22:12:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ typedef struct s_command
 
 typedef struct s_env
 {
-	bool			has_beans;
+	bool			has_key;
 	char			*key;
 	char			*beans;
 	char			*data;
@@ -142,9 +142,11 @@ void	init_env(t_minishell *shell, char **env);
 char	*ms_getenv(char *key, t_minishell *shell);
 int		fill_key(t_env	*new);
 int		fill_data(t_env	*new, int eq);
-t_env	*new_env(char *data);
+void	new_env(char *data, t_minishell *shell);
 bool	ms_replace_env(char *beans, t_minishell *shell);
 bool	legal_env(char *data);
+bool	replace_env(char *beans, t_env *env);
+t_env	*env_exists(char	*beans, t_minishell *shell);
 
 // execute.c
 void	execute(t_command *cmd, t_minishell *shell);

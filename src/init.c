@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 20:24:40 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/18 22:13:28 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void	increase_shlvl(t_minishell *shell)
 
 	num = ft_itoa(1 + ft_atoi(ms_getenv("SHLVL", shell)));
 	shlvl = ft_strjoin("SHLVL=", num);
-	ms_replace_env(shlvl, shell);
+	// ms_replace_env(shlvl, shell);
+	replace_env(shlvl, env_exists(shlvl, shell));
 	free(shlvl);
 	free(num);
 }
@@ -55,13 +56,8 @@ void	init_env(t_minishell *shell, char **envp)
 	t_env	*tmp;
 
 	i = 0;
-	shell->env = new_env(envp[i]);
-	tmp = shell->env;
 	while (envp[++i])
-	{
-		tmp->next = new_env(envp[i]);
-		tmp = tmp->next;
-	}
+		new_env(envp[i], shell);
 	i = 0;
 	while (ft_strncmp(envp[i], "PATH=", 5) != 0 && envp[i + 1])
 		i++;
@@ -85,7 +81,8 @@ int	init_minishell(t_minishell *shell, char **envp)
 	shell->bin_dir = ft_strexpand(shell->bin_dir, "/bin/");
 	// shell->last_return = 0;
 	init_env(shell, envp);
-	ms_replace_env("SHELL=minishell", shell);
+	// ms_replace_env("SHELL=minishell", shell);
 	increase_shlvl(shell);
+	// printf ("DISASTER INCOMING\n");
 	return (0);
 }

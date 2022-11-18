@@ -203,6 +203,7 @@ int	main(int ac, char **av, char **envp)
 	if (!shell->bin)
 		perror("no bins lmao");
 	init_minishell(shell, envp);
+	// exit (0);
 	dash_c(shell, av);
 	while (shell->exit == 0)
 	{
