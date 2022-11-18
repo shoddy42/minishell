@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 11:25:12 by root          ########   odam.nl         */
+/*   Updated: 2022/11/18 23:22:07 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell)
 	t_token	*tmp;
 	t_token	*replace_prev;
 
+	replace_prev = NULL;
 	if (start->prev)
 	{
 		start->prev->next = end;

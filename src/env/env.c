@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/18 22:59:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 00:31:53 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
  * @returns @b true  When it replaced an env, or the env is illegal.
  * @returns @b false When it did not replace an env.
  */
-bool	replace_env(char *beans, t_env *env)
+bool	replace_env(char *beans, t_env *env, t_minishell *shell)
 {
 	if (!env || !env->beans || !beans || ft_strchr_num(beans, '=') == -1)
 		return (false);
@@ -50,7 +50,7 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 		if (env)
 		{
 			printf ("[%s] exists\n", cmd->command[i]);
-			replace_env(cmd->command[i], env);
+			replace_env(cmd->command[i], env, shell);
 		}
 		else
 		{
@@ -58,6 +58,8 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 			new_env(cmd->command[i], shell);
 		}
 	}
+	create_envp(shell);
+	// print_envp(shell->envp);
 	return (0);
 }
 

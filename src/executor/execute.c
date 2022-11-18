@@ -6,13 +6,14 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 20:25:45 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 00:45:42 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
 // this function is not properly protected, might need to exit instead of return?
+// todo: STEAL THE LOGIC FROM PIPEX AGAIN TO MAKE THIS WORK BETTER!
 char	*pipex_pathjoin(char const *path, char const *cmd)
 {
 	char	*ret;
@@ -65,7 +66,21 @@ void	cmd_child_reopen(t_command *cmd, t_minishell *shell)
 		exit(1);
 }
 
-void	cmd_execute(t_command *cmd, t_minishell *shell, char **envp)
+static bool	handle_path(char **args, char **envp)
+{
+	int		i;
+
+	if (access(args[0], X_OK) == 0)
+		if (execve(args[0], args, envp) == -1)
+			exit (1);
+	i = -1;
+	while (args[0][++i])
+		if (args[0][i] == '/')
+			return (true);
+	return (false);
+}
+
+void	cmd_execute(t_command *cmd, t_minishell *shell)
 {
 	char	*path;
 	int		i;
@@ -74,16 +89,26 @@ void	cmd_execute(t_command *cmd, t_minishell *shell, char **envp)
 	if (is_builtin(cmd, shell) == true)
 		exit(0); //change this?
 	if (access(cmd->command[0], X_OK) == 0)
-		execve(cmd->command[0], cmd->command, envp);
+		if (execve(cmd->command[0], cmd->command, shell->envp) < 0)
+			ms_error("error", 0, false, shell);
 	i = -1;
-	while (shell->path[++i])
+	// NEED NEW
+	if (handle_path(cmd->command, shell->envp))
+		exit(1); //todo: ERROR; no such file or msth
+	while (shell->path && shell->path[++i])
 	{
 		path = pipex_pathjoin(shell->path[i], cmd->command[0]);
 		if (access(path, X_OK) == 0)
-			execve(path, cmd->command, envp);
+			if (execve(path, cmd->command, shell->envp) < 0)
+				ms_error("error", 0, false, shell);
 		free(path);
 		// i++;
 	}
+	path = pipex_pathjoin(".", cmd->command[0]);
+	if (access(path, X_OK) == 0)
+		if (execve(path, cmd->command, shell->envp) == -1)
+			exit (1);
+	free (path);
 	write(2, "minishell: ", 12);
 	write(2, cmd->command[0], ft_strlen(cmd->command[0]));
 	write(2, ": command not found\n", 20);
@@ -128,7 +153,7 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 	}
 	if (cmd->pid == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
+		signal(SIGQUIT, child_sig);
 		close (cmd->tunnel[READ]);
 	}
 	return (cmd->pid);
@@ -142,7 +167,6 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	int			i;
 	int			status;
 	int			last_status;
-	char		**envp;
 	
 	
 	status = 0;
@@ -156,9 +180,10 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	if (cmd && !cmd->next && cmd->executable == true)
 		if (is_builtin(cmd, shell) == true)
 			return ;
-	// creation of envp
-	envp = create_envp(shell->env); //move
-	// print_envp(envp);
+	// creation of shell->envp
+	// printf ("PRINTING ENVP\n");
+	// create_envp(shell);
+	// print_envp(shell->envp);
 
 	
 	// pipeline logic.
@@ -168,7 +193,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		tunnel_fork(cmd, shell);
 		i++;
 		if (cmd->pid == 0)
-			cmd_execute(cmd, shell, envp);
+			cmd_execute(cmd, shell);
 		if (!cmd->next)
 			break;
 		cmd = cmd->next;
@@ -198,8 +223,6 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 		// printf("PROCESS [%i] ENDED WITH CODE:(%i) STATUS:(%i)\n", pid, status, WEXITSTATUS(status));
 		i--;
 	}
-	if (envp)
-		free(envp);
 	if (last_status != -42)
 		shell->last_return = last_status;
 	// printf ("LAST Status [%i]\n", shell->last_return);

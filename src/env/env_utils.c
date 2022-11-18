@@ -6,20 +6,12 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 23:00:10 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 00:35:04 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-/**
- * @brief Looks through all environment variables and checks if beans exists.
- * 
- * @param beans The string to check against the envs.
- * @param shell The shell.
- * @returns The found env if one exists. 
- * @returns NULL if it doesn't find one.
- */
 t_env	*env_exists(char *beans, t_minishell *shell)
 {
 	t_env	*env;
@@ -49,6 +41,7 @@ bool	legal_env(char *data)
 	if (!data || (ft_isalpha(data[0]) == false && data[0] != '_'))
 	{
 		printf ("export: `%s': not a valid identifier.\n", data);
+		printf ("ILLEGAL FIRST CHAR [%s] c = [%c]\n", data, data[0]);
 		return (false);
 	}
 	i = -1;
@@ -57,6 +50,7 @@ bool	legal_env(char *data)
 		if (ft_isalnum(data[i]) == false && data[i] != '_' && data[i] != '=')
 		{
 			printf ("export: `%s': not a valid identifier.\n", data);
+			printf ("ILLEGAL ENV [%s] c = [%c]\n", data, data[i]);
 			return (false);
 		}	
 	}
@@ -109,44 +103,73 @@ void	new_env(char *data, t_minishell *shell)
 		env->next = new;
 }
 
-// void	print_envp(char **envp)
-// {
-// 	int	i;
+void	print_envp(char **envp)
+{
+	int	i;
 
-// 	i = -1;
-// 	printf ("\nPRINTING NEW ENVP \n");
-// 	while (envp[++i])
-// 	{
-// 		printf("%s\n", envp[i]);
-// 	}
-// 	printf ("\n");
-// }
+	i = -1;
+	printf ("\nPRINTING NEW ENVP \n");
+	while (envp[++i])
+	{
+		printf("%s\n", envp[i]);
+	}
+	printf ("\n");
+}
 
 //todo: change envp creation and freeing
 //		to whenever the env linked list changes.
-char	**create_envp(t_env *env_head)
+
+void	create_path(t_minishell *shell)
+{
+	int		i;
+
+	i = -1;
+	if (shell->path)
+		while (shell->path[++i])
+			free(shell->path[i]);
+	if (shell->path)
+	{
+		printf ("Freed path\n");
+		free(shell->path);
+		shell->path = NULL;
+	}
+	i = -1;
+	while (shell->envp[++i])
+	{
+		if (ft_strncmp("PATH=", shell->envp[i], 5) == 0)
+			shell->path = ft_split(shell->envp[i] + 6, ':');
+	}
+	if (!shell->path)
+		printf ("NO PATH\n");
+}
+
+void	create_envp(t_minishell *shell)
 {
 	t_env	*env;
-	char	**ret;
 	int		size;
 	int		i;
 
 	size = 0;
-	env = env_head;
+	env = shell->env;
 	while (env)
 	{
 		size++;
 		env = env->next;
 	}
-	env = env_head;
-	ret = ft_calloc(size + 1, sizeof(char *));
-	if (!ret)
+	env = shell->env;
+	if (shell->envp)
+	{
+		printf ("Freeing envp\n");
+		free(shell->envp);
+	}
+	shell->envp = ft_calloc(size + 1, sizeof(char *));
+	if (!shell->envp || !env)
 		printf ("major error\n");
 	i = 0;
 	while (env)
 	{
-		ret[i++] = env->beans;
+		shell->envp[i++] = env->beans;
 		env = env->next;
 	}
-	return (ret);
+	create_path(shell);
 }

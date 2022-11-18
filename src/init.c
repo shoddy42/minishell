@@ -6,19 +6,21 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 22:13:28 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 00:29:07 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-//todo: make another sighandler for children, so they exit properly when signalled.
-
 void	child_sig(int signum)
 {
-	// printf ("KID SIGNAL HANDLED\n");
+	printf ("KID SIGNAL HANDLED\n");
 	if (signum == SIGINT)
 		rl_redisplay();
+	if (signum == SIGQUIT)
+	{
+		exit (3);
+	}
 }
 
 void	sighandler(int signum)
@@ -31,7 +33,6 @@ void	sighandler(int signum)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-		// rl_redisplay();
 		// write(1, "\n", 1);
 	}
 	// exit(1); //later: remove
@@ -45,7 +46,7 @@ void	increase_shlvl(t_minishell *shell)
 	num = ft_itoa(1 + ft_atoi(ms_getenv("SHLVL", shell)));
 	shlvl = ft_strjoin("SHLVL=", num);
 	// ms_replace_env(shlvl, shell);
-	replace_env(shlvl, env_exists(shlvl, shell));
+	replace_env(shlvl, env_exists(shlvl, shell), shell);
 	free(shlvl);
 	free(num);
 }
@@ -59,11 +60,13 @@ void	init_env(t_minishell *shell, char **envp)
 	while (envp[++i])
 		new_env(envp[i], shell);
 	i = 0;
-	while (ft_strncmp(envp[i], "PATH=", 5) != 0 && envp[i + 1])
-		i++;
-	if (ft_strncmp(envp[i], "PATH=", 5) != 0)
-		exit (1);
-	shell->path = ft_split(envp[i] + 6, ':');
+	// while (ft_strncmp(envp[i], "PATH=", 5) != 0 && envp[i + 1])
+	// 	i++;
+	// if (ft_strncmp(envp[i], "PATH=", 5) != 0)
+	// 	exit (1);
+	// shell->path = ft_split(envp[i] + 6, ':');
+	create_envp(shell);
+	print_envp(shell->envp);
 }
 
 int	init_minishell(t_minishell *shell, char **envp)
@@ -76,7 +79,6 @@ int	init_minishell(t_minishell *shell, char **envp)
 	// environment setup
 	shell->cancel_all_commands = false;
 	shell->last_return = 0;
-	shell->envp = envp;
 	shell->bin_dir = getcwd(NULL, 0);
 	shell->bin_dir = ft_strexpand(shell->bin_dir, "/bin/");
 	// shell->last_return = 0;

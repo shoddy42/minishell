@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 22:12:08 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 00:18:22 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,9 @@ int		fill_data(t_env	*new, int eq);
 void	new_env(char *data, t_minishell *shell);
 bool	ms_replace_env(char *beans, t_minishell *shell);
 bool	legal_env(char *data);
-bool	replace_env(char *beans, t_env *env);
+bool	replace_env(char *beans, t_env *env, t_minishell *shell);
 t_env	*env_exists(char	*beans, t_minishell *shell);
+void	print_export(t_minishell	*shell);
 
 // execute.c
 void	execute(t_command *cmd, t_minishell *shell);
@@ -197,7 +198,8 @@ int		make_commands(t_minishell *shell);
 void	print_commands(t_minishell *shell); //remove later
 
 //env_utils.c
-char    **create_envp(t_env *env_head);
+void	create_envp(t_minishell *shell);
+// char	**create_envp(t_env *env_head);
 void    print_envp(char **envp);
 
 
