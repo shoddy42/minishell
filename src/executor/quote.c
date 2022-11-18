@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:58:28 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 17:13:19 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/17 08:53:24 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../../include/minishell.h"
 
 t_token	*handle_quote(t_token *token, int type, t_minishell *shell)
 {

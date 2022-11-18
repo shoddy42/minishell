@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 18:38:06 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/17 11:25:34 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 
 // # include <sys/wait.h> // needed for WSL
 
-// should =; be tokens? are tabs actually getting set to void?
+// should ; be token? are tabs actually getting set to void?
 # define DELIMITER " |$<>=;\t\'\"\n"
 
 typedef enum e_from
@@ -60,7 +60,6 @@ typedef enum e_tokentype
 	RIGHT = 50,
 	PIPE = 51,
 	HEREDOC = 53,
-	HEREDOC_FILE = 54,
 	SEMICOLON = 60,
 	OUTFILE = 55,
 	INFILE = 56,
@@ -82,6 +81,8 @@ typedef struct s_command
 {
 	char				**command;	
 	bool				executable;
+	char				*in_name;
+	char				*out_name;
 	int					outfile;
 	int					infile;
 	int					tunnel[2];
@@ -133,6 +134,7 @@ void	free_single_token(t_token *token);
 void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
 int		ms_strchr(const char *src, int c);
+t_token	*merge_tokens(t_token *start, t_token *end, t_minishell *shell);
 
 // env
 void	init_env(t_minishell *shell, char **env);

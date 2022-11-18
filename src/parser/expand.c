@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 17:22:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/17 08:53:24 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../../include/minishell.h"
 
 t_token	*word_adding(char *variable, t_token *token, t_minishell *shell)
 {

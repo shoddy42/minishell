@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 17:15:15 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/17 11:25:12 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../../include/minishell.h"
 
 // REMOVE THIS FUNCTION LATER
 void	print_tokens(t_minishell *shell)
@@ -94,8 +94,6 @@ char *print_token_type(int type)
 		return "PIPE";
 	if (type == HEREDOC)
 		return "HEREDOC";
-	if (type == HEREDOC_FILE)
-		return "HEREDOC_FILE";
 	if (type == OUTFILE)
 		return "OUTFILE";
 	if (type == INFILE)
@@ -107,6 +105,39 @@ char *print_token_type(int type)
 	return ("TYPELESS ERROR!!!");
 }
 
+/**
+ * @brief	COOL UTIL BUT IT HAS NO USES YET, SO MAYBE REMOVE
+ * 			Merges tokens into one, by appending all token->data from start to end.
+ * 			This does cause a loss of FDs within tokens, so only use it for literals.
+ * 
+ * @param start The token to start appending from. Will get freed.
+ * @param end 	The token to append up to.
+ * @param shell The shell.
+ * @returns		The passed token @b [end], after it's data has been appended. 
+ * 
+ * @bug			NOT YET TESTED
+ */
+t_token	*merge_tokens(t_token *start, t_token *end, t_minishell *shell)
+{
+	t_token	*token;
+	char	*new_data;
+
+	token = start;
+	new_data = ft_strdup("");
+	while (token && new_data)
+	{
+		new_data = ft_strexpand(new_data, token->data);
+		if (token == end || !token->next)
+			break ;
+		token = token->next;
+	}
+	if (!new_data)
+		return (token_error(start, "Token merge error. [", true));
+	free (end->data);
+	end->data = new_data;
+	free_tokens_til(start, end, shell);
+	return (end);	
+}
 
 //todo: IF there is no token, prev SET HEAD AGAIN
 // maybe rename to REMOVE_tokens_til?
@@ -134,7 +165,11 @@ void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell)
 	end->prev = replace_prev;
 }
 
-//frees a single token in the list, and relinks tokens when needed.
+/**
+ * @brief Frees a single token in the list, and relinks tokens when needed.
+ * 
+ * @param token The token to be freed.
+ */
 void	free_single_token(t_token *token)
 {
 	if (token->prev && token->next)
@@ -147,12 +182,12 @@ void	free_single_token(t_token *token)
 	else if (!token->prev && token->next)
 		token->next->prev = NULL;
 	free(token->data);
-	// token->next = NULL;
-	// token->prev = NULL;
 	free(token);
 }
 
 // frees all tokens.
+
+//can probably lose the bottom half.
 void	free_tokens(t_minishell *shell)
 {
 	t_token	*list;

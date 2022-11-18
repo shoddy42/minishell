@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 20:54:55 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/17 12:11:57 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../../include/minishell.h"
 
 // this function is not properly protected, might need to exit instead of return?
 char	*pipex_pathjoin(char const *path, char const *cmd)
@@ -43,7 +43,17 @@ int		child_p_1(t_command *cmd, t_minishell *shell, char **envp)
 
 	if (!cmd->command)
 		exit(-1);
-	if (cmd->infile == -42 || cmd->outfile == -42)
+	if (cmd->in_name)
+	{
+		printf ("opening infile [%s]\n", cmd->in_name);
+		cmd->infile = open(cmd->in_name, O_RDONLY);
+	}
+	if (cmd->out_name)
+	{
+		printf ("opening infile [%s]\n", cmd->out_name);
+		cmd->infile = open(cmd->out_name, O_WRONLY);
+	}
+	if (cmd->infile == -42 || cmd->outfile == -42 || cmd->infile < 0 || cmd->outfile < 0)
 		cmd->executable = false;
 	if (cmd->infile != STDIN_FILENO && cmd->infile != NEEDS_PIPE)
 		if (dup2(cmd->infile, STDIN_FILENO) == -1)

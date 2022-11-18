@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 16:08:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/17 12:06:25 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	print_commands(t_minishell *shell)
 
 t_token	*get_command_options(t_token *token, t_command *cmd)
 {
-	t_token		*tmp;
-	int			i;
+	t_token	*tmp;
+	int		i;
 
 	tmp = token;
 	i = 0;
@@ -59,10 +59,18 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 	{
 		if (tmp->type == COMMAND)
 			cmd->command[i++] = ft_strdup(tmp->data);
-		if (tmp->type == INFILE || tmp->type == HEREDOC_FILE)
-			cmd->infile = tmp->fd;
+		if (tmp->type == INFILE || tmp->type == HEREDOC)
+		{
+			cmd->in_name = tmp->data;
+			printf ("in: [%s]\n", cmd->in_name);
+			// cmd->infile = tmp->fd;
+		}
 		if (tmp->type == OUTFILE)
-			cmd->outfile = tmp->fd;
+		{
+			cmd->out_name = tmp->data;
+			printf ("out: [%s]\n", cmd->out_name);
+			// cmd->outfile = tmp->fd;
+		}
 		if (tmp->type == ERROR)
 		{
 			printf ("command [%s] terminated. due to error found in commands.c\n", cmd->command[0]);

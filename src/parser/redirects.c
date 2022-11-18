@@ -6,11 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/16 19:49:19 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/17 09:08:31 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/minishell.h"
+#include "../../include/minishell.h"
 
 //todo: fix segfault on 
 //todo:  < ls  echo > wc should create "wc"
