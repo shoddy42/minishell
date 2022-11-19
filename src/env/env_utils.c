@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 00:35:04 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 01:57:56 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,31 +30,29 @@ t_env	*env_exists(char *beans, t_minishell *shell)
 	return (NULL);
 }
 
+// const char	legal[] = "_=";
+// const char	legal_last[] = "+";
+// const char	illegal[] = "~@#%%^&*()-|[]{};:\"\'$";
+// const char	first_illegal[] = "+=";
 bool	legal_env(char *data)
 {
-	int			i;
-	const char	legal[] = "_=";
-	const char	legal_last[] = "+";
-	const char	illegal[] = "~@#%%^&*()-|[]{};:\"\'$";
-	const char	first_illegal[] = "+=";
+	int	i;
+	bool	ret;
 
+	ret = true;
 	if (!data || (ft_isalpha(data[0]) == false && data[0] != '_'))
-	{
-		printf ("export: `%s': not a valid identifier.\n", data);
-		printf ("ILLEGAL FIRST CHAR [%s] c = [%c]\n", data, data[0]);
-		return (false);
-	}
+		ret = false;
 	i = -1;
-	while (data[++i] && data[i] != '=')
-	{
-		if (ft_isalnum(data[i]) == false && data[i] != '_' && data[i] != '=')
-		{
-			printf ("export: `%s': not a valid identifier.\n", data);
-			printf ("ILLEGAL ENV [%s] c = [%c]\n", data, data[i]);
-			return (false);
-		}	
-	}
-	return (true);
+	while (data[++i] && data[i] != '=' && data[i] != '+')
+		if (ft_isalnum(data[i]) == false && data[i] != '_' && data[i] != '=' && data[i] != '+')
+			ret = false;
+	printf ("s?? [%c][%c]\n", data[i], data[i + 1]);
+	if (data[i] == '+')
+		if (!data[i + 1] || data[i + 1] != '=')
+			ret = false;
+	if (ret == false)
+		printf ("export: `%s': not a valid identifier.\n", data);
+	return (ret);
 }
 
 int	fill_key(t_env	*new)
@@ -95,7 +93,7 @@ void	new_env(char *data, t_minishell *shell)
 	new->beans = ft_strdup(data);
 	if (!new->beans)
 		ms_error("Failed to allocate ENV->beans.", -1, true, NULL);
-	printf ("new = [%s]\n", new->beans);
+	// printf ("new = [%s]\n", new->beans);
 	fill_key(new);
 	if (!env)
 		shell->env = new;
@@ -103,22 +101,8 @@ void	new_env(char *data, t_minishell *shell)
 		env->next = new;
 }
 
-void	print_envp(char **envp)
-{
-	int	i;
-
-	i = -1;
-	printf ("\nPRINTING NEW ENVP \n");
-	while (envp[++i])
-	{
-		printf("%s\n", envp[i]);
-	}
-	printf ("\n");
-}
-
 //todo: change envp creation and freeing
 //		to whenever the env linked list changes.
-
 void	create_path(t_minishell *shell)
 {
 	int		i;
@@ -129,7 +113,6 @@ void	create_path(t_minishell *shell)
 			free(shell->path[i]);
 	if (shell->path)
 	{
-		printf ("Freed path\n");
 		free(shell->path);
 		shell->path = NULL;
 	}
@@ -139,8 +122,8 @@ void	create_path(t_minishell *shell)
 		if (ft_strncmp("PATH=", shell->envp[i], 5) == 0)
 			shell->path = ft_split(shell->envp[i] + 6, ':');
 	}
-	if (!shell->path)
-		printf ("NO PATH\n");
+	// if (!shell->path)
+	// 	printf ("NO PATH\n");
 }
 
 void	create_envp(t_minishell *shell)
@@ -158,10 +141,7 @@ void	create_envp(t_minishell *shell)
 	}
 	env = shell->env;
 	if (shell->envp)
-	{
-		printf ("Freeing envp\n");
 		free(shell->envp);
-	}
 	shell->envp = ft_calloc(size + 1, sizeof(char *));
 	if (!shell->envp || !env)
 		printf ("major error\n");

@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/19 00:31:53 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 01:59:09 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 		}
 	}
 	create_envp(shell);
-	// print_envp(shell->envp);
 	return (0);
 }
 

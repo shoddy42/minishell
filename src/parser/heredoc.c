@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 19:33:26 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 01:35:26 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ t_token	*heredoc(t_token *start, t_minishell *shell)
 {
 	t_token	*token;
 	pid_t	pid;
-	char	*heredoc; // replace with token datar.
+	char	*heredoc;
 	int		fd;
 
 	//token select. hopes for smth past >
@@ -191,77 +191,3 @@ t_token	*heredoc(t_token *start, t_minishell *shell)
 	shell->hd_count++;
 	return (token);
 }
-
-// t_token	*heredoc(t_token *token, t_minishell *shell)
-// {
-// 	char	*delim;
-// 	char	*line;
-// 	char	*heredoc;
-// 	t_token	*tmp;
-// 	int		fd;
-
-// 	tmp = token->next;
-// 	while (tmp && tmp->next && tmp->type == VOID)
-// 		tmp = tmp->next;
-// 	if (tmp->type != COMMAND && tmp->type != VARIABLE) //can it even be a variable here?
-// 	{
-// 		ms_error("Syntax Error near heredoc.", -7, false, shell);
-// 		tmp->type = ERROR;
-// 		return (tmp);
-// 	}
-// 	heredoc = get_hd_name(shell);
-// 	fd = open(heredoc, O_RDWR | O_CREAT | O_TRUNC, 0644);
-// 	if (fd < 0)
-// 	{
-// 		tmp->type = ERROR;
-// 		ms_error("HEREDOC FAILED TO OPEN.", -1, false, shell);
-// 	}
-// 	delim = ft_strdup(tmp->data);
-// 	pid_t doc;
-
-// 	//todo: for the love of god refactor heredoc..
-// 	doc = fork();
-// 	if (doc == 0)
-// 		signal(SIGINT, heredoc_sig);
-// 	else
-// 		signal(SIGINT, SIG_IGN);
-// 	while (1)
-// 	{
-// 		if (doc == 0)
-// 		{
-// 			line = readline("heredoc> ");
-// 			if (!line)
-// 				break ;
-// 			if (ft_strcmp(line, delim) == 0)
-// 			{
-// 				free(line);
-// 				free(delim);
-// 				break ;
-// 			}
-// 			if (ft_charinstr('$', line))
-// 				line = hd_var_exp(line, shell);
-// 			write(fd, line, ft_strlen(line));
-// 			write(fd, "\n", 1);
-// 			free(line);
-// 		}
-// 		else
-// 			break ;
-// 	}
-// 	if (doc == 0)
-// 		exit (0);
-// 	else
-// 	{
-// 		waitpid(doc, NULL, 0);
-// 		signal(SIGINT, sighandler);
-// 	}
-// 	close (fd);
-// 	fd = open(heredoc, O_RDONLY);
-// 	if (fd < 0)
-// 		ms_error("SOMEHOW LOST THE HEREDOC KEK", -2, false, shell);
-// 	tmp->fd = fd;
-// 	tmp->type = HEREDOC;
-// 	free(heredoc);
-// 	shell->hd_count++;
-// 	// printf ("hd ret = [%s]\n", tmp->data);
-// 	return (tmp);
-// }

@@ -6,38 +6,38 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 20:36:35 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 01:35:13 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	print_commands(t_minishell *shell)
-{
-	t_command	*tmp;
-	int			cmd_num;	
-	int			i;
+// void	print_commands(t_minishell *shell)
+// {
+// 	t_command	*tmp;
+// 	int			cmd_num;	
+// 	int			i;
 
-	i = 0;
-	cmd_num = 0;
-	tmp = shell->commands;
-	printf ("\nPrinting all commands:\n");
-	while (tmp)
-	{
-		printf ("\nCMD (%i) infile [%i] outfile [%i]\n",
-			cmd_num, tmp->infile, tmp->outfile);
-		cmd_num++;
-		i = -1;
-		while (tmp && tmp->command && tmp->command[++i])
-			printf("cmd(%i) = [%s]\n", i, tmp->command[i]);
-		if (!tmp->next)
-		{
-			printf ("no command next\n");
-			break ;
-		}
-		tmp = tmp->next;
-	}
-}
+// 	i = 0;
+// 	cmd_num = 0;
+// 	tmp = shell->commands;
+// 	printf ("\nPrinting all commands:\n");
+// 	while (tmp)
+// 	{
+// 		printf ("\nCMD (%i) infile [%i] outfile [%i]\n",
+// 			cmd_num, tmp->infile, tmp->outfile);
+// 		cmd_num++;
+// 		i = -1;
+// 		while (tmp && tmp->command && tmp->command[++i])
+// 			printf("cmd(%i) = [%s]\n", i, tmp->command[i]);
+// 		if (!tmp->next)
+// 		{
+// 			printf ("no command next\n");
+// 			break ;
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// }
 
 t_token	*get_command_options(t_token *token, t_command *cmd)
 {
@@ -79,8 +79,6 @@ t_token	*get_command_options(t_token *token, t_command *cmd)
 		cmd->executable = false;
 	return (tmp);
 }
-	// if (cmd->executable == false)
-	// 	printf ("error found, cancelling command [%s]\n", cmd->command[0]);
 
 t_command	*new_command(t_minishell *shell, t_command *cmd)
 {

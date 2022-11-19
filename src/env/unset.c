@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/14 11:26:52 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 00:31:46 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 01:23:02 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,5 @@ int	ms_unset(t_minishell *shell, t_command *cmd)
 			printf ("[%s] doesnt exist?\n", cmd->command[i]);
 	}
 	create_envp(shell);
-	// print_envp(shell->envp);
 	return (0);
 }

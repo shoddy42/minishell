@@ -208,7 +208,7 @@ int	main(int ac, char **av, char **envp)
 	while (shell->exit == 0)
 	{
 		shell->hd_count = 0;
-		shell->command = readline("minishell> ");
+		shell->command = readline("minishell > ");
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
 		{
 			// printf ("test\n");

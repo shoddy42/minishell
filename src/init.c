@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 00:29:07 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 01:23:24 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	init_env(t_minishell *shell, char **envp)
 	// 	exit (1);
 	// shell->path = ft_split(envp[i] + 6, ':');
 	create_envp(shell);
-	print_envp(shell->envp);
 }
 
 int	init_minishell(t_minishell *shell, char **envp)

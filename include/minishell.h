@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 00:18:22 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/19 03:21:36 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,16 @@
 # include <stdbool.h>
 # include <limits.h>
 # include <dirent.h>
+# define EMOJI "💤☢️🐧🤖🧙‍♂️🧙🐉🐲🔥💀🐢🐢🐢☢️⚜️"
+# define TITLEA "\x1B[103m\x1B[37;44m ⚜️  🐢 \x1B[0;34;40m shell 𝒔𝒉𝒆𝒍𝒍 \x1B[0m\x1B[92m ᗌ >"
+# define TITLEC "\x1B[42mGreen Background\x1B[0m"
+# define TITLEB "\x1B[49m\x1B[92m ❱ \x1B[0m"
+# define FONT1 "𝓶𝓲𝓷𝓲𝓼𝓱𝓮𝓵𝓵"
+# define FONT2 "🐌 🔥 𝓂𝒾𝓃𝒾𝓈𝒽𝑒𝓁𝓁 🔥 🐌"
+# define FONT3 "🍉 ⋆ 🍧 🔥 𝓂𝒾𝓃𝒾𝓈𝒽𝑒𝓁𝓁 🔥 🍧 ⋆ 🍉"
+# define PROMPT "ᗌ ❱ ▷ ᕗ ᑀ 〉》"
 
+// printf '\e[31m██ = #FF0000\e[m\n'
 // # include <sys/wait.h> // needed for WSL
 
 // should ; be token? are tabs actually getting set to void?
