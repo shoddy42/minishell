@@ -6,20 +6,16 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 17:47:18 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/21 19:30:35 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-//todo: move this to libft lmao
-int		ft_isspace(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\n');
-}
-
 void	set_token_type(t_minishell *shell, t_token *token, char *data)
 {
+	if (!data || !data[0])
+		token->type = ERROR;
 	if (ft_isspace(data[0]))
 		token->type = VOID;
 	else if (data[0] == '|')
@@ -30,8 +26,6 @@ void	set_token_type(t_minishell *shell, t_token *token, char *data)
 		token->type = LEFT;
 	else if (data[0] == '>')
 		token->type = RIGHT;
-	// else if (data[0] == ';') //supported if uncomment all SEMICOLON occurances. not fully operational
-	// 	token->type = SEMICOLON;
 	else if (data[0] == '\'')
 		token->type = QUOTE;
 	else if (data[0] == '\"')
@@ -80,32 +74,6 @@ t_token	*new_token(t_minishell *shell, char *data, int len, bool link)
 }
 
 //only issue with this so far is that for the final token, it'll allocate 1 bit too many.
-//REWRITE... INCREMENTING  COMMAND CAUSES BIG ISSUES
-// void	ft_tokenize(t_minishell *shell, char *command)
-// {
-// 	int	i;
-// 	int	skip;
-
-// 	i = 0;
-// 	skip = 0;
-// 	shell->pipe_count = 0;
-// 	while (command[i])
-// 	{
-// 		printf ("pre: command[%i] = [%c]\n", i, command[i]);
-// 		while (ft_charinstr(command[i], DELIMITER) == 0 && command[i] != '\0')
-// 			i++;
-// 		if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
-// 			i--;
-// 		// command += new_token(shell, command, i + 1); //could swap back to this 1 line saver B]
-// 		new_token(shell, command, i + 1, true);
-// 		command += i + 1 + skip;
-// 		printf ("post: command[%i] = [%c]\n", i, command[i]);
-// 		skip = 0;
-// 		i = 0;
-// 	}
-// }
-
-
 // "echo hello world | ls -la | cat"
 // [echo][ ][hello][ ][world][ ][|][ ][ls][ ][-la][ ][|][ ][cat]
 void	ft_tokenize(t_minishell *shell, char *command)
@@ -114,11 +82,10 @@ void	ft_tokenize(t_minishell *shell, char *command)
 	int	len;
 
 	i = 0;
-	shell->pipe_count = 0;
 	while (command[i])
 	{
 		len = 1;
-		if (ft_charinstr(command[i], DELIMITER) == false && command[i + 1])
+		if (ft_charinstr(command[i], DELIMITER) == false && command[i + len])
 			while (command[i + len] && ft_charinstr(command[i + len], DELIMITER) == false)
 				len++;
 		new_token(shell, command + i, len, true);

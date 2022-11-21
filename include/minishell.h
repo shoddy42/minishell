@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:58:48 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/21 19:06:54 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # include <dirent.h>
 # define EMOJI "💤☢️🐧🤖🧙‍♂️🧙🐉🐲🔥💀🐢🐢🐢☢️⚜️➜ 🍉"
 // choose between 33(blue) and 32(blue) 69 (more turq)
-# define PRMT "\x1B[48;5;220m 🐢 \x1B[0m\x1B[48;5;33;30m shell \x1B[0m \x1B[92m > \x1b[0m" // THIS SHIT BUGGED
+# define PRMT "\x1B[48;5;220m 🐢 \x1B[0m\x1B[48;5;33;30;1m shell \x1B[0m \x1B[92m > \x1b[0m" // THIS SHIT BUGGED
 # define PRMT2 "\x1B[33m 🐢 \x1B[30m shell \x1B[m > \x1b[0m"
 # define TITLEA2 "\x1B[4;105m 🐢 \x1B[4;30;31m  𝒔𝒉𝒆𝒍𝒍 \x1B[0m\x1B[92m >"
 # define TITLEA "\x1B[104m\x1B[37;44m 🐢 \x1B[0;34;40m 𝒔𝒉𝒆𝒍𝒍 \x1B[0m\x1B[92m >"

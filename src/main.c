@@ -243,11 +243,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
 		if (shell->command)
-		{
-			ft_bzero(shell->command, ft_strlen(shell->command));
 			free(shell->command);
-			shell->command = NULL;
-		}
 		shell->cancel_all_commands = false;
 		shell->cancel_command = false;
 		// if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)

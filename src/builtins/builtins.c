@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 13:33:25 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 19:48:19 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,53 @@
 #include <string.h>
 
 //todo: dogshit behavior of exit
+// int	ms_exit(t_command *cmd, t_minishell *shell)
+// {
+// 	int	status;
+
+// 	status = 0;
+// 	if (cmd && cmd->command && cmd->command[1])
+// 	{
+// 		if (cmd->command[2])
+// 		{
+// 			printf ("exit: Too many arguments.\n");
+// 			return (1);
+// 		}
+// 		if (ft_strisnum(cmd->command[1]) == true)
+// 			status = ft_atoi(cmd->command[1]);
+// 		else
+// 		{
+// 			write(2, "Minishell: ", 12);
+// 			write(2, cmd->command[1], ft_strlen(cmd->command[0]));
+// 			write(2, ": numeric argument required\n", 29);
+// 			status = 255;
+// 		}
+// 	}
+// 	exit (shell->last_return);
+// }
+
 int	ms_exit(t_command *cmd, t_minishell *shell)
 {
 	int	status;
 
+	if (!cmd || !cmd->command || !cmd->command[1])
+		exit (shell->last_return);
 	status = 0;
-	if (cmd && cmd->command && cmd->command[1])
+	if (ft_strisnum(cmd->command[1]) == false)
 	{
-		if (cmd->command[2])
-		{
-			printf ("exit: Too many arguments.\n");
-			return (1);
-		}
-		if (ft_strisnum(cmd->command[1]) == true)
-			status = ft_atoi(cmd->command[1]);
-		else
-		{
-			write(2, "Minishell: ", 12);
-			write(2, cmd->command[1], ft_strlen(cmd->command[0]));
-			write(2, ": numeric argument required\n", 29);
-			status = 255;
-		}
+		write(2, "exit: ", 7);
+		write(2, cmd->command[1], ft_strlen(cmd->command[0]));
+		write(2, ": numeric argument required\n", 29);
+		exit (255);
 	}
-	exit (shell->last_return);
+	if (cmd->command[2])
+	{
+		printf ("exit: Too many arguments.\n");
+		return (1);
+	}
+	if (ft_strisnum(cmd->command[1]) == true)
+		status = ft_atoi(cmd->command[1]);
+	exit (status);
 }
 
 void	builtin_redir(t_command *cmd, t_minishell *shell)
