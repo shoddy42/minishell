@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 22:20:15 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/20 16:14:41 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <string.h>
 
+//todo: dogshit behavior of exit
 int	ms_exit(t_command *cmd, t_minishell *shell)
 {
 	int	status;

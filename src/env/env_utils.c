@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 01:57:56 by root          ########   odam.nl         */
+/*   Updated: 2022/11/20 16:15:08 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ bool	legal_env(char *data)
 	if (!data || (ft_isalpha(data[0]) == false && data[0] != '_'))
 		ret = false;
 	i = -1;
-	while (data[++i] && data[i] != '=' && data[i] != '+')
-		if (ft_isalnum(data[i]) == false && data[i] != '_' && data[i] != '=' && data[i] != '+')
+	while (data[++i] && data[i] != '=')
+		if (ft_isalnum(data[i]) == false && data[i] != '_' && data[i] != '=')
 			ret = false;
 	printf ("s?? [%c][%c]\n", data[i], data[i + 1]);
-	if (data[i] == '+')
-		if (!data[i + 1] || data[i + 1] != '=')
-			ret = false;
+	// if (data[i] == '+')
+	// 	if (!data[i + 1] || data[i + 1] != '=')
+	// 		ret = false;
 	if (ret == false)
 		printf ("export: `%s': not a valid identifier.\n", data);
 	return (ret);
@@ -101,8 +101,6 @@ void	new_env(char *data, t_minishell *shell)
 		env->next = new;
 }
 
-//todo: change envp creation and freeing
-//		to whenever the env linked list changes.
 void	create_path(t_minishell *shell)
 {
 	int		i;
@@ -118,10 +116,8 @@ void	create_path(t_minishell *shell)
 	}
 	i = -1;
 	while (shell->envp[++i])
-	{
 		if (ft_strncmp("PATH=", shell->envp[i], 5) == 0)
 			shell->path = ft_split(shell->envp[i] + 6, ':');
-	}
 	// if (!shell->path)
 	// 	printf ("NO PATH\n");
 }

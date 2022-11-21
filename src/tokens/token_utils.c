@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 23:22:07 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/20 16:21:42 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,6 @@ t_token	*merge_tokens(t_token *start, t_token *end, t_minishell *shell)
 	return (end);	
 }
 
-//todo: IF there is no token, prev SET HEAD AGAIN
 // maybe rename to REMOVE_tokens_til?
 // free tokens starting from START, up to END, does NOT free END. IF there is a prev token, it will relink. so far it only links  start->prev to end 
 void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell)

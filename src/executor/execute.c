@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 00:45:42 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/20 16:17:21 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void	cmd_execute(t_command *cmd, t_minishell *shell)
 		if (execve(cmd->command[0], cmd->command, shell->envp) < 0)
 			ms_error("error", 0, false, shell);
 	i = -1;
-	// NEED NEW
 	if (handle_path(cmd->command, shell->envp))
 		exit(1); //todo: ERROR; no such file or msth
 	while (shell->path && shell->path[++i])
@@ -102,7 +101,6 @@ void	cmd_execute(t_command *cmd, t_minishell *shell)
 			if (execve(path, cmd->command, shell->envp) < 0)
 				ms_error("error", 0, false, shell);
 		free(path);
-		// i++;
 	}
 	path = pipex_pathjoin(".", cmd->command[0]);
 	if (access(path, X_OK) == 0)
