@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 13:36:02 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 16:21:27 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_env	*env_exists(char *beans, t_minishell *shell)
 	len = ft_strchr_num(beans, '=');
 	if (len == -1)
 		len = ft_strlen(beans);
-	env = shell->env;
+	env = shell->env_head;
 	while (env)
 	{
 		if (ft_strncmp(beans, env->key, len) == 0)
@@ -80,7 +80,7 @@ void	new_env(char *data, t_minishell *shell)
 		ms_error("Illegal env", 0, false, shell);
 		return ;
 	}
-	env = shell->env;
+	env = shell->env_head;
 	while (env && env->next)
 		env = env->next;
 	new = ft_calloc(1, sizeof(t_env));
@@ -92,7 +92,7 @@ void	new_env(char *data, t_minishell *shell)
 	// printf ("new = [%s]\n", new->beans);
 	fill_key(new);
 	if (!env)
-		shell->env = new;
+		shell->env_head = new;
 	else
 		env->next = new;
 }
@@ -125,13 +125,13 @@ void	create_envp(t_minishell *shell)
 	int		i;
 
 	size = 0;
-	env = shell->env;
+	env = shell->env_head;
 	while (env)
 	{
 		size++;
 		env = env->next;
 	}
-	env = shell->env;
+	env = shell->env_head;
 	if (shell->envp)
 		free(shell->envp);
 	shell->envp = ft_calloc(size + 1, sizeof(char *));

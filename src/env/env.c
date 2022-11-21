@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/21 13:33:11 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 16:21:27 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	*ms_getenv(char *key, t_minishell *shell)
 {
 	t_env	*env;
 
-	env = shell->env;
+	env = shell->env_head;
 	while (env)
 	{
 		if (ft_strcmp(key, env->key) == 0)
@@ -81,9 +81,9 @@ int	print_env(t_minishell *shell, t_command *cmd)
 {
 	t_env	*tmp;
 
-	if (!shell->env)
+	if (!shell->env_head)
 		return (1);
-	tmp = shell->env;
+	tmp = shell->env_head;
 	while (tmp)
 	{
 		if (tmp && tmp->has_key == true)
@@ -100,7 +100,7 @@ void	print_export(t_minishell	*shell)
 {
 	t_env	*env;
 
-	env = shell->env;
+	env = shell->env_head;
 	if (!env)
 		exit(1);
 	while (env)

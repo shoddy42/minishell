@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/14 11:26:52 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 01:23:02 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 16:21:27 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	remove_env(t_env *env, char *key, t_minishell *shell)
 {
 	t_env	*prev;
 
-	prev = shell->env;
+	prev = shell->env_head;
 	if (!env || !key || !prev)
 		return ;
 	while (prev && prev->next)
@@ -49,7 +49,7 @@ int	ms_unset(t_minishell *shell, t_command *cmd)
 	int		i;
 	t_env	*env;
 
-	env = shell->env;
+	env = shell->env_head;
 	i = 0;
 	while (cmd->command[++i])
 	{

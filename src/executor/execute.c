@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 13:36:41 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 16:21:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int		tunnel_fork(t_command *cmd, t_minishell *shell)
 			close(cmd->outfile);
 		if (cmd->infile != STDIN_FILENO && cmd->infile != NEEDS_PIPE)
 			close(cmd->infile);
-		if (cmd != shell->commands) //check its not the first command.
+		if (cmd != shell->cmd_head) //check its not the first command.
 			close(cmd->prev->tunnel[READ]);
 		if (!cmd->next)
 			close(cmd->tunnel[READ]);
@@ -169,7 +169,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	
 	status = 0;
 	last_status = -42;
-	cmd = shell->commands;
+	cmd = shell->cmd_head;
 	if (!cmd)
 	{
 		printf ("no cmd!\n"); //todo: real error.

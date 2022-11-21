@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 01:35:13 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 16:21:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 // 	i = 0;
 // 	cmd_num = 0;
-// 	tmp = shell->commands;
+// 	tmp = shell->cmd_head;
 // 	printf ("\nPrinting all commands:\n");
 // 	while (tmp)
 // 	{
@@ -104,8 +104,8 @@ int	make_commands(t_minishell *shell)
 	t_token		*token;
 
 	cmd = new_command(shell, NULL);
-	shell->commands = cmd;
-	token = shell->tokens;
+	shell->cmd_head = cmd;
+	token = shell->token_head;
 	if (!token)
 	{
 		cmd->executable = false;

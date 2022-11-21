@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/20 16:21:42 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 16:20:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_tokens(t_minishell *shell)
 	int i = 0;
 	t_token *test;
 
-	test = shell->tokens;
+	test = shell->token_head;
 	printf("\nall tokens: ");
 	while (test && test->next)
 	{
@@ -48,7 +48,7 @@ void	print_tokens_backwards(t_minishell *shell)
 	int i = 0;
 	t_token *test;
 
-	test = shell->tokens;
+	test = shell->token_head;
 	printf("backwards:  ");
 	while (test && test->next)
 		test = test->next;
@@ -153,7 +153,7 @@ void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell)
 		replace_prev = start->prev;
 	}
 	else
-		shell->tokens = end; //late addition 
+		shell->token_head = end; //late addition 
 	while (start != end)
 	{
 		tmp = start;
@@ -192,7 +192,7 @@ void	free_tokens(t_minishell *shell)
 {
 	t_token	*list;
 
-	list = shell->tokens;
+	list = shell->token_head;
 	while (list && list->next)
 	{
 		// printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
@@ -209,8 +209,8 @@ void	free_tokens(t_minishell *shell)
 			free(list->data);
 		free(list);
 	}
-	// shell->tokens->next = NULL;
-	shell->tokens = NULL;
+	// shell->token_head->next = NULL;
+	shell->token_head = NULL;
 }
 
 t_token	*get_last_token(t_token *list)

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 17:39:59 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 16:58:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,14 @@
 # include <stdbool.h>
 # include <limits.h>
 # include <dirent.h>
-# define EMOJI "💤☢️🐧🤖🧙‍♂️🧙🐉🐲🔥💀🐢🐢🐢☢️⚜️➜ "
-# define TITLEA "\x1B[103m\x1B[37;44m ⚜️  🐢 \x1B[0;34;40m shell 𝒔𝒉𝒆𝒍𝒍 \x1B[0m\x1B[92m ᗌ >"
+# define EMOJI "💤☢️🐧🤖🧙‍♂️🧙🐉🐲🔥💀🐢🐢🐢☢️⚜️➜ 🍉"
+// choose between 33(blue) and 32(blue) 69 (more turq)
+# define PRMT "\x1B[48;5;220m 🐢 \x1B[0m\x1B[48;5;33;30m shell \x1B[0m \x1B[92m > \x1b[0m" // THIS SHIT BUGGED
+# define PRMT2 "\x1B[33m 🐢 \x1B[30m shell \x1B[m > \x1b[0m"
+# define TITLEA2 "\x1B[4;105m 🐢 \x1B[4;30;31m  𝒔𝒉𝒆𝒍𝒍 \x1B[0m\x1B[92m >"
+# define TITLEA "\x1B[104m\x1B[37;44m 🐢 \x1B[0;34;40m 𝒔𝒉𝒆𝒍𝒍 \x1B[0m\x1B[92m >"
 # define TITLEC "\x1B[42mGreen Background\x1B[0m"
-# define TITLEB "\x1B[49m\x1B[92m ❱ \x1B[0m"
+# define TITLEB "\x1B[49m\x1B[92m \x1B[0m"
 # define FONT1 "𝓶𝓲𝓷𝓲𝓼𝓱𝓮𝓵𝓵"
 # define FONT2 "🐌 🔥 𝓂𝒾𝓃𝒾𝓈𝒽𝑒𝓁𝓁 🔥 🐌"
 # define FONT3 "🍉 ⋆ 🍧 🔥 𝓂𝒾𝓃𝒾𝓈𝒽𝑒𝓁𝓁 🔥 🍧 ⋆ 🍉"
@@ -111,16 +115,17 @@ typedef struct s_env
 
 typedef struct s_shell_data
 {
-	t_token		*tokens;	//rename to head?
-	t_command	*commands;	//rename to head?
-	t_env		*env;		//rename to head?
+	t_token		*token_head;	//rename to head?
+	t_command	*cmd_head;	//rename to head?
+	t_env		*env_head;		//rename to head?
 	char		**envp;			//repurpose after init.
-	char		**ms_environment;
 	char		**path;			//probably dont store this.
 	char		*command;
+	size_t		command_len;
 	char		*bin_dir;		//check requirement
 	DIR			*bin;
 
+	char		*prompt;
 	pid_t		last_cmd;
 	int			last_return;	//rename
 	int			pipe_count;

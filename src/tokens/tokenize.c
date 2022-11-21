@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/17 11:24:17 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 17:47:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	link_token(t_minishell *shell, t_token *new)
 {
 	t_token	*last;
 
-	last = get_last_token(shell->tokens);
+	last = get_last_token(shell->token_head);
 	if (last != NULL)
 	{
 		last->next = new;
@@ -53,7 +53,7 @@ void	link_token(t_minishell *shell, t_token *new)
 	else
 	{
 		new->next = NULL;
-		shell->tokens = new;
+		shell->token_head = new;
 	}	
 }
 
@@ -79,25 +79,50 @@ t_token	*new_token(t_minishell *shell, char *data, int len, bool link)
 	return (new);
 }
 
-//only issue with this so far is that for the final token, it'll allocate 1 bit toomany.
+//only issue with this so far is that for the final token, it'll allocate 1 bit too many.
+//REWRITE... INCREMENTING  COMMAND CAUSES BIG ISSUES
+// void	ft_tokenize(t_minishell *shell, char *command)
+// {
+// 	int	i;
+// 	int	skip;
+
+// 	i = 0;
+// 	skip = 0;
+// 	shell->pipe_count = 0;
+// 	while (command[i])
+// 	{
+// 		printf ("pre: command[%i] = [%c]\n", i, command[i]);
+// 		while (ft_charinstr(command[i], DELIMITER) == 0 && command[i] != '\0')
+// 			i++;
+// 		if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
+// 			i--;
+// 		// command += new_token(shell, command, i + 1); //could swap back to this 1 line saver B]
+// 		new_token(shell, command, i + 1, true);
+// 		command += i + 1 + skip;
+// 		printf ("post: command[%i] = [%c]\n", i, command[i]);
+// 		skip = 0;
+// 		i = 0;
+// 	}
+// }
+
+
+// "echo hello world | ls -la | cat"
+// [echo][ ][hello][ ][world][ ][|][ ][ls][ ][-la][ ][|][ ][cat]
 void	ft_tokenize(t_minishell *shell, char *command)
 {
 	int	i;
-	int	skip;
+	int	len;
 
 	i = 0;
-	skip = 0;
 	shell->pipe_count = 0;
 	while (command[i])
 	{
-		while (ft_charinstr(command[i], DELIMITER) == 0 && command[i])
-			i++;
-		if (ft_charinstr(command[i], DELIMITER) == 1 && i > 0)
-			i--;
-		// command += new_token(shell, command, i + 1); //could swap back to this 1 line saver B]
-		new_token(shell, command, i + 1, true);
-		command += i + 1 + skip;
-		skip = 0;
-		i = 0;
+		len = 1;
+		if (ft_charinstr(command[i], DELIMITER) == false && command[i + 1])
+			while (command[i + len] && ft_charinstr(command[i + len], DELIMITER) == false)
+				len++;
+		new_token(shell, command + i, len, true);
+		i += len;
 	}
 }
+

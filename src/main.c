@@ -22,7 +22,7 @@ void	parse_append(t_minishell *shell)
 {
 	t_token	*tmp;
 
-	tmp = shell->tokens;
+	tmp = shell->token_head;
 	while(tmp && tmp->next)
 	{
 		if (tmp->type == COMMAND && tmp->next->type == COMMAND && tmp->data && tmp->next->data)
@@ -78,9 +78,10 @@ void parse_token(t_minishell *shell)
 {
 	t_token	*token;
 
-	token = shell->tokens;
+	token = shell->token_head;
 	while (token && shell->cancel_all_commands == false)
 	{
+		printf ("Handling token: [%s]\n", token->data);
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT && shell->cancel_command == false)
@@ -106,7 +107,7 @@ int	count_pipes(t_minishell *shell)
 {
 	t_token	*token;
 
-	token = shell->tokens;
+	token = shell->token_head;
 	shell->pipe_count = 0;
 	while (token)
 	{
@@ -119,17 +120,15 @@ int	count_pipes(t_minishell *shell)
 	return (0);
 }
 
-//not fully functional, but works for basic testing
-//condense this.. last half of it should not be needed.
 int	free_commands(t_minishell *shell)
 {
 	t_command	*tmp;
 	int			i;
 
-	tmp = shell->commands;
+	tmp = shell->cmd_head;
 	if (!tmp)
-		return (-12);
-	while (tmp && tmp->next)
+		return (-12); //wtf?
+	while (tmp)
 	{
 		i = -1;
 		if (tmp->command)
@@ -138,22 +137,15 @@ int	free_commands(t_minishell *shell)
 				free(tmp->command[i]);
 			free (tmp->command);
 		}
+		if (!tmp->next)
+			break ;
 		tmp = tmp->next;
 		if (tmp->prev)
 			free(tmp->prev);
 	}
 	if (tmp)
-	{
-		i = -1;
-		if (tmp->command)
-		{
-			while (tmp->command[++i])
-				free(tmp->command[i]);
-			free(tmp->command);
-		}
 		free(tmp);
-	}
-	shell->commands = NULL;
+	shell->cmd_head = NULL;
 	return (0);
 }
 
@@ -204,7 +196,8 @@ int	main(int ac, char **av, char **envp)
 	while (shell->exit == 0)
 	{
 		shell->hd_count = 0;
-		shell->command = readline("minishell > ");
+		shell->command = readline(PRMT);
+		// shell->command[ft_strlen(shell->command)] = '\0';
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
 		{
 			// printf ("test\n");
@@ -213,6 +206,8 @@ int	main(int ac, char **av, char **envp)
 			rl_redisplay();
 			exit (1);
 		}
+		printf ("Wtf? [%s] len?: [%zu]\n", shell->command, ft_strlen(shell->command));
+		shell->command_len = ft_strlen(shell->command);
 		if (shell->command[0] == 'q' && ft_strlen(shell->command) == 1) //temporary exits
 			exit (0);
 		if (ft_strcmp(shell->command, "exit") == 0)
@@ -248,7 +243,11 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strlen(shell->command) > 0)
 			add_history(shell->command);
 		if (shell->command)
+		{
+			ft_bzero(shell->command, ft_strlen(shell->command));
 			free(shell->command);
+			shell->command = NULL;
+		}
 		shell->cancel_all_commands = false;
 		shell->cancel_command = false;
 		// if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
