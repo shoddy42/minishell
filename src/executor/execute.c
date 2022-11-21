@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/20 16:17:21 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 13:36:41 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ void    execute_two_electric_boogaloo(t_minishell *shell)
 	cmd = shell->commands;
 	if (!cmd)
 	{
-		printf ("no cmd!\n");
+		printf ("no cmd!\n"); //todo: real error.
 		return ;
 	}
 	if (cmd && !cmd->next && cmd->executable == true)

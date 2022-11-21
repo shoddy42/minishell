@@ -76,12 +76,11 @@ void	check_pipe(t_token *token, t_minishell *shell)
  */
 void parse_token(t_minishell *shell)
 {
-	t_token		*token;
+	t_token	*token;
 
 	token = shell->tokens;
 	while (token && shell->cancel_all_commands == false)
 	{
-		// printf ("p (%s)[%s]\n", print_token_type(token->type), token->data);
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT && shell->cancel_command == false)
@@ -105,25 +104,22 @@ void parse_token(t_minishell *shell)
 // incorperate this into parse_token, and change the function to check for syntax errors near |
 int	count_pipes(t_minishell *shell)
 {
-	t_token	*tmp;
+	t_token	*token;
 
-	tmp = shell->tokens;
+	token = shell->tokens;
 	shell->pipe_count = 0;
-	while (tmp)
+	while (token)
 	{
-		if (tmp->type == PIPE)// || tmp->type == SEMICOLON)
+		if (token->type == PIPE)// || token->type == SEMICOLON)
 			shell->pipe_count++;
-		if (!tmp->next)
+		if (!token->next)
 			break;
-		tmp = tmp->next;
+		token = token->next;
 	}
-	// printf ("pipe count real: [%i]\n", shell->pipe_count);
 	return (0);
 }
 
 //not fully functional, but works for basic testing
-
-
 //condense this.. last half of it should not be needed.
 int	free_commands(t_minishell *shell)
 {
@@ -234,7 +230,7 @@ int	main(int ac, char **av, char **envp)
 				// print_commands(shell);
 				execute_two_electric_boogaloo(shell);
 			}
-			printf("$? [%i]\n", shell->last_return); //print last cmd return
+			// printf("$? [%i]\n", shell->last_return); //print last cmd return
 			// print_tokens(shell);
 			// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 

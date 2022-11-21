@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/20 16:15:08 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 13:36:02 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,6 @@ bool	legal_env(char *data)
 	while (data[++i] && data[i] != '=')
 		if (ft_isalnum(data[i]) == false && data[i] != '_' && data[i] != '=')
 			ret = false;
-	printf ("s?? [%c][%c]\n", data[i], data[i + 1]);
-	// if (data[i] == '+')
-	// 	if (!data[i + 1] || data[i + 1] != '=')
-	// 		ret = false;
 	if (ret == false)
 		printf ("export: `%s': not a valid identifier.\n", data);
 	return (ret);

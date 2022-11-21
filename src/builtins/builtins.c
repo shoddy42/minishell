@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/20 16:14:41 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 13:33:25 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,3 @@ bool	is_builtin(t_command *cmd, t_minishell *shell)
 		return (false);
 	return (true);
 }
-
-// int	ms_strchr(const char *src, int c)
-// {
-// 	int		i;
-
-// 	i = 0;
-// 	while (src[i])
-// 	{
-// 		if (src[i] == (char)c)
-// 			return (i);
-// 		i++;
-// 	}
-// 	if (src[i] == (char)c)
-// 		return (i);
-// 	return (0);
-// }

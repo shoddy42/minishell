@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/20 16:10:53 by root          ########   odam.nl         */
+/*   Updated: 2022/11/21 13:33:11 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ bool	replace_env(char *beans, t_env *env, t_minishell *shell)
 	return (true);
 }
 
-//todo: maybe add +=
 int	ms_export(t_command *cmd, t_minishell *shell)
 {
 	t_env	*env;
