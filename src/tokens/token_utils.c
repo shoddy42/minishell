@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:20:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 19:18:19 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,35 +43,34 @@ void	print_tokens(t_minishell *shell)
 
 //	remove later
 //	to check if token->prev is still fully linked.
-void	print_tokens_backwards(t_minishell *shell)
-{
-	int i = 0;
-	t_token *test;
+// void	print_tokens_backwards(t_minishell *shell)
+// {
+// 	int i = 0;
+// 	t_token *test;
 
-	test = shell->token_head;
-	printf("backwards:  ");
-	while (test && test->next)
-		test = test->next;
-	while (test && test->prev)
-	{
-		if (test->type && test->type != VOID)
-		{
-			printf("(%s)", print_token_type(test->type));
-			printf("[%s]-", test->data);
-		}
-		test = test->prev;
-	}
-	if (test != NULL)
-	{
-		if (test->type && test->type != VOID)
-		{
-			printf("(%s)", print_token_type(test->type));
-			printf("[%s]\n", test->data);
-		}
-	}
-	printf("\n");
-}
-
+// 	test = shell->token_head;
+// 	printf("backwards:  ");
+// 	while (test && test->next)
+// 		test = test->next;
+// 	while (test && test->prev)
+// 	{
+// 		if (test->type && test->type != VOID)
+// 		{
+// 			printf("(%s)", print_token_type(test->type));
+// 			printf("[%s]-", test->data);
+// 		}
+// 		test = test->prev;
+// 	}
+// 	if (test != NULL)
+// 	{
+// 		if (test->type && test->type != VOID)
+// 		{
+// 			printf("(%s)", print_token_type(test->type));
+// 			printf("[%s]\n", test->data);
+// 		}
+// 	}
+// 	printf("\n");
+// }
 
 // delete later
 char *print_token_type(int type)
@@ -105,9 +104,9 @@ char *print_token_type(int type)
 	return ("TYPELESS ERROR!!!");
 }
 
+//todo: think about whether i want to preserve INFILE OUTFILE names
 /**
- * @brief	COOL UTIL BUT IT HAS NO USES YET, SO MAYBE REMOVE
- * 			Merges tokens into one, by appending all token->data from start to end.
+ * @brief	Merges tokens into one, by appending all token->data from start to end.
  * 			This does cause a loss of FDs within tokens, so only use it for literals.
  * 
  * @param start The token to start appending from. Will get freed.
@@ -135,13 +134,20 @@ t_token	*merge_tokens(t_token *start, t_token *end, t_minishell *shell)
 		return (token_error(start, "Token merge error. [", true));
 	free (end->data);
 	end->data = new_data;
-	free_tokens_til(start, end, shell);
-	return (end);	
+	remove_tokens(start, end, shell);
+	return (end);
 }
 
-// maybe rename to REMOVE_tokens_til?
-// free tokens starting from START, up to END, does NOT free END. IF there is a prev token, it will relink. so far it only links  start->prev to end 
-void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell)
+/**
+ * @brief	Frees all tokens from @b [START] up to @b [END]. 
+ * 			Relinks tokens after deletion if needed.
+ * 
+ * @param start The first token to free.
+ * 	 	If there is a start->prev, it will be linked to end->prev.
+ * @param end 	The token to end on. This token does not get freed.
+ * @param shell The shell.
+ */
+void	remove_tokens(t_token *start, t_token *end, t_minishell *shell)
 {
 	t_token	*tmp;
 	t_token	*replace_prev;
@@ -153,7 +159,7 @@ void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell)
 		replace_prev = start->prev;
 	}
 	else
-		shell->token_head = end; //late addition 
+		shell->token_head = end;
 	while (start != end)
 	{
 		tmp = start;
@@ -185,31 +191,32 @@ void	free_single_token(t_token *token)
 	free(token);
 }
 
-// frees all tokens.
-
-//can probably lose the bottom half.
+/**
+ * @brief	Frees all tokens and their data
+ *  		starting from shell->token_head
+ *			And sets shell->token_head to NULL
+ * 
+ * @param shell The shell.
+ */
 void	free_tokens(t_minishell *shell)
 {
-	t_token	*list;
+	t_token	*token;
 
-	list = shell->token_head;
-	while (list && list->next)
+	token = shell->token_head;
+	while (token && token->next)
 	{
-		// printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
-		if (list->data)
-			free(list->data);
-		list = list->next;
-		if (list->prev)
-			free(list->prev);
+		if (token->data)
+			free(token->data);
+		token = token->next;
+		if (token->prev)
+			free(token->prev);
 	}
-	if (list)
+	if (token)
 	{
-		// printf ("freeing token [%s] at adress [%p]\n", list->data, &list->data);
-		if (list->data)
-			free(list->data);
-		free(list);
+		if (token->data)
+			free(token->data);
+		free(token);
 	}
-	// shell->token_head->next = NULL;
 	shell->token_head = NULL;
 }
 

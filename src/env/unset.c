@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/14 11:26:52 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:21:27 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 19:12:17 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,7 @@ int	ms_unset(t_minishell *shell, t_command *cmd)
 	{
 		env = env_exists(cmd->command[i], shell);
 		if (env)
-		{
-			printf ("[%s] found and removing\n", env->beans);
 			remove_env(env, cmd->command[i], shell);
-		}
-		else
-			printf ("[%s] doesnt exist?\n", cmd->command[i]);
 	}
 	create_envp(shell);
 	return (0);

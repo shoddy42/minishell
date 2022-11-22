@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 18:42:30 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/17 08:53:24 by root          ########   odam.nl         */
+/*   Updated: 2022/11/22 19:17:12 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,6 @@ int	ms_echo(t_command *command)
 
 	if (!(command->command))
 		return (1);
-	// if (!command->command[1])
-	// {
-	// 	printf ("early return on echo\n");
-	// 	return (0);
-	// }
 	i = 1;
 	no_nl = false;
 	while (dash_n(command->command[i]))
@@ -48,8 +43,6 @@ int	ms_echo(t_command *command)
 		no_nl = true;
 		i++;
 	}
-	// if (command->command[1] && ft_strcmp(command->command[1], "-n") == 0)
-	// 	i++;
 	while (command->command[i])
 	{
 		ft_putstr_fd(command->command[i], command->outfile);
@@ -57,8 +50,6 @@ int	ms_echo(t_command *command)
 			write(command->outfile, " ", 1);
 		i++;
 	}
-	// if (ft_strcmp(command->command[1], "-n") == 0)
-	// 	return (0);
 	if (no_nl)
 		return (0);
 	ft_putchar_fd('\n', command->outfile);

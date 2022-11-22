@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:58:28 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 18:47:31 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 18:36:22 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ t_token	*handle_quote(t_token *token, int type, t_minishell *shell)
 		tmp = tmp->next;
 	}
 	if (tmp->type == type && tmp->next)
-		free_tokens_til(token->next, tmp->next, shell);
+		remove_tokens(token->next, tmp->next, shell);
 	else //incase there is no token past "
 	{
 		if (tmp->type != type)
 			printf ("WARNING: UNCLOSED %s\n", print_token_type(type));
-		free_tokens_til(token->next, tmp, shell);
+		remove_tokens(token->next, tmp, shell);
 		free_single_token(tmp);
 		token->next = NULL;
 	}
@@ -82,14 +82,14 @@ t_token	*handle_quote(t_token *token, int type, t_minishell *shell)
 // 	if (tmp->type == type && tmp->next)
 // 	{
 // 		tmp = tmp->next;
-// 		free_tokens_til(token->next, tmp);
+// 		remove_tokens(token->next, tmp);
 // 		token->next = tmp;
 // 	}
 // 	else
 // 	{
 // 		if (tmp->type != type)
 // 			printf ("WARNING: UNCLOSED %s\n", print_token_type(type));
-// 		free_tokens_til(token->next, tmp);
+// 		remove_tokens(token->next, tmp);
 // 		free_single_token(tmp);
 // 		token->next = NULL;
 // 	}

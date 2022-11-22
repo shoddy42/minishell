@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 20:36:06 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 19:46:02 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_token	*handle_left(t_token *start, t_minishell *shell)
 	// actually open.
 	if (token->type == COMMAND)
 	{
-		free_tokens_til(start, token, shell);
+		remove_tokens(start, token, shell);
 		token->fd = open(token->data, O_RDONLY);
 		token->type = INFILE;
 		if (token->fd == -1)
@@ -87,15 +87,24 @@ t_token	*handle_right(t_token *start, t_minishell *shell)
 		return (token_error(token, "Syntax error near '>'; Unexpected token: [", true));
 	}
 	// actual open + error
-	if (append)
-		token->fd = open(token->data, O_RDWR | O_APPEND | O_CREAT, 0644);
-	else
-		token->fd = open(token->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
+	token->fd = open(token->data, O_RDWR | O_APPEND | O_CREAT, 0644);
 	if (token->fd < 0)
 		return (token_error(token, "Redirect '>' failed; Permission denied for file: [", true));
+	printf ("fd? [%i]\n", token->fd);
+	close(token->fd);
+	printf ("closed fd? [%i]\n", token->fd);
+	// access(token->data, W_OK);
+	if (append && token->fd > 0)
+		token->fd = O_APPEND;
+	else if (token->fd > 0)
+		token->fd = O_TRUNC;
+	// if (append)
+	// 	token->fd = open(token->data, O_RDWR | O_APPEND | O_CREAT, 0644);
+	// else
+	// 	token->fd = open(token->data, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	// printf ("handling right\n");
 	token->type = OUTFILE;
-	close (token->fd);
-	free_tokens_til(start, token, shell);
+	// close (token->fd);
+	remove_tokens(start, token, shell);
 	return (token);
 }

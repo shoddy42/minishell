@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/19 01:35:26 by root          ########   odam.nl         */
+/*   Updated: 2022/11/22 18:31:12 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,11 @@ void	heredoc_sig(int signum)
 {
 	if (signum == SIGINT)
 	{
-		printf ("sig int recieved\n");
+		// printf ("sig int recieved\n");
 		exit (1);
 	}
+	// if (signum == SIGQUIT)
+	// 	;
 }
 
 //todo: check for potential segfaults if malloc fails.
@@ -71,15 +73,20 @@ t_token *hd_delim(t_token *token, t_minishell *shell)
 	hd = token;
 	while (hd && hd->next)
 	{
-		if (hd->next->type != VARIABLE && hd->next->type != COMMAND && hd->next->type != DQUOTE && hd->next->type == QUOTE)
+		// printf ("hd assess (%s)[%s] next: (%s)[%s]\n", print_token_type(hd->type), hd->data, print_token_type(hd->next->type), hd->next->data);
+		if (hd->next->type != VARIABLE && hd->next->type != COMMAND && hd->next->type != DQUOTE && hd->next->type != QUOTE)
+		{
+			// printf ("BREAK ON [%s]\n", hd->data);
 			break ;
+		}
 		hd = hd->next;
 	}
+	// printf ("hd returned? [%s]\n", hd->data);
 	if (hd && hd != token)
 		hd = merge_tokens(token, hd, shell);
 	delim = ft_calloc(ft_strlen(hd->data), sizeof(char));
 	if (!delim)
-		return (token_error(hd, "Allocating delimiter for heredoc failed. [", true));
+		return (token_error(hd, "Allocating DELIM for heredoc failed. [", true));
 	i = -1;
 	skip = 0;
 	while (hd->data[++i + skip])
@@ -160,7 +167,7 @@ t_token	*heredoc(t_token *start, t_minishell *shell)
 	while (token && token->next && token->type == VOID)
 		token = token->next;
 	if (token->type != COMMAND && token->type != QUOTE && token->type != DQUOTE && token->type != VARIABLE)
-		return (token_error(token, "Syntax error near '<<'; No valid delimiter for heredoc. [", true));
+		return (token_error(token, "Syntax error near '<<'; No valid DELIM for heredoc. [", true));
 	token = hd_delim(token, shell); // what if token die?
 	heredoc = get_hd_name(shell);
 	fd = open(heredoc, O_RDWR | O_CREAT | O_TRUNC, 0644);
@@ -170,7 +177,10 @@ t_token	*heredoc(t_token *start, t_minishell *shell)
 	if (pid < 0)
 		return (token_error(token, "Forking for heredoc failed. [", true));
 	if (pid == 0)
+	{
+		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, heredoc_sig);
+	}
 	else
 		signal(SIGINT, SIG_IGN);
 	//child writes the actual heredoc.

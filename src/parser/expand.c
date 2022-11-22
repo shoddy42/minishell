@@ -6,11 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/18 23:21:10 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 16:33:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+extern int	g_status;
 
 t_token	*word_adding(char *variable, t_token *token, t_minishell *shell)
 {
@@ -75,8 +77,8 @@ void	expand_dong(t_token *token, t_minishell *shell)
 		next = tmp->next;
 	if (tmp->data && tmp->data[0] == '?')
 	{
-		printf ("number? = [%i]\n", shell->last_return);
-		variable = ft_itoa(shell->last_return);
+		printf ("number? = [%i]\n", g_status);
+		variable = ft_itoa(g_status);
 	}
 	else
 		variable = ft_strdup(ms_getenv(tmp->data, shell));

@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:21:27 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 19:11:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,37 +21,17 @@
  * @returns @b true  When it replaced an env, or the env is illegal.
  * @returns @b false When it did not replace an env.
  */
-bool	replace_env(char *beans, t_env *env, t_minishell *shell)
+int	replace_env(char *beans, t_env *env, t_minishell *shell)
 {
 	if (!env || !env->beans || !beans || ft_strchr_num(beans, '=') == -1)
-		return (false);
+		return (1);
 	free(env->beans);
 	env->beans = ft_strdup(beans);
 	if (env->key)
 		free(env->key);
 	if (env->data)
 		free(env->data);
-	fill_key(env);
-	return (true);
-}
-
-int	ms_export(t_command *cmd, t_minishell *shell)
-{
-	t_env	*env;
-	int		i;
-
-	if (!cmd->command[1])
-		print_export(shell);
-	i = 0;
-	while (cmd->command[++i])
-	{
-		env = env_exists(cmd->command[i], shell);
-		if (env)
-			replace_env(cmd->command[i], env, shell);
-		else
-			new_env(cmd->command[i], shell);
-	}
-	create_envp(shell);
+	fill_env(env);
 	return (0);
 }
 
@@ -94,27 +74,4 @@ int	print_env(t_minishell *shell, t_command *cmd)
 		tmp = tmp->next;
 	}
 	return (0);
-}
-
-void	print_export(t_minishell	*shell)
-{
-	t_env	*env;
-
-	env = shell->env_head;
-	if (!env)
-		exit(1);
-	while (env)
-	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(env->key, 1);
-		if (env->data && env->has_key == true)
-		{
-			write(1, "=", 1);
-			ft_putstr_fd("\"", 1);
-			ft_putstr_fd(env->data, 1);
-			ft_putstr_fd("\"", 1);
-		}
-		write(1, "\n", 1);
-		env = env->next;
-	}
 }

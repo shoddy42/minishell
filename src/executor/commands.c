@@ -6,12 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:21:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 20:50:31 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+//later: remove
 // void	print_commands(t_minishell *shell)
 // {
 // 	t_command	*tmp;
@@ -39,45 +40,47 @@
 // 	}
 // }
 
-t_token	*get_command_options(t_token *token, t_command *cmd)
+static void	set_command_options(t_token *token, t_command *cmd)
 {
-	t_token	*tmp;
+	if (token->type == INFILE || token->type == HEREDOC)
+		cmd->in_name = token->data;
+	if (token->type == OUTFILE)
+	{
+		cmd->out_name = token->data;
+		cmd->outfile = token->fd;
+	}
+	if (token->type == ERROR)
+		cmd->executable = false;
+}
+
+t_token	*get_command_options(t_token *start, t_command *cmd)
+{
+	t_token	*token;
 	int		i;
 
-	tmp = token;
+	token = start;
 	i = 0;
-	while (tmp && tmp->type != PIPE) // && tmp->type != SEMICOLON)
+	while (token && token->type != PIPE)
 	{
-		if (tmp->type == COMMAND)
+		if (token->type == COMMAND)
 			i++;
-		tmp = tmp->next;
+		token = token->next;
 	}
 	cmd->command = ft_calloc(i + 1, sizeof(char *));
-	tmp = token;
+	token = start;
 	i = 0;
-	while (tmp && tmp->type != PIPE) // && tmp->type != SEMICOLON)
+	while (token && token->type != PIPE)
 	{
-		if (tmp->type == COMMAND)
-			cmd->command[i++] = ft_strdup(tmp->data);
-		if (tmp->type == INFILE || tmp->type == HEREDOC)
-			cmd->in_name = tmp->data;
-		if (tmp->type == OUTFILE)
-		{
-			printf ("OUTFOUND [%s]\n", tmp->data);
-			cmd->out_name = tmp->data;
-		}
-		if (tmp->type == ERROR)
-		{
-			// printf ("command [%s] terminated. due to error found in commands.c\n", cmd->command[0]);
-			cmd->executable = false;
-		}
-		if (!tmp->next)
+		if (token->type == COMMAND)
+			cmd->command[i++] = ft_strdup(token->data);
+		set_command_options(token, cmd);
+		if (!token->next)
 			break ;
-		tmp = tmp->next;
+		token = token->next;
 	}
 	if (!cmd->command[0])
 		cmd->executable = false;
-	return (tmp);
+	return (token);
 }
 
 t_command	*new_command(t_minishell *shell, t_command *cmd)
@@ -111,11 +114,9 @@ int	make_commands(t_minishell *shell)
 		cmd->executable = false;
 		return (1);
 	}
-	// printf ("token? [%s]\n", token->data);
 	while (token)
 	{
 		token = get_command_options(token, cmd);
-		// printf("returned token = [%s]\n", token->data);
 		if (token && token->type == PIPE)
 		{
 			cmd = new_command(shell, cmd);
@@ -124,9 +125,10 @@ int	make_commands(t_minishell *shell)
 			if (cmd->prev->outfile == STDOUT_FILENO)
 				cmd->prev->outfile = NEEDS_PIPE;
 		}
-		else if (token && token->type == SEMICOLON)
-			cmd = new_command(shell, cmd);
 		token = token->next;
 	}
 	return (0);
 }
+
+		// else if (token && token->type == SEMICOLON) //only useful for semi
+		// 	cmd = new_command(shell, cmd);

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 16:21:27 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 19:13:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ t_env	*env_exists(char *beans, t_minishell *shell)
 // const char	first_illegal[] = "+=";
 bool	legal_env(char *data)
 {
-	int	i;
 	bool	ret;
+	int		i;
 
 	ret = true;
 	if (!data || (ft_isalpha(data[0]) == false && data[0] != '_'))
@@ -51,7 +51,7 @@ bool	legal_env(char *data)
 	return (ret);
 }
 
-int	fill_key(t_env	*new)
+int	fill_env(t_env	*new)
 {
 	int	eq;
 
@@ -70,7 +70,7 @@ int	fill_key(t_env	*new)
 	return (0);
 }
 
-void	new_env(char *data, t_minishell *shell)
+int	new_env(char *data, t_minishell *shell)
 {
 	t_env	*env;
 	t_env	*new;
@@ -78,7 +78,7 @@ void	new_env(char *data, t_minishell *shell)
 	if (legal_env(data) == false)
 	{
 		ms_error("Illegal env", 0, false, shell);
-		return ;
+		return (1);
 	}
 	env = shell->env_head;
 	while (env && env->next)
@@ -89,59 +89,10 @@ void	new_env(char *data, t_minishell *shell)
 	new->beans = ft_strdup(data);
 	if (!new->beans)
 		ms_error("Failed to allocate ENV->beans.", -1, true, NULL);
-	// printf ("new = [%s]\n", new->beans);
-	fill_key(new);
+	fill_env(new);
 	if (!env)
 		shell->env_head = new;
 	else
 		env->next = new;
-}
-
-void	create_path(t_minishell *shell)
-{
-	int		i;
-
-	i = -1;
-	if (shell->path)
-		while (shell->path[++i])
-			free(shell->path[i]);
-	if (shell->path)
-	{
-		free(shell->path);
-		shell->path = NULL;
-	}
-	i = -1;
-	while (shell->envp[++i])
-		if (ft_strncmp("PATH=", shell->envp[i], 5) == 0)
-			shell->path = ft_split(shell->envp[i] + 6, ':');
-	// if (!shell->path)
-	// 	printf ("NO PATH\n");
-}
-
-void	create_envp(t_minishell *shell)
-{
-	t_env	*env;
-	int		size;
-	int		i;
-
-	size = 0;
-	env = shell->env_head;
-	while (env)
-	{
-		size++;
-		env = env->next;
-	}
-	env = shell->env_head;
-	if (shell->envp)
-		free(shell->envp);
-	shell->envp = ft_calloc(size + 1, sizeof(char *));
-	if (!shell->envp || !env)
-		printf ("major error\n");
-	i = 0;
-	while (env)
-	{
-		shell->envp[i++] = env->beans;
-		env = env->next;
-	}
-	create_path(shell);
+	return (0);
 }

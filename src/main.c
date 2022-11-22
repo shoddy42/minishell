@@ -12,6 +12,8 @@
 
 #include "../include/minishell.h"
 
+int	g_status;
+
 /**
  * @brief Loops through all tokens after parsing. 
  * 		  Will append neighboring tokens of type COMMAND to eachother.
@@ -81,7 +83,7 @@ void parse_token(t_minishell *shell)
 	token = shell->token_head;
 	while (token && shell->cancel_all_commands == false)
 	{
-		printf ("Handling token: [%s]\n", token->data);
+		// printf ("Handling token: [%s]\n", token->data);
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
 		if (token->type == RIGHT && shell->cancel_command == false)
@@ -172,7 +174,7 @@ int	dash_c(t_minishell *shell, char **av)
 		free_commands(shell);
 		free_tokens(shell);
 		delete_heredocs(shell);
-		exit (shell->last_return);
+		exit (g_status);
 	}
 	return (0);
 }
@@ -206,7 +208,7 @@ int	main(int ac, char **av, char **envp)
 			rl_redisplay();
 			exit (1);
 		}
-		printf ("Wtf? [%s] len?: [%zu]\n", shell->command, ft_strlen(shell->command));
+		// printf ("Wtf? [%s] len?: [%zu]\n", shell->command, ft_strlen(shell->command));
 		shell->command_len = ft_strlen(shell->command);
 		if (shell->command[0] == 'q' && ft_strlen(shell->command) == 1) //temporary exits
 			exit (0);
@@ -225,7 +227,8 @@ int	main(int ac, char **av, char **envp)
 				// print_commands(shell);
 				execute_two_electric_boogaloo(shell);
 			}
-			// printf("$? [%i]\n", shell->last_return); //print last cmd return
+			// printf("$? [%i]\n", g_status); //print last cmd return
+			printf("g$? [%i]\n", g_status); //print last cmd return
 			// print_tokens(shell);
 			// print_tokens_backwards(shell); //for testing whether prev is linked properly.
 
@@ -238,6 +241,7 @@ int	main(int ac, char **av, char **envp)
 		}
 		else
 			printf ("SYNTAXICAL ERROR\n"); //todo: make actual syntax error reporter, which will also work with <<<<< and >>>>>
+		
 		delete_heredocs(shell);
 		free_tokens(shell);
 		if (ft_strlen(shell->command) > 0)

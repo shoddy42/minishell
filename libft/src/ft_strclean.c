@@ -6,7 +6,7 @@
 /*   By: root <root@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/20 15:21:40 by root          #+#    #+#                 */
-/*   Updated: 2022/11/20 16:09:55 by root          ########   odam.nl         */
+/*   Updated: 2022/11/22 17:02:59 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ char    *ft_strclean(const char *s, const char *remove)
             clean++;
         ret[i] = s[i + clean];
     }
-    printf("ret = [%s]\n", ret);
+    // printf("ret = [%s]\n", ret);
     return (ret);
 }

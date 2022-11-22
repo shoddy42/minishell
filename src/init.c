@@ -6,20 +6,26 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 17:29:00 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 17:03:07 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+extern int	g_status;
+
 void	child_sig(int signum)
 {
+	// printf ("chdsig\n");
+	if (signum == SIGQUIT) //useless because unless sigquit is ignored, it just quits...
+	{
+		g_status = 131;
+	}
 	if (signum == SIGINT)
+	{
+		g_status = 130;
 		rl_redisplay();
-	// if (signum == SIGQUIT) useless because unless sigquit is ignored, it just quits...
-	// {
-	// 	exit (3);
-	// }
+	}
 }
 
 void	sighandler(int signum)
@@ -31,7 +37,7 @@ void	sighandler(int signum)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	exit(1); //later: remove
+	// exit(1); //later: remove
 }
 
 void	increase_shlvl(t_minishell *shell)
@@ -59,6 +65,7 @@ void	init_env(t_minishell *shell, char **envp)
 	increase_shlvl(shell);
 }
 
+
 int	init_minishell(t_minishell *shell, char **envp)
 {
 	// signal handlers
@@ -66,9 +73,18 @@ int	init_minishell(t_minishell *shell, char **envp)
 		exit (55);
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		exit (56);
+
+
+
+
+
+
+    // printf("Entering the loop\n");
+    // while(1) {};
+
 	// environment setup
 	shell->cancel_all_commands = false;
-	shell->last_return = 0;
+	g_status = 0;
 	shell->bin_dir = getcwd(NULL, 0);
 	shell->bin_dir = ft_strexpand(shell->bin_dir, "/bin/");
 	init_env(shell, envp);

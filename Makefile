@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/21 15:28:15 by wkonings      ########   odam.nl          #
+#    Updated: 2022/11/22 19:14:33 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ DEBUG = -g #-fsanitize=address
 CC = clang
 
 # ---------------------------------------- #
-# --------------- DIRECTORIES ------------ #
+# --------------- DIRECTORIES ------------ #d
 # ---------------------------------------- #
 
 #src and its subdirectories.
@@ -55,8 +55,8 @@ HEADERS		:=	$(addprefix $(INCLUDE_DIR)/, $(HEADER_FILES))
 
 MAIN_FILES	:= main error init
 TOKEN_FILES := tokenize token_utils
-ENV_FILES	:= env env_utils unset
-EXEC_FILES	:= commands execute
+ENV_FILES	:= env env_utils unset export envp
+EXEC_FILES	:= commands execute execute_utils
 BUILT_FILES	:= builtins cd pwd echo
 PARSE_FILES	:= quote expand redirects heredoc
 
@@ -75,6 +75,7 @@ OBJS		:=	$(addprefix $(OBJ_DIR)/, $(FILES:%.c=%.o))
 # --------------- BREW -------------------- #
 # ----------------------------------------- #
 
+#somehow brew uninstalled??????
 BREW_DIR	= $(shell brew --prefix)
 LIB_READLINE	= $(BREW_DIR)/opt/readline/lib
 INCLUDE_READLINE = -I $(BREW_DIR)/opt/readline/include

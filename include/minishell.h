@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/21 19:06:54 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 20:50:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@
 # include <stdbool.h>
 # include <limits.h>
 # include <dirent.h>
+# include <termios.h>
 # define EMOJI "💤☢️🐧🤖🧙‍♂️🧙🐉🐲🔥💀🐢🐢🐢☢️⚜️➜ 🍉"
 // choose between 33(blue) and 32(blue) 69 (more turq)
-# define PRMT "\x1B[48;5;220m 🐢 \x1B[0m\x1B[48;5;33;30;1m shell \x1B[0m \x1B[92m > \x1b[0m" // THIS SHIT BUGGED
+# define PRMT "\x1B[48;5;220m 🐢 \x1B[0m\x1B[48;5;33;30;1m shell \x1B[0m \x1B[92m> \x1b[0m" // THIS SHIT BUGGED
 # define PRMT2 "\x1B[33m 🐢 \x1B[30m shell \x1B[m > \x1b[0m"
 # define TITLEA2 "\x1B[4;105m 🐢 \x1B[4;30;31m  𝒔𝒉𝒆𝒍𝒍 \x1B[0m\x1B[92m >"
 # define TITLEA "\x1B[104m\x1B[37;44m 🐢 \x1B[0;34;40m 𝒔𝒉𝒆𝒍𝒍 \x1B[0m\x1B[92m >"
@@ -46,13 +47,13 @@
 // # include <sys/wait.h> // needed for WSL
 
 // should ; be token? are tabs actually getting set to void?
-# define DELIMITER " |$<>=;\t\'\"\n"
+# define DELIM " |$<>=;\t\'\"\n"
 
-// typedef enum e_from
+// typedef enum e_opentype
 // {
-// 	MINISHELL,
-// 	CHILD
-// }	t_from;
+// 	O_TRUNC;
+// 	O_APPEND;
+// }	t_opentype;
 
 typedef enum e_pipe
 {
@@ -144,7 +145,7 @@ void	ft_tokenize(t_minishell *shell, char *command);
 void	print_tokens(t_minishell *shell); //REMOVE LATER
 void	print_tokens_backwards(t_minishell *shell); //REMOVE LATER
 char	*print_token_type(int type); // REMOVE LATER
-void	free_tokens_til(t_token *start, t_token *end, t_minishell *shell);
+void	remove_tokens(t_token *start, t_token *end, t_minishell *shell);
 void	free_single_token(t_token *token);
 void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
@@ -154,23 +155,30 @@ t_token	*merge_tokens(t_token *start, t_token *end, t_minishell *shell);
 // env
 void	init_env(t_minishell *shell, char **env);
 char	*ms_getenv(char *key, t_minishell *shell);
-int		fill_key(t_env	*new);
-int		fill_data(t_env	*new, int eq);
-void	new_env(char *data, t_minishell *shell);
+int		fill_env(t_env	*new);
+int		new_env(char *data, t_minishell *shell);
 bool	ms_replace_env(char *beans, t_minishell *shell);
 bool	legal_env(char *data);
-bool	replace_env(char *beans, t_env *env, t_minishell *shell);
+int		replace_env(char *beans, t_env *env, t_minishell *shell);
 t_env	*env_exists(char	*beans, t_minishell *shell);
 void	print_export(t_minishell	*shell);
+
+// envp.c
+void	create_envp(t_minishell *shell);
 
 // execute.c
 void	execute(t_command *cmd, t_minishell *shell);
 void	execute_two_electric_boogaloo(t_minishell *shell);
 // char	**get_command_options(t_token	*token);
 t_token	*get_command_options(t_token *token, t_command *cmd);
-// char	*pipex_pathjoin(char const *path, char const *cmd);
+char	*pipex_pathjoin(char const *path, char const *cmd);
 // ^^^^doesn't need to be in here probably.
-
+// execute_utils.c
+void	parent_close(t_command *cmd, t_minishell *shell);
+char	*pipex_pathjoin(char const *path, char const *cmd);
+bool	handle_path(char **args, char **envp);
+void	local_command(char **args, char **envp);
+void	set_status(t_minishell *shell, int cmd_count);
 // Builtins.c
 bool	is_builtin(t_command *cmd, t_minishell *shell);
 int		ms_cd(t_command	*cmd, t_minishell *shell);
