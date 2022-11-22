@@ -6,12 +6,10 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/22 19:14:33 by wkonings      ########   odam.nl          #
+#    Updated: 2022/11/22 22:03:21 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-#todo: make Makefile always call make on library makefile to make sure ITS make is upto date.
-#todo: also make sure the header is up to date when constructing .o FILES i think
 # ----------------------------------------- #
 # --------------- VARIABLES --------------- #
 # ----------------------------------------- #

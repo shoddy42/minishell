@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 18:42:30 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/22 19:17:12 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 21:17:56 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@ bool	dash_n(const char *flag)
 	return (true);
 }
 
+/**
+ * @brief Mimics echo command. Writes given string
+ * 
+ * @param command The commands to read the str from.
+ * @returns 0 upon success. 1 on failure.
+ * @bug		Due to no mutex/pthreads, multiple appending writes to 1 file
+ * 			can desync with the newline write.
+ */
 int	ms_echo(t_command *command)
 {
 	int		i;
@@ -52,6 +60,7 @@ int	ms_echo(t_command *command)
 	}
 	if (no_nl)
 		return (0);
-	ft_putchar_fd('\n', command->outfile);
+	write(command->outfile, "\n", 1);
+	// ft_putchar_fd('\n', command->outfile);
 	return (0);
 }

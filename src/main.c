@@ -181,6 +181,7 @@ int	dash_c(t_minishell *shell, char **av)
 
 //later: make more test cases and more todos :)
 //later: make sure EVERY alloc is protected properly.
+//todo: norme.
 int	main(int ac, char **av, char **envp)
 {
 	t_minishell	*shell;

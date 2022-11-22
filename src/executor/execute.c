@@ -6,14 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 20:42:21 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 22:10:39 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
 //todo: make sure there is only 1 global move all externs to in the funcs
-// extern int	g_status;
 
 void	cmd_child_open(t_command *cmd)
 {
@@ -72,7 +71,7 @@ void	cmd_execute(t_command *cmd, t_minishell *shell)
 			free(path);
 		}
 	}
-	local_command(cmd->command, shell->envp);
+	// local_command(cmd->command, shell->envp);
 	write(2, "minishell: ", 12);
 	write(2, cmd->command[0], ft_strlen(cmd->command[0]));
 	write(2, ": command not found\n", 20);
@@ -92,7 +91,7 @@ int	tunnel_fork(t_command *cmd, t_minishell *shell)
 			cmd->next->infile = cmd->tunnel[READ];
 	cmd->pid = fork();
 	if (cmd->pid < 0)
-		ms_error("Forking failed.\n", -43, true, shell);
+		ms_error("Forking failed.\n", -43, false, shell);
 	if (cmd->pid > 0)
 		parent_close(cmd, shell);
 	if (cmd->pid == 0)
@@ -104,6 +103,8 @@ int	tunnel_fork(t_command *cmd, t_minishell *shell)
 		// signal(SIGINT, child_sig);
 		// signal(SIGQUIT, child_sig);
 
+//todo: make it so FAKE doesnt do ./FAKE command not found.
+//todo: think whether we want this ugly desync code...
 void	execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
@@ -113,7 +114,7 @@ void	execute_two_electric_boogaloo(t_minishell *shell)
 	if (!cmd)
 		return ;
 	if (cmd && !cmd->next && cmd->executable == true)
-		if (is_builtin(cmd, shell) == true)
+		if (is_builtin(cmd, shell) == true && close_builtin(cmd,shell) == 0)
 			return ;
 	i = 0;
 	while (i++ <= shell->pipe_count)
@@ -121,6 +122,7 @@ void	execute_two_electric_boogaloo(t_minishell *shell)
 		tunnel_fork(cmd, shell);
 		if (cmd->pid == 0)
 			cmd_execute(cmd, shell);
+		printf ("in: [%i] out: [%i]\n",cmd->infile,cmd->outfile);
 		if (!cmd->next)
 			break ;
 		cmd = cmd->next;

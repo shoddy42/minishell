@@ -6,15 +6,12 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/22 18:52:21 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 20:42:18 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 22:07:13 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// this function is not properly protected
-//, might need to exit instead of return?
-// todo: STEAL THE LOGIC FROM PIPEX AGAIN TO MAKE THIS WORK BETTER!
 void	parent_close(t_command *cmd, t_minishell *shell)
 {
 	signal(SIGINT, child_sig);
@@ -31,6 +28,9 @@ void	parent_close(t_command *cmd, t_minishell *shell)
 		close(cmd->tunnel[READ]);
 }
 
+// this function is not properly protected
+//, might need to exit instead of return?
+// todo: STEAL THE LOGIC FROM PIPEX AGAIN TO MAKE THIS WORK BETTER!
 char	*pipex_pathjoin(char const *path, char const *cmd)
 {
 	char	*ret;
@@ -70,6 +70,8 @@ void	local_command(char **args, char **envp)
 {
 	char	*path;
 
+	if (access(path, F_OK) < 0)
+		return ;
 	if (ft_strncmp(args[0], "./", 2) == 0)
 	{
 		perror(args[0]);

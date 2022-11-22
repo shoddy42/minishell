@@ -6,18 +6,17 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 17:03:07 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 22:12:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-extern int	g_status;
-
 void	child_sig(int signum)
 {
-	// printf ("chdsig\n");
-	if (signum == SIGQUIT) //useless because unless sigquit is ignored, it just quits...
+	extern int	g_status;
+
+	if (signum == SIGQUIT)
 	{
 		g_status = 131;
 	}
@@ -30,7 +29,7 @@ void	child_sig(int signum)
 
 void	sighandler(int signum)
 {
-	if (signum == SIGINT) // ctrl + C
+	if (signum == SIGINT)
 	{
 		write(1, "\n", 1);
 		rl_on_new_line();
@@ -65,24 +64,12 @@ void	init_env(t_minishell *shell, char **envp)
 	increase_shlvl(shell);
 }
 
-
 int	init_minishell(t_minishell *shell, char **envp)
 {
-	// signal handlers
 	if (signal(SIGINT, sighandler) == SIG_ERR)
 		exit (55);
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 		exit (56);
-
-
-
-
-
-
-    // printf("Entering the loop\n");
-    // while(1) {};
-
-	// environment setup
 	shell->cancel_all_commands = false;
 	g_status = 0;
 	shell->bin_dir = getcwd(NULL, 0);

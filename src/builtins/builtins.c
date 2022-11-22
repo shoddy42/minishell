@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 19:56:37 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 21:23:54 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,16 @@ int	ms_exit(t_command *cmd, t_minishell *shell)
 
 void	builtin_redir(t_command *cmd, t_minishell *shell)
 {
+	int desync;
+
+	desync = 0;
 	if (cmd->in_name)
 		cmd->infile = open(cmd->in_name, O_RDONLY);
 	if (cmd->out_name)
 	{
+		// if (ft_strcmp(cmd->command[0], "echo"))
+		// 	while (desync < 4000)
+		// 		desync++;
 		if (cmd->outfile == O_TRUNC)
 			cmd->outfile = open(cmd->out_name, O_WRONLY | O_CREAT | O_TRUNC);
 		if (cmd->outfile == O_APPEND)
@@ -52,7 +58,17 @@ void	builtin_redir(t_command *cmd, t_minishell *shell)
 			printf(" OUT BAD \n");
 	}
 	if (cmd->infile < 0 || cmd->outfile < 0)
-		printf ("someting wong\n");
+		printf ("someting wong in builtin redir\n");
+}
+
+//todo: 
+int	close_builtin(t_command *cmd, t_minishell *shell)
+{
+	if (cmd->infile != STDIN_FILENO)
+		close(cmd->infile);
+	if (cmd->outfile != STDOUT_FILENO)
+		close(cmd->outfile);
+	return (0);
 }
 
 bool	is_builtin(t_command *cmd, t_minishell *shell)

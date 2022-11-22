@@ -6,40 +6,40 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 19:18:19 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/22 22:10:52 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
 // REMOVE THIS FUNCTION LATER
-void	print_tokens(t_minishell *shell)
-{
-	int i = 0;
-	t_token *test;
+// void	print_tokens(t_minishell *shell)
+// {
+// 	int i = 0;
+// 	t_token *test;
 
-	test = shell->token_head;
-	printf("\nall tokens: ");
-	while (test && test->next)
-	{
-		if (test->type)// && test->type != VOID)
-		{
-			printf("(%s)", print_token_type(test->type));
-			printf("[%s]-", test->data);
-		}
-		test = test->next;
-	}
-	if (test != NULL)
-	{
-		if (test->type)// && test->type != VOID)
-		{
-			// printf("final token ");
-			printf("(%s)", print_token_type(test->type));
-			printf("[%s]\n", test->data);
-		}
-	}
-	printf("\n");
-}
+// 	test = shell->token_head;
+// 	printf("\nall tokens: ");
+// 	while (test && test->next)
+// 	{
+// 		if (test->type)// && test->type != VOID)
+// 		{
+// 			printf("(%s)", print_token_type(test->type));
+// 			printf("[%s]-", test->data);
+// 		}
+// 		test = test->next;
+// 	}
+// 	if (test != NULL)
+// 	{
+// 		if (test->type)// && test->type != VOID)
+// 		{
+// 			// printf("final token ");
+// 			printf("(%s)", print_token_type(test->type));
+// 			printf("[%s]\n", test->data);
+// 		}
+// 	}
+// 	printf("\n");
+// }
 
 //	remove later
 //	to check if token->prev is still fully linked.
@@ -73,36 +73,36 @@ void	print_tokens(t_minishell *shell)
 // }
 
 // delete later
-char *print_token_type(int type)
-{
-	if (type == COMMAND)
-		return "COMMAND";
-	if (type == QUOTE)
-		return "QUOTE";
-	if (type == DQUOTE)
-		return "DQUOTE";
-	if (type == VARIABLE)
-		return "VARIABLE";
-	if (type == AND)
-		return "AND";
-	if (type == LEFT)
-		return "LEFT";
-	if (type == RIGHT)
-		return "RIGHT";
-	if (type == PIPE)
-		return "PIPE";
-	if (type == HEREDOC)
-		return "HEREDOC";
-	if (type == OUTFILE)
-		return "OUTFILE";
-	if (type == INFILE)
-		return "INFILE";
-	if (type ==	ERROR)
-		return "ERROR";
-	if (type == VOID)
-		return "VOID";
-	return ("TYPELESS ERROR!!!");
-}
+// char *print_token_type(int type)
+// {
+// 	if (type == COMMAND)
+// 		return "COMMAND";
+// 	if (type == QUOTE)
+// 		return "QUOTE";
+// 	if (type == DQUOTE)
+// 		return "DQUOTE";
+// 	if (type == VARIABLE)
+// 		return "VARIABLE";
+// 	if (type == AND)
+// 		return "AND";
+// 	if (type == LEFT)
+// 		return "LEFT";
+// 	if (type == RIGHT)
+// 		return "RIGHT";
+// 	if (type == PIPE)
+// 		return "PIPE";
+// 	if (type == HEREDOC)
+// 		return "HEREDOC";
+// 	if (type == OUTFILE)
+// 		return "OUTFILE";
+// 	if (type == INFILE)
+// 		return "INFILE";
+// 	if (type ==	ERROR)
+// 		return "ERROR";
+// 	if (type == VOID)
+// 		return "VOID";
+// 	return ("TYPELESS ERROR!!!");
+// }
 
 //todo: think about whether i want to preserve INFILE OUTFILE names
 /**
