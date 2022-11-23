@@ -6,13 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 16:33:30 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 00:56:13 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-extern int	g_status;
 
 t_token	*word_adding(char *variable, t_token *token, t_minishell *shell)
 {
@@ -61,39 +59,28 @@ t_token	*word_splitting(char *variable, t_token *token, t_minishell *shell)
 	return (tmp);
 }
 
-void	expand_dong(t_token *token, t_minishell *shell)
+void	expand_dong(t_token *start, t_minishell *shell)
 {
-	char	*variable;
-	t_token	*tmp;
-	t_token	*next;
+	char		*variable;
+	t_token		*token;
+	extern int	g_status;
 
-	token->type = COMMAND;
-	if (token->next && token->next->type == COMMAND)
-		tmp = token->next;
+	start->type = COMMAND;
+	if (start->next && start->next->type == COMMAND)
+		token = start->next;
 	else
 		return ;
-	next = NULL;
-	if (tmp->next)
-		next = tmp->next;
-	if (tmp->data && tmp->data[0] == '?')
-	{
-		printf ("number? = [%i]\n", g_status);
+	if (token->data && token->data[0] == '?')
 		variable = ft_itoa(g_status);
-	}
 	else
-		variable = ft_strdup(ms_getenv(tmp->data, shell));
-	free_single_token(tmp);
-	free(token->data);
+		variable = ft_strdup(ms_getenv(token->data, shell));
+	free_single_token(token);
+	free(start->data);
 	if (ft_strcmp("", variable) == 0)
-		token->data = variable;
+		start->data = variable;
 	else
 	{
-		tmp = word_splitting(variable, token, shell);
+		token = word_splitting(variable, start, shell);
 		free(variable);
-		if (next)
-		{
-			tmp->next = next;
-			next->prev = tmp;
-		}
 	}
 }

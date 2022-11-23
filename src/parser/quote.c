@@ -6,92 +6,58 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:58:28 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 18:36:22 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/23 23:57:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+/**
+ * @brief Writes error in case of no closing quote.
+ */
+void	quote_error(t_token *tmp, t_token *start, int type, t_minishell *shell)
+{
+	if (tmp->type != type)
+		printf ("WARNING: UNCLOSED QUOTE\n");
+	remove_tokens(start->next, tmp, shell);
+	free_single_token(tmp);
+	start->next = NULL;
+}
 
-//redo so it doesnt return starter token but scrolled token.
-t_token	*handle_quote(t_token *token, int type, t_minishell *shell)
+/**
+ * @brief Goes through all tokens past @b [start],
+ * 		  until a matching token of type @b [int] is found.
+ * 		  Merges all found tokens into @b [start].
+ * 
+ * @param start The quote token.
+ * @param type	DQUOTE or QUOTE.
+ * @param shell The shell.
+ * @return @b [start] after all tokens are merged.
+ */
+t_token	*handle_quote(t_token *start, int type, t_minishell *shell)
 {
 	t_token	*tmp;
 	char	*str;
 
-	tmp = token;
+	tmp = start;
 	if (!tmp || !tmp->next)
-	{
-		printf("ERROR: OUT OF TOKENS\n");
-		return (token);
-	}
-	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
-	token->type = COMMAND;
-	free(token->data);
-	token->data = NULL;
+		return (token_error(tmp, NULL, true));
+	str = ft_calloc(1, 1);
+	start->type = COMMAND;
+	free(start->data);
+	start->data = NULL;
 	while (tmp && tmp->type != type)
 	{
 		if (type == DQUOTE && tmp->type == VARIABLE)
 			expand_dong(tmp, shell);
 		str = ft_strexpand(str, tmp->data);
 		if (!tmp->next)
-			break;
+			break ;
 		tmp = tmp->next;
 	}
 	if (tmp->type == type && tmp->next)
-		remove_tokens(token->next, tmp->next, shell);
-	else //incase there is no token past "
-	{
-		if (tmp->type != type)
-			printf ("WARNING: UNCLOSED %s\n", print_token_type(type));
-		remove_tokens(token->next, tmp, shell);
-		free_single_token(tmp);
-		token->next = NULL;
-	}
-	token->data = str;
-	return (token);
+		remove_tokens(start->next, tmp->next, shell);
+	else
+		quote_error(tmp, start, type, shell);
+	start->data = str;
+	return (start);
 }
-
-// t_token	*handle_quote(t_token *token, int type, t_minishell *shell)
-// {
-// 	t_token	*tmp;
-// 	t_bool	append_start;
-// 	t_bool	append_end;
-// 	char	*str;
-
-// 	tmp = token;
-// 	printf ("quote tok[%s]\n", token->data);
-// 	if (!tmp || !tmp->next)
-// 	{
-// 		printf("ERROR: OUT OF TOKENS\n");
-// 		return (token);
-// 	}
-// 	str = ft_calloc(1, 1); // required for WSL at least otherwise we segmafault on ft_strexpand
-// 	token->type = COMMAND;
-// 	if (tmp->prev && tmp->prev->type == COMMAND)
-// 		tmp = tmp->prev;
-// 	while (tmp && tmp->next && tmp->type != type)
-// 	{
-// 		if (type == DQUOTE)
-// 			if (tmp->next->type == VARIABLE)
-// 				expand_dong(tmp->next, shell);
-// 		if (tmp->next->type != type)
-// 			str = ft_strexpand(str, tmp->next->data);
-// 		tmp = tmp->next;
-// 	}
-// 	token->data = str;
-// 	if (tmp->type == type && tmp->next)
-// 	{
-// 		tmp = tmp->next;
-// 		remove_tokens(token->next, tmp);
-// 		token->next = tmp;
-// 	}
-// 	else
-// 	{
-// 		if (tmp->type != type)
-// 			printf ("WARNING: UNCLOSED %s\n", print_token_type(type));
-// 		remove_tokens(token->next, tmp);
-// 		free_single_token(tmp);
-// 		token->next = NULL;
-// 	}
-// 	return (token);
-// }

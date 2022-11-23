@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 22:06:09 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 00:37:37 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,54 @@
 # include <limits.h>
 # include <dirent.h>
 # include <termios.h>
+#define TEST "\x1b"
 // choose between 33(blue) and 32(blue) 69 (more turq)
 # define PRMT "shell > "
-# define PRMT_FNCY "\e[48;5;220m 🐢 \e[0m\e[48;5;33;30;1m shell \e[0m \e[92m> \e[0m"
+# define YELLOW
+# define PRMT_FNCY "\x1b 1;5H\001\x1b[48;5;220m\002 \001 🐢 \002 \001\x1b[0m\x1b[48;5;33;30;1m\002 shell \001\x1b[0m\002 \001\x1b[92m>\002 \001\x1b[0m\002"
 # define PRMT_FNCY2 "\e[33m 🐢 \e[0m\e[30;1m shell \e[0m \e[33m> \e[0m\0\0\0\0\0"
 # define PRMT_FNCY3 "🐢 shell > \0\0\0\0\0"
+# define OK "\001\x1b[103;30m\x02 🐢 "
+# define TWO "\x01\x1b[104m\x02 minishell "
+# define RESET "\001\033[0m\002 > \003"
+# define TITLEA "\001\033[103;30m\002 🐢 \001\x1b[104m\002"
+# define TITLEB " MongolShell \001\x1b[49m\x1b[92m❱\002 \001\x1b[0m\002"
+# define STOLENTITLEA "\001\x1b[103m\x1b[30m\002 🐎 \001\x1b[104m\002"
+# define STOLENTITLEB " MongolShell \001\x1b[49m\x1b[92m❱\002 \001\x1b[0m\002"
+
+# define AT "\1\x1b[103m\x1b[30m\2 🐢 \1\x1b[48;5;33;30m\2"
+# define BT " TurtleShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+
+# define TURTLE1 "\1\x1b[48;5;220m\x1b[30m\2 🐢 \1\x1b[104m\2"
+# define TURTLE2 " TurtleShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m \2\3"
+
+# define HELL1 "\1\x1b[48;5;220m\x1b[30m\2 👹 \1\x1b[101m\2"
+# define HELL2 " Minis hell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+
+# define DRAGON1 "\1\x1b[48;5;220m\x1b[30m\2 🐉 \1\x1b[38;5;232;48;5;47m\2"
+# define DRAGON2 " DragonShell \1\x1b[49m\x1b[92m❱\2\1\x1b[0m\2\3"
+
+# define SPOOKY1 "\1\x1b[48;5;202m\x1b[30m\2 🎃 \1\x1b[38;5;202;48;5;232m\2"
+# define SPOOKY2 " SpookyShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+
+# define MOON1 "\1\x1b[48;5;234m\x1b[30m\2 🌙 \1\x1b[38;5;252;48;5;234m\2"
+# define MOON2 " MoonShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+
+# define WIZARD1 "\1\x1b[48;5;45m\x1b[30m\2 🍉 \1\x1b[38;5;232;48;5;200m\2"
+# define WIZARD2 " MelonShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+
+# define HD1 "\1\x1b[48;5;220m\x1b[30m\2 📄 \1\x1b[48;5;33;30m\2"
+# define HD2 " heredoc \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+
+// ERROR DEFINES
+
+# define SYN_NODELIM "Syntax error near '<<'; No valid DELIM for heredoc. ["
 
 // printf '\e[31m██ = #FF0000\e[m\n'
 // # include <sys/wait.h> // needed for WSL
 
 // should ; be token? are tabs actually getting set to void?
 # define DELIM " |$<>=;\t\'\"\n"
-
-// typedef enum e_opentype
-// {
-// 	O_TRUNC;
-// 	O_APPEND;
-// }	t_opentype;
 
 typedef enum e_pipe
 {
@@ -119,6 +150,8 @@ typedef struct s_shell_data
 	char		*bin_dir;		//check requirement
 	DIR			*bin;
 
+	bool		hd_history;
+	int			prompt_type;
 	char		*prompt;
 	pid_t		last_cmd;
 	// int			last_return;	//rename
@@ -188,11 +221,18 @@ void	heredoc_loop(t_token *token, t_minishell *shell);
 void	ms_heredoc(t_token *token, t_minishell *shell);
 void	delete_heredocs(t_minishell *shell);
 
+// heredoc_utils.c
+char	*get_hd_name(t_minishell	*shell);
+void	delete_heredocs(t_minishell *shell);
+int		hd_var(int fd, char *line, t_minishell *shell);
+void	heredoc_sig(int signum);
+
 // init.c
 int		init_minishell(t_minishell *shell, char **envp);
 void	sighandler(int signum);
 void	child_sig(int signum);
 void	init_env(t_minishell *shell, char **envp);
+void	create_bin(t_minishell *shell);
 
 // redirects.c
 t_token	*handle_left(t_token *token, t_minishell *shell);

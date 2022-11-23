@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/22 22:03:21 by wkonings      ########   odam.nl          #
+#    Updated: 2022/11/24 00:23:02 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 # ----------------------------------------- #
 
 NAME = minishell
-FLAGS = #-Wall -Wextra -Werror //todo: RENABLE FLAGS WHEN HANDING IN FOR THE LOVE OF GOD
+FLAGS = #-Wall -Wextra -Werror #//todo: RENABLE FLAGS WHEN HANDING IN FOR THE LOVE OF GOD
 DEBUG = -g #-fsanitize=address
 CC = clang
 
@@ -56,24 +56,23 @@ TOKEN_FILES := tokenize token_utils
 ENV_FILES	:= env env_utils unset export envp
 EXEC_FILES	:= commands execute execute_utils
 BUILT_FILES	:= builtins cd pwd echo
-PARSE_FILES	:= quote expand redirects heredoc
+PARSE_FILES	:= quote expand redirects heredoc heredoc_utils
 
 FILES	:=	$(MAIN_FILES:%=%.c) \
-				$(addprefix $(S_TOKEN)/, $(TOKEN_FILES:%=%.c)) \
-				$(addprefix $(S_PARSE)/, $(PARSE_FILES:%=%.c)) \
-				$(addprefix $(S_EXEC)/, $(EXEC_FILES:%=%.c)) \
-				$(addprefix $(S_ENV)/, $(ENV_FILES:%=%.c)) \
-				$(addprefix $(S_BUILTIN)/, $(BUILT_FILES:%=%.c))
+			$(addprefix $(S_TOKEN)/, $(TOKEN_FILES:%=%.c)) \
+			$(addprefix $(S_PARSE)/, $(PARSE_FILES:%=%.c)) \
+			$(addprefix $(S_EXEC)/, $(EXEC_FILES:%=%.c)) \
+			$(addprefix $(S_ENV)/, $(ENV_FILES:%=%.c)) \
+			$(addprefix $(S_BUILTIN)/, $(BUILT_FILES:%=%.c))
 
-LIBS		:=	
-SRCS		:=	$(addprefix $(SRC_DIR)/, $(FILES))
-OBJS		:=	$(addprefix $(OBJ_DIR)/, $(FILES:%.c=%.o))
+LIBS	:=	
+SRCS	:=	$(addprefix $(SRC_DIR)/, $(FILES))
+OBJS	:=	$(addprefix $(OBJ_DIR)/, $(FILES:%.c=%.o))
 
 # ----------------------------------------- #
 # --------------- BREW -------------------- #
 # ----------------------------------------- #
 
-#somehow brew uninstalled??????
 BREW_DIR	= $(shell brew --prefix)
 LIB_READLINE	= $(BREW_DIR)/opt/readline/lib
 INCLUDE_READLINE = -I $(BREW_DIR)/opt/readline/include

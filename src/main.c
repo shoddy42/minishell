@@ -38,7 +38,8 @@ void	parse_append(t_minishell *shell)
 }
 
 /**
- * @brief Checks infront of, and behind the pipe to check whether there is a syntax error.
+ * @brief Checks infront of, and behind the pipe
+ *  to check whether there is a syntax error.
  * 
  * @param token A token of which token->type == PIPE 
  * @param shell The shell.
@@ -86,13 +87,13 @@ void parse_token(t_minishell *shell)
 		// printf ("Handling token: [%s]\n", token->data);
 		if (token->type == LEFT)
 			token = handle_left(token, shell);
-		if (token->type == RIGHT && shell->cancel_command == false)
+		else if (token->type == RIGHT && shell->cancel_command == false)
 			token = handle_right(token, shell);
-		if (token->type == QUOTE || token->type == DQUOTE)
+		else if (token->type == QUOTE || token->type == DQUOTE)
 			token = handle_quote(token, token->type, shell);
-		if (token->type == VARIABLE)
+		else if (token->type == VARIABLE)
 			expand_dong(token, shell);
-		if (token->type == PIPE)
+		else if (token->type == PIPE)
 			check_pipe(token, shell);
 		if (token->type == ERROR)
 			shell->cancel_command = true;
@@ -113,10 +114,10 @@ int	count_pipes(t_minishell *shell)
 	shell->pipe_count = 0;
 	while (token)
 	{
-		if (token->type == PIPE)// || token->type == SEMICOLON)
+		if (token->type == PIPE) // || token->type == SEMICOLON)
 			shell->pipe_count++;
 		if (!token->next)
-			break;
+			break ;
 		token = token->next;
 	}
 	return (0);
@@ -179,6 +180,38 @@ int	dash_c(t_minishell *shell, char **av)
 	return (0);
 }
 
+//todo: make comand and prompt work.
+bool	change_prompt(t_minishell *shell)
+{
+	char	*old;
+
+	if (!shell->command)
+		return (false);
+	old = shell->prompt;
+	// printf ("type? [%i]\n", shell->prompt_type);
+	if (ft_strcmp(shell->command, "prompt") == 0 || shell->prompt_type == 0)
+		shell->prompt_type++;
+	if (ft_strcmp(shell->command, "turtle") == 0 || shell->prompt_type == 1)
+		shell->prompt = AT BT;
+	if (ft_strcmp(shell->command, "hell") == 0 || shell->prompt_type == 2)
+		shell->prompt = HELL1 HELL2;
+	if (ft_strcmp(shell->command, "dragon") == 0 || shell->prompt_type == 3)
+		shell->prompt = DRAGON1 DRAGON2;
+	if (ft_strcmp(shell->command, "spooky") == 0 || shell->prompt_type == 4)
+		shell->prompt = SPOOKY1 SPOOKY2;
+	if (ft_strcmp(shell->command, "moon") == 0 || shell->prompt_type == 5)
+		shell->prompt = MOON1 MOON2;
+
+
+	if (shell->prompt_type > 5)
+		shell->prompt_type = 0;
+	if (ft_strcmp(old, shell->prompt) != 0 && ft_strcmp(shell->command, "prompt") != 0)
+		shell->prompt_type = -1;
+	// if (ft_strcmp(old, shell->prompt) != 0)
+	// 	return (true);	
+	return (false);
+}
+
 //later: make more test cases and more todos :)
 //later: make sure EVERY alloc is protected properly.
 //todo: norme.
@@ -189,18 +222,17 @@ int	main(int ac, char **av, char **envp)
 	shell = ft_calloc(1, sizeof(t_minishell));
 	if (!shell)
 		ms_error("FAILED TO ALLOCATE SHELL STRUCT, YOU HAVE LITERALLY 0 MEMORY LMAO", -1, true, NULL);
-	shell->bin = opendir("./bin");
-	printf ("open bins\n");
-	if (!shell->bin)
-		perror("no bins lmao");
 	init_minishell(shell, envp);
-	// exit (0);
 	dash_c(shell, av);
+	shell->prompt = "WELCOME TO MINIS HELL > ";
 	while (shell->exit == 0)
 	{
+		create_bin(shell);
 		shell->hd_count = 0;
-		shell->command = readline(PRMT);
-		// shell->command[ft_strlen(shell->command)] = '\0';
+		shell->command = readline(shell->prompt);
+		change_prompt(shell);
+		// if (change_prompt(shell))
+			// shell->cancel_all_commands = true;
 		if (shell->command == NULL) // todo: make it so we actually write exit with rl_replace_line somehow
 		{
 			// printf ("test\n");
@@ -242,7 +274,7 @@ int	main(int ac, char **av, char **envp)
 		}
 		else
 			printf ("SYNTAXICAL ERROR\n"); //todo: make actual syntax error reporter, which will also work with <<<<< and >>>>>
-		
+
 		delete_heredocs(shell);
 		free_tokens(shell);
 		if (ft_strlen(shell->command) > 0)

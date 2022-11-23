@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/22 18:52:21 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 22:07:13 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/23 18:06:58 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ void	parent_close(t_command *cmd, t_minishell *shell)
 		close(cmd->tunnel[READ]);
 }
 
-// this function is not properly protected
-//, might need to exit instead of return?
-// todo: STEAL THE LOGIC FROM PIPEX AGAIN TO MAKE THIS WORK BETTER!
+// check what ahppen if mallok fail
 char	*pipex_pathjoin(char const *path, char const *cmd)
 {
 	char	*ret;
