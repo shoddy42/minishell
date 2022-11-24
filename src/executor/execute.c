@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 02:04:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 17:42:01 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	execute_two_electric_boogaloo(t_minishell *shell)
 	if (!cmd)
 		return ;
 	if (cmd && !cmd->next && cmd->executable == true)
-		if (is_builtin(cmd, shell) == true && close_builtin(cmd,shell) == 0)
+		if (is_builtin(cmd, shell) == true && close_builtin(cmd, shell) == 0)
 			return ;
 	i = 0;
 	while (i++ <= shell->pipe_count)
@@ -117,7 +117,6 @@ void	execute_two_electric_boogaloo(t_minishell *shell)
 		tunnel_fork(cmd, shell);
 		if (cmd->pid == 0)
 			cmd_execute(cmd, shell);
-		printf("in: [%i] out: [%i]\n", cmd->infile,cmd->outfile);
 		if (!cmd->next)
 			break ;
 		cmd = cmd->next;

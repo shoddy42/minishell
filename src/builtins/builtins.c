@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 01:57:52 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 21:24:49 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ bool	is_builtin(t_command *cmd, t_minishell *shell)
 		return (false);
 	if (ft_strcmp(cmd->command[0], "cd") == 0)
 		g_status = ms_cd(cmd, shell);
+	else if (ft_strcmp(cmd->command[0], "prompt") == 0)
+		g_status = change_prompt(cmd, shell);
 	else if (ft_strcmp(cmd->command[0], "echo") == 0)
 		g_status = ms_echo(cmd);
 	else if (ft_strcmp(cmd->command[0], "env") == 0)

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 00:06:58 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 17:50:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ t_token	*open_left(t_token *start, t_token *token, t_minishell *shell)
 	else
 	{
 		shell->cancel_all_commands = true;
-		return (token_error(token, "Syntax error near '<' \
-			; Unexpected token: [", true));
+		return (token_error(token, SYN_LUNEX, true));
 	}
 	return (token);
 }
@@ -73,9 +72,11 @@ t_token	*right(t_token *start, t_token *token, t_minishell *shell, bool append)
 			Unexpected token: [", true));
 	}
 	token->fd = open(token->data, O_RDWR | O_APPEND | O_CREAT, 0644);
-	if (token->fd < 0)
-		return (token_error(token, "Redirect '>' failed;\
-			Permission denied for file: [", true));
+	printf ("errno [%i]\n", errno);
+	if (token->fd < 0 && errno == 13)
+		return (token_error(token, REDIR_R_DENIED, true));
+	else if (token->fd < 0)
+		return (token_error(token, REDIR_R_NOFILE, true));
 	close(token->fd);
 	if (append && token->fd > 0)
 		token->fd = O_APPEND;

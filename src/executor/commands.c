@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 20:50:31 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 17:33:33 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,10 @@ static void	set_command_options(t_token *token, t_command *cmd)
 		cmd->executable = false;
 }
 
-t_token	*get_command_options(t_token *start, t_command *cmd)
+int	get_options_amount(t_token *token)
 {
-	t_token	*token;
-	int		i;
+	int i;
 
-	token = start;
 	i = 0;
 	while (token && token->type != PIPE)
 	{
@@ -66,9 +64,17 @@ t_token	*get_command_options(t_token *start, t_command *cmd)
 			i++;
 		token = token->next;
 	}
-	cmd->command = ft_calloc(i + 1, sizeof(char *));
-	token = start;
+	return (i);
+}
+
+t_token	*get_command_options(t_token *start, t_command *cmd)
+{
+	t_token	*token;
+	int		i;
+
 	i = 0;
+	token = start;
+	cmd->command = ft_calloc(get_options_amount(token) + 1, sizeof(char *));
 	while (token && token->type != PIPE)
 	{
 		if (token->type == COMMAND)
@@ -129,6 +135,3 @@ int	make_commands(t_minishell *shell)
 	}
 	return (0);
 }
-
-		// else if (token && token->type == SEMICOLON) //only useful for semi
-		// 	cmd = new_command(shell, cmd);

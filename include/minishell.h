@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 02:50:55 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 23:25:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,26 +44,39 @@
 # define STOLENTITLEA "\001\x1b[103m\x1b[30m\002 🐎 \001\x1b[104m\002"
 # define STOLENTITLEB " MongolShell \001\x1b[49m\x1b[92m❱\002 \001\x1b[0m\002"
 
-# define AT "\1\x1b[103m\x1b[30m\2 🐢 \1\x1b[48;5;33;30m\2"
-# define BT " TurtleShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+# define PROMPTS 5
+# define A 1
+# define AT "\1\x1b[103m\x1b[30m\2 🐢 \1\x1b[48;5;33;30m\2 TurtleShell \
+\1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+# define BT ""
 
+
+
+# define TURTLE 1
 # define TURTLE1 "\1\x1b[48;5;220m\x1b[30m\2 🐢 \1\x1b[104m\2"
-# define TURTLE2 " TurtleShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m \2\3"
+# define TURTLE2 " TurtleShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
 
+# define TURTLE3 "\1\x1b[48;5;220m\x1b[30m\2 🐢 \1\x1b[104m\2\
+ TurtleShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m \2\3"
+
+# define MOON 2
+# define MOON1 "\1\x1b[48;5;234m\x1b[30m\2 🌙 \1\x1b[38;5;252;48;5;234m\2"
+# define MOON2 " Moony Shell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+
+# define HELL 3
 # define HELL1 "\1\x1b[48;5;232m\x1b[30m\2 👹 \1\x1b[101m\2"
 # define HELL2 " Mini's hell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
 
+# define DRAGON 4
 # define DRAGON1 "\1\x1b[48;5;220m\x1b[30m\2 🐉 \1\x1b[38;5;232;48;5;47m\2"
-# define DRAGON2 " DragonShell \1\x1b[49m\x1b[92m❱\2\1\x1b[0m\2\3"
+# define DRAGON2 " DragonShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
 
+# define SPOOKY 5
 # define SPOOKY1 "\1\x1b[48;5;202m\x1b[30m\2 🎃 \1\x1b[38;5;202;48;5;232m\2"
 # define SPOOKY2 " SpookyShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
 
-# define MOON1 "\1\x1b[48;5;234m\x1b[30m\2 🌙 \1\x1b[38;5;252;48;5;234m\2"
-# define MOON2 " MoonShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
-
-# define WIZARD1 "\1\x1b[48;5;45m\x1b[30m\2 🍉 \1\x1b[38;5;232;48;5;200m\2"
-# define WIZARD2 " MelonShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+# define WIZARD1 "\1\x1b[48;5;45m\x1b[30m\2 🧿 \1\x1b[38;5;232;48;5;200m\2"
+# define WIZARD2 " hell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
 
 # define HD1 "\1\x1b[48;5;220m\x1b[30m\2 📄 \1\x1b[48;5;33;30m\2"
 # define HD2 " heredoc \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
@@ -71,6 +84,9 @@
 // ERROR DEFINES
 
 # define SYN_NODELIM "Syntax error near '<<'; No valid DELIM for heredoc. ["
+# define SYN_LUNEX "Syntax error near '<'; Unexpected token: ["
+# define REDIR_R_DENIED "Redirect '>' failed; Permission denied for file: ["
+# define REDIR_R_NOFILE "Redirect '>' failed; No such file or directory: ["
 # define SHELL_ALLOC_FAILURE "FAILED TO ALLOCATE SHELL, YOU HAVE 0 MEMORY LMAO"
 
 // printf '\e[31m██ = #FF0000\e[m\n'
@@ -265,6 +281,9 @@ void	print_envp(char **envp);
 void	ms_cleanup(t_minishell *shell);
 void	close_stdin(t_minishell *shell);
 void	free_commands(t_minishell *shell);
+
+//prompt.c
+bool	change_prompt(t_command *cmd, t_minishell *shell);
 
 t_minishell	*init_minishell(char **envp);
 

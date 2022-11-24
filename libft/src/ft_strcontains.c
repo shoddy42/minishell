@@ -1,32 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_charinstr.c                                     :+:    :+:            */
+/*   ft_strcontains.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/09/09 16:31:51 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 19:15:17 by wkonings      ########   odam.nl         */
+/*   Created: 2022/11/24 19:05:25 by wkonings      #+#    #+#                 */
+/*   Updated: 2022/11/24 19:18:09 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
 /**
- * @brief Returns whether a character exists in a given string.
+ * @brief Checks if any characters of @b delims are in string @b s
  * 
- * @param c the character to look for.
- * @param s	the string to look in.
- * @returns	returns @b [true] if the character exists in @b [s],
- * @returns	returns @b [false] otherwise.
+ * @param s 		The string to look in.
+ * @param delims	The delimiters to look for.
+ * @returns returns @b [true] if any of the delim are in s,
+ * @returns	returns	@b [false] otherwise. 
  */
-bool	ft_charinstr(char c, const char *s)
+bool	ft_strcontains(char *s, char *delims)
 {
 	int	i;
 
+	if (!s || !delims)
+		return (false);
 	i = -1;
 	while (s[++i])
-		if (s[i] == c)
+		if (ft_charinstr(s[i], delims) == true)
 			return (true);
 	return (false);
 }

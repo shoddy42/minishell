@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/23 23:57:53 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 17:43:09 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@
 // 	return ("TYPELESS ERROR!!!");
 // }
 
-//todo: think about whether i want to preserve INFILE OUTFILE names
 /**
  * @brief	Merges tokens into one, by appending all token->data from start to end.
  * 			This does cause a loss of FDs within tokens, so only use it for literals.

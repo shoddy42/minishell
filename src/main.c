@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 01:37:48 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 23:23:46 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,36 +42,6 @@ int	dash_c(t_minishell *shell, char **av)
 	return (0);
 }
 
-//todo: make comand and prompt work.
-bool	change_prompt(t_minishell *shell)
-{
-	char	*old;
-
-	if (!shell->command)
-		return (false);
-	old = shell->prompt;
-	if (ft_strcmp(shell->command, "prompt") == 0 || shell->prompt_type == 0)
-		shell->prompt_type++;
-	if (ft_strcmp(shell->command, "turtle") == 0 || shell->prompt_type == 1)
-		shell->prompt = AT BT;
-	if (ft_strcmp(shell->command, "hell") == 0 || shell->prompt_type == 2)
-		shell->prompt = HELL1 HELL2;
-	if (ft_strcmp(shell->command, "dragon") == 0 || shell->prompt_type == 3)
-		shell->prompt = DRAGON1 DRAGON2;
-	if (ft_strcmp(shell->command, "spooky") == 0 || shell->prompt_type == 4)
-		shell->prompt = SPOOKY1 SPOOKY2;
-	if (ft_strcmp(shell->command, "moon") == 0 || shell->prompt_type == 5)
-		shell->prompt = MOON1 MOON2;
-	if (shell->prompt_type > 5)
-		shell->prompt_type = 0;
-	if (ft_strcmp(old, shell->prompt) != 0 && \
-		ft_strcmp(shell->command, "prompt") != 0)
-		shell->prompt_type = -1;
-	// if (ft_strcmp(old, shell->prompt) != 0)
-	// 	return (true);	
-	return (false);
-}
-
 //later: make more test cases and more todos :)
 //later: make sure EVERY alloc is protected properly.
 //todo: norme.
@@ -87,7 +57,8 @@ int	main(int ac, char **av, char **envp)
 		create_bin(shell);
 		shell->hd_count = 0;
 		shell->command = readline(shell->prompt);
-		change_prompt(shell);
+		if (shell->prompt_type == 0)
+			change_prompt(NULL, shell);
 		if (shell->command == NULL)
 			close_stdin(shell);
 		shell->command_len = ft_strlen(shell->command);
