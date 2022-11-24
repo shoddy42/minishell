@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 00:01:04 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 00:28:22 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 01:10:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,4 @@ int	hd_var(int fd, char *line, t_minishell *shell)
 		write (fd, &var[var_index], 1);
 	free (key);
 	return (i);
-}
-
-void	heredoc_sig(int signum)
-{
-	if (signum == SIGINT)
-	{
-		exit (1);
-	}
 }

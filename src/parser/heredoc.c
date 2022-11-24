@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 00:35:07 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 01:03:16 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ t_token	*hd_delim(t_token *token, t_minishell *shell)
 			delim[i] = hd->data[i + skip];
 	}
 	delim[i] = '\0';
-	printf ("delim = [%s]\n", delim);
 	free (hd->data);
 	hd->data = delim;
 	return (hd);

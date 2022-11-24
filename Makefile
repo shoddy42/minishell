@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/24 00:23:02 by wkonings      ########   odam.nl          #
+#    Updated: 2022/11/24 01:40:01 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,12 +51,12 @@ INC			:= -I include
 HEADER_FILES:= $(INCLUDE_DIR)/minishell.h
 HEADERS		:=	$(addprefix $(INCLUDE_DIR)/, $(HEADER_FILES))
 
-MAIN_FILES	:= main error init
+MAIN_FILES	:= main error init signals cleanup
 TOKEN_FILES := tokenize token_utils
 ENV_FILES	:= env env_utils unset export envp
 EXEC_FILES	:= commands execute execute_utils
 BUILT_FILES	:= builtins cd pwd echo
-PARSE_FILES	:= quote expand redirects heredoc heredoc_utils
+PARSE_FILES	:= parser quote expand redirects heredoc heredoc_utils
 
 FILES	:=	$(MAIN_FILES:%=%.c) \
 			$(addprefix $(S_TOKEN)/, $(TOKEN_FILES:%=%.c)) \

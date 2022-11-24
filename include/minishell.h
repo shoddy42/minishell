@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 00:37:37 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 02:50:55 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@
 # include <limits.h>
 # include <dirent.h>
 # include <termios.h>
-#define TEST "\x1b"
 // choose between 33(blue) and 32(blue) 69 (more turq)
 # define PRMT "shell > "
 # define YELLOW
@@ -51,8 +50,8 @@
 # define TURTLE1 "\1\x1b[48;5;220m\x1b[30m\2 🐢 \1\x1b[104m\2"
 # define TURTLE2 " TurtleShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m \2\3"
 
-# define HELL1 "\1\x1b[48;5;220m\x1b[30m\2 👹 \1\x1b[101m\2"
-# define HELL2 " Minis hell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+# define HELL1 "\1\x1b[48;5;232m\x1b[30m\2 👹 \1\x1b[101m\2"
+# define HELL2 " Mini's hell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
 
 # define DRAGON1 "\1\x1b[48;5;220m\x1b[30m\2 🐉 \1\x1b[38;5;232;48;5;47m\2"
 # define DRAGON2 " DragonShell \1\x1b[49m\x1b[92m❱\2\1\x1b[0m\2\3"
@@ -72,6 +71,7 @@
 // ERROR DEFINES
 
 # define SYN_NODELIM "Syntax error near '<<'; No valid DELIM for heredoc. ["
+# define SHELL_ALLOC_FAILURE "FAILED TO ALLOCATE SHELL, YOU HAVE 0 MEMORY LMAO"
 
 // printf '\e[31m██ = #FF0000\e[m\n'
 // # include <sys/wait.h> // needed for WSL
@@ -147,14 +147,13 @@ typedef struct s_shell_data
 	char		**path;
 	char		*command;
 	size_t		command_len;
-	char		*bin_dir;		//check requirement
+	char		*bin_dir;
 	DIR			*bin;
 
 	bool		hd_history;
 	int			prompt_type;
 	char		*prompt;
 	pid_t		last_cmd;
-	// int			last_return;	//rename
 	int			pipe_count;
 	int			hd_count;
 	bool		cancel_command;
@@ -177,6 +176,11 @@ void	free_tokens(t_minishell *shell);
 t_token	*get_last_token(t_token *list);
 int		ms_strchr(const char *src, int c);
 t_token	*merge_tokens(t_token *start, t_token *end, t_minishell *shell);
+
+// parser.c
+void	parse_append(t_minishell *shell);
+int		count_pipes(t_minishell *shell);
+void	parse_token(t_minishell *shell);
 
 // env
 void	init_env(t_minishell *shell, char **env);
@@ -228,7 +232,6 @@ int		hd_var(int fd, char *line, t_minishell *shell);
 void	heredoc_sig(int signum);
 
 // init.c
-int		init_minishell(t_minishell *shell, char **envp);
 void	sighandler(int signum);
 void	child_sig(int signum);
 void	init_env(t_minishell *shell, char **envp);
@@ -258,6 +261,11 @@ void	create_envp(t_minishell *shell);
 // char	**create_envp(t_env *env_head);
 void	print_envp(char **envp);
 
-// oblivion of main.c
-void	parse_append(t_minishell *shell);
+// cleanup.c
+void	ms_cleanup(t_minishell *shell);
+void	close_stdin(t_minishell *shell);
+void	free_commands(t_minishell *shell);
+
+t_minishell	*init_minishell(char **envp);
+
 #endif

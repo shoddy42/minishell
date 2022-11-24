@@ -6,38 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/23 18:27:12 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 01:46:02 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-void	child_sig(int signum)
-{
-	extern int	g_status;
-
-	if (signum == SIGQUIT)
-	{
-		g_status = 131;
-	}
-	if (signum == SIGINT)
-	{
-		g_status = 130;
-		rl_redisplay();
-	}
-}
-
-void	sighandler(int signum)
-{
-	if (signum == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	// exit(1); //later: remove
-}
 
 char	**bin_command(t_minishell *shell)
 {
@@ -101,7 +74,6 @@ void	increase_shlvl(t_minishell *shell)
 void	init_env(t_minishell *shell, char **envp)
 {
 	int		i;
-	t_env	*tmp;
 
 	i = 0;
 	while (envp[++i])
@@ -111,10 +83,15 @@ void	init_env(t_minishell *shell, char **envp)
 	increase_shlvl(shell);
 }
 
-int	init_minishell(t_minishell *shell, char **envp)
+t_minishell	*init_minishell(char **envp)
 {
+	t_minishell	*shell;
 	extern int	g_status;
 
+	shell = ft_calloc(1, sizeof(t_minishell));
+	if (!shell)
+		ms_error(SHELL_ALLOC_FAILURE, -1, true, NULL);
+	shell->prompt = "WELCOME TO MINIS HELL > ";
 	if (signal(SIGINT, sighandler) == SIG_ERR)
 		exit (55);
 	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
@@ -124,5 +101,5 @@ int	init_minishell(t_minishell *shell, char **envp)
 	shell->bin_dir = getcwd(NULL, 0);
 	shell->bin_dir = ft_strexpand(shell->bin_dir, "/bin");
 	init_env(shell, envp);
-	return (0);
+	return (shell);
 }

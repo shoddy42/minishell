@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 21:23:54 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/24 01:57:52 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,10 @@ int	ms_exit(t_command *cmd, t_minishell *shell)
 
 void	builtin_redir(t_command *cmd, t_minishell *shell)
 {
-	int desync;
-
-	desync = 0;
 	if (cmd->in_name)
 		cmd->infile = open(cmd->in_name, O_RDONLY);
 	if (cmd->out_name)
 	{
-		// if (ft_strcmp(cmd->command[0], "echo"))
-		// 	while (desync < 4000)
-		// 		desync++;
 		if (cmd->outfile == O_TRUNC)
 			cmd->outfile = open(cmd->out_name, O_WRONLY | O_CREAT | O_TRUNC);
 		if (cmd->outfile == O_APPEND)
