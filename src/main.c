@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/25 16:54:18 by root          ########   odam.nl         */
+/*   Updated: 2022/11/29 21:56:30 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	g_status;
  * @param av	The arg variables of the call to ./minishell.
  * @returns 0 on success. 1 on failure (currently doesnt happen.)
  */
-int	dash_c(t_minishell *shell, char **av)
+int	dash_c(t_minishell *shell, char **av, int ac)
 {
 	if (av[1] && ft_strcmp(av[1], "-c") == 0)
 	{
@@ -29,7 +29,7 @@ int	dash_c(t_minishell *shell, char **av)
 			shell->command = av[2];
 		else
 			ms_error("NO COMMAND STR.", -9, true, shell);
-		ft_tokenize(shell, shell->command);
+		tokenize(shell, shell->command);
 		parse_token(shell);
 		count_pipes(shell);
 		make_commands(shell);
@@ -39,19 +39,17 @@ int	dash_c(t_minishell *shell, char **av)
 		delete_heredocs(shell);
 		exit (g_status);
 	}
-	return (0);
+	return (ac);
 }
 
 //later: make more test cases and more todos :)
 //later: make sure EVERY alloc is protected properly.
-//todo: norme.
 int	main(int ac, char **av, char **envp)
 {
 	t_minishell	*shell;
 
-	ac = 0;
 	shell = init_minishell(envp);
-	dash_c(shell, av);
+	dash_c(shell, av, ac);
 	while (shell->exit == 0)
 	{
 		create_bin(shell);
@@ -64,7 +62,7 @@ int	main(int ac, char **av, char **envp)
 		shell->command_len = ft_strlen(shell->command);
 		if (ft_strcmp(shell->command, "exit") == 0)
 			shell->exit = 1;
-		ft_tokenize(shell, shell->command);
+		tokenize(shell, shell->command);
 		parse_token(shell);
 		count_pipes(shell);
 		if (shell->cancel_all_commands == false)

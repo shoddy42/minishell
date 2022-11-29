@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/25 15:27:17 by root          ########   odam.nl         */
+/*   Updated: 2022/11/29 21:57:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@ t_token	*open_left(t_token *start, t_token *token, t_minishell *shell)
 	return (token);
 }
 
-//todo: maybe? "ls > FAKE_FOLDER/test"
-// gives "permission denied", rather than no such file or dir?
-//todo: maybe Failed to open should be on perror instead of a write but eh.
 t_token	*handle_left(t_token *start, t_minishell *shell)
 {
 	t_token	*token;
@@ -72,7 +69,6 @@ t_token	*right(t_token *start, t_token *token, t_minishell *shell, bool append)
 			Unexpected token: [", true));
 	}
 	token->fd = open(token->data, O_RDWR | O_APPEND | O_CREAT, 0644);
-	// printf ("errno [%i]\n", errno);
 	if (token->fd < 0 && errno == 13)
 		return (token_error(token, REDIR_R_DENIED, true));
 	else if (token->fd < 0)

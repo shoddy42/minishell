@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 18:42:30 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/24 02:03:32 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/29 21:56:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ bool	dash_n(const char *flag)
 	return (true);
 }
 
-//todo: rewrite to create one big string then print
 /**
  * @brief Mimics echo command. Writes given string
  * 
@@ -62,6 +61,5 @@ int	ms_echo(t_command *command)
 	if (no_nl)
 		return (0);
 	write(command->outfile, "\n", 1);
-	// ft_putchar_fd('\n', command->outfile);
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/11/25 16:57:55 by root          ########   odam.nl          #
+#    Updated: 2022/11/29 19:53:05 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,7 @@ INC			:= -I include
 # ----------------------------------------- #
 
 #this cant be fully right?
-HEADER_FILES:= $(INCLUDE_DIR)/minishell.h
+HEADER_FILES:= minishell.h prompt.h
 HEADERS		:=	$(addprefix $(INCLUDE_DIR)/, $(HEADER_FILES))
 
 MAIN_FILES	:= main error init signals cleanup
@@ -83,7 +83,7 @@ READLINE_DIRS = -L $(LIB_READLINE) $(READLINE)
 # ----------------------------------------- #
 
 
-$(NAME): $(OBJS) $(LIBS) $(HEADER_FILES) | $(BIN_DIR)
+$(NAME): $(OBJS) $(LIBS) $(HEADERS) | $(BIN_DIR)
 	@make -C $(LIB_DIR)
 	@echo COMPILING EXECUTABLE
 	@gcc $(FLAGS) $(DEBUG) $(SRCS) -o $(NAME) -I include $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)

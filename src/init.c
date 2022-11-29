@@ -6,13 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/25 15:46:20 by root          ########   odam.nl         */
+/*   Updated: 2022/11/29 21:20:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	**bin_command(t_minishell *shell)
+static char	**bin_command(t_minishell *shell)
 {
 	char	**dir;
 
@@ -21,7 +21,6 @@ char	**bin_command(t_minishell *shell)
 		return (NULL);
 	if (errno == EACCES)
 	{
-		// printf ("access issue!\n");
 		dir[0] = "/bin/chmod";
 		dir[1] = "777";
 		dir[2] = shell->bin_dir;
@@ -47,7 +46,6 @@ void	create_bin(t_minishell *shell)
 		if (pid == 0)
 		{
 			execve(bin_cmd[0], bin_cmd, shell->envp);
-			// printf ("%s FAILED!\n", bin_cmd[0]);
 			exit (1);
 		}
 		if (pid > 0)
@@ -59,7 +57,7 @@ void	create_bin(t_minishell *shell)
 		free (bin_cmd);
 }
 
-void	increase_shlvl(t_minishell *shell)
+static void	increase_shlvl(t_minishell *shell)
 {
 	char	*shlvl;
 	char	*num;
@@ -71,7 +69,7 @@ void	increase_shlvl(t_minishell *shell)
 	free(num);
 }
 
-void	init_env(t_minishell *shell, char **envp)
+static void	init_env(t_minishell *shell, char **envp)
 {
 	int		i;
 
@@ -90,7 +88,7 @@ t_minishell	*init_minishell(char **envp)
 
 	shell = ft_calloc(1, sizeof(t_minishell));
 	if (!shell)
-		ms_error(SHELL_ALLOC_FAILURE, -1, true, NULL);
+		ms_error(SHELL_ALLOC_FAILURE, false, true, NULL);
 	shell->prompt = "WELCOME TO MINIS HELL > ";
 	if (signal(SIGINT, sighandler) == SIG_ERR)
 		exit (55);

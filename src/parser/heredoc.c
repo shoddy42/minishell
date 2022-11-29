@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/25 16:22:10 by root          ########   odam.nl         */
+/*   Updated: 2022/11/29 21:57:02 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ t_token	*hd_open(char *heredoc, t_token *token, t_minishell *shell)
 }
 
 //todo: check leaks
-//todo: fix sometingwong.
 t_token	*heredoc(t_token *start, t_minishell *shell)
 {
 	t_token	*token;

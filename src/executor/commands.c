@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 17:33:33 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/29 19:30:41 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	set_command_options(t_token *token, t_command *cmd)
 
 int	get_options_amount(t_token *token)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (token && token->type != PIPE)

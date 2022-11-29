@@ -6,20 +6,20 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/25 15:47:08 by root          ########   odam.nl         */
+/*   Updated: 2022/11/29 21:56:45 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-//todo: make sure there is only 1 global move all externs to in the funcs
+//todo: fix bad error messages!
 void	cmd_child_open(t_command *cmd)
 {
 	if (cmd->in_name)
 	{
 		cmd->infile = open(cmd->in_name, O_RDONLY);
-		// if (cmd->infile < 0)
-		// 	printf ("OPENING IN FAILED\n");
+		if (cmd->infile < 0)
+			printf ("OPENING IN FAILED\n");
 	}
 	if (cmd->out_name)
 	{
@@ -51,6 +51,7 @@ void	cmd_child_fd(t_command *cmd, t_minishell *shell)
 		exit(1);
 }
 
+//todo: TEST LOCAL_COMMAND
 void	cmd_execute(t_command *cmd, t_minishell *shell)
 {
 	char	*path;
@@ -70,7 +71,7 @@ void	cmd_execute(t_command *cmd, t_minishell *shell)
 			free(path);
 		}
 	}
-	local_command(cmd->command, shell->envp); // test!
+	local_command(cmd->command, shell->envp);
 	write(2, "minishell: ", 12);
 	write(2, cmd->command[0], ft_strlen(cmd->command[0]));
 	write(2, ": command not found\n", 20);

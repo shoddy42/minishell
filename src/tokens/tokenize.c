@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 18:31:12 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/29 21:17:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_token	*new_token(t_minishell *shell, char *data, int len, bool link)
 //		, it'll allocate 1 bit too many.
 // "echo hello world | ls -la | cat"
 // [echo][ ][hello][ ][world][ ][|][ ][ls][ ][-la][ ][|][ ][cat]
-void	ft_tokenize(t_minishell *shell, char *line)
+void	tokenize(t_minishell *shell, char *line)
 {
 	int	i;
 	int	len;
