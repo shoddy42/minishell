@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 00:01:04 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 01:10:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 15:47:14 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	hd_var(int fd, char *line, t_minishell *shell)
 	int		var_index;
 	int		i;
 
-	printf ("expanding var [%s]\n", line);
+	// printf ("expanding var [%s]\n", line);
 	key = ft_calloc(ft_strlen(line), sizeof(char));
 	if (!key)
 		exit (1);

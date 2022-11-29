@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 23:25:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 16:18:33 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,10 @@
 # define SPOOKY 5
 # define SPOOKY1 "\1\x1b[48;5;202m\x1b[30m\2 🎃 \1\x1b[38;5;202;48;5;232m\2"
 # define SPOOKY2 " SpookyShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
+
+# define NEW 6
+# define NEW1 "\1\x1b[48;5;220m\x1b[30m\2 🐢 \1\x1b[104m\2"
+# define NEW2 " TurtleShell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"
 
 # define WIZARD1 "\1\x1b[48;5;45m\x1b[30m\2 🧿 \1\x1b[38;5;232;48;5;200m\2"
 # define WIZARD2 " hell \1\x1b[49m\x1b[92m❱\2 \1\x1b[0m\2\3"

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 23:23:46 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 16:54:18 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	main(int ac, char **av, char **envp)
 		if (shell->prompt_type == 0)
 			change_prompt(NULL, shell);
 		if (shell->command == NULL)
-			close_stdin(shell);
+			exit (0);
 		shell->command_len = ft_strlen(shell->command);
 		if (ft_strcmp(shell->command, "exit") == 0)
 			shell->exit = 1;

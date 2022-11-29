@@ -6,20 +6,20 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 01:11:56 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 01:34:05 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 16:54:13 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
 // todo: make it so we actually write exit with rl_replace_line somehow
-void	close_stdin(t_minishell *shell)
-{
-	rl_replace_line("minishell> exit", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	exit (1);
-}
+// void	close_stdin(t_minishell *shell)
+// {
+// 	// rl_replace_line("minishell> exit", 0);
+// 	// rl_on_new_line();
+// 	// rl_redisplay();
+// 	exit (1);
+// }
 
 void	free_commands(t_minishell *shell)
 {

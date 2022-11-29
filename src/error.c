@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/22 22:13:29 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 15:46:12 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ms_error(char *msg, int error_code, bool terminate, t_minishell *shell)
 	{
 		errno = error_code;
 		perror(msg);
-		printf("err?: [%i]\n", errno);
+		// printf("err?: [%i]\n", errno);
 	}
 	if (terminate == true)
 		exit(error_code);

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 01:03:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 16:22:10 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,11 @@ void	hd_child(int fd, char *delim, t_minishell *shell)
 		i = -1;
 		line = readline(HD1 HD2);
 		if (!line || ft_strcmp(line, delim) == 0)
+		{
+			if (!line)
+				write (fd, "\n", 1);
 			exit (0);
+		}
 		while (line[++i])
 		{
 			if (line[i] == '$' && line[i + 1])

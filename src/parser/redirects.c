@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 17:50:18 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 15:27:17 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ t_token	*right(t_token *start, t_token *token, t_minishell *shell, bool append)
 			Unexpected token: [", true));
 	}
 	token->fd = open(token->data, O_RDWR | O_APPEND | O_CREAT, 0644);
-	printf ("errno [%i]\n", errno);
+	// printf ("errno [%i]\n", errno);
 	if (token->fd < 0 && errno == 13)
 		return (token_error(token, REDIR_R_DENIED, true));
 	else if (token->fd < 0)

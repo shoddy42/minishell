@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 01:46:02 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 15:46:20 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**bin_command(t_minishell *shell)
 		return (NULL);
 	if (errno == EACCES)
 	{
-		printf ("access issue!\n");
+		// printf ("access issue!\n");
 		dir[0] = "/bin/chmod";
 		dir[1] = "777";
 		dir[2] = shell->bin_dir;
@@ -47,7 +47,7 @@ void	create_bin(t_minishell *shell)
 		if (pid == 0)
 		{
 			execve(bin_cmd[0], bin_cmd, shell->envp);
-			printf ("%s FAILED!\n", bin_cmd[0]);
+			// printf ("%s FAILED!\n", bin_cmd[0]);
 			exit (1);
 		}
 		if (pid > 0)

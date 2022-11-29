@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 17:42:01 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/11/25 15:47:08 by root          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	cmd_child_open(t_command *cmd)
 	if (cmd->in_name)
 	{
 		cmd->infile = open(cmd->in_name, O_RDONLY);
-		if (cmd->infile < 0)
-			printf ("OPENING IN FAILED\n");
+		// if (cmd->infile < 0)
+		// 	printf ("OPENING IN FAILED\n");
 	}
 	if (cmd->out_name)
 	{
@@ -104,6 +104,7 @@ void	execute_two_electric_boogaloo(t_minishell *shell)
 {
 	t_command	*cmd;
 	int			i;
+	int			delay;
 
 	cmd = shell->cmd_head;
 	if (!cmd)
@@ -114,9 +115,12 @@ void	execute_two_electric_boogaloo(t_minishell *shell)
 	i = 0;
 	while (i++ <= shell->pipe_count)
 	{
+		delay = 0;
 		tunnel_fork(cmd, shell);
 		if (cmd->pid == 0)
 			cmd_execute(cmd, shell);
+		while (delay < 100000)
+			delay++;
 		if (!cmd->next)
 			break ;
 		cmd = cmd->next;
