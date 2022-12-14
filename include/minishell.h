@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 21:20:36 by wkonings      ########   odam.nl         */
+/*   Updated: 2022/12/14 14:55:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
-# include "../libft/libft.h"
+# include "../libft/include/libft.h"
 # include <stdbool.h>
 # include <limits.h>
 # include <dirent.h>
@@ -231,6 +231,5 @@ void		free_commands(t_minishell *shell);
 
 //prompt.c
 bool		change_prompt(t_command *cmd, t_minishell *shell);
-
 
 #endif
