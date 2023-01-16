@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 21:22:53 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 21:04:13 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/16 21:42:38 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	set_prompt(t_minishell *shell)
 		shell->prompt = MOON1 MOON2;
 	else if (shell->prompt_type == HELL)
 		shell->prompt = HELL1 HELL2;
-	else if (shell->prompt_type == DRAGON)
-		shell->prompt = DRAGON1 DRAGON2;
 	else if (shell->prompt_type == SPOOKY)
 		shell->prompt = SPOOKY1 SPOOKY2;
 	else if (shell->prompt_type == RACOON)
@@ -41,6 +39,28 @@ int	set_prompt(t_minishell *shell)
 	return (0);
 }
 
+void	cutscene(void)
+{
+	long	wait;
+
+	wait = 0;
+	printf (RED "Fatal:" RESET);
+	printf (" [1]		69420	Segmentation Fault		./minishell\n");
+	while (++wait < 2000000000)
+		;
+	printf (RED "Fatal:" RESET " [7]			cpu temperature: 117 °C \n");
+	wait = 0;
+	while (++wait < 1000000000)
+		;
+	printf (RED "Overloaded:" RESET);
+	printf (" [6] SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.MHlHV8A369\n");
+	printf ("Terminating macOS Mojave 10.14.6\n");
+	wait = 0;
+	while (++wait < 1000000000)
+		;
+	exit (0);
+}
+
 int	prompt_choose(char **prompt, t_minishell *shell)
 {
 	if (ft_strcmp(prompt[1], "turtle") == 0)
@@ -51,14 +71,14 @@ int	prompt_choose(char **prompt, t_minishell *shell)
 		shell->prompt_type = HELL;
 	else if (ft_strcmp(prompt[1], "spooky") == 0)
 		shell->prompt_type = SPOOKY;
-	else if (ft_strcmp(prompt[1], "dragon") == 0)
-		shell->prompt_type = DOOKIE;
+	else if (ft_strcmp(prompt[1], "malloc") == 0)
+		cutscene();
 	else if (ft_strcmp(prompt[1], "okay") == 0)
 		shell->prompt_type = OKAY;
 	else if (ft_strcmp(prompt[1], "racoon") == 0)
 		shell->prompt_type = RACOON;
 	else if (ft_strcmp(prompt[1], "cherry") == 0)
-		shell->prompt_type = SPOOKY;
+		shell->prompt_type = CHERRY;
 	else if (ft_strcmp(prompt[1], "shark") == 0)
 		shell->prompt_type = SHARK;
 	else if (ft_strcmp(prompt[1], "care") == 0)

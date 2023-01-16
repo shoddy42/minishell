@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 21:20:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/16 21:28:01 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,13 @@ static void	init_env(t_minishell *shell, char **envp)
 {
 	int		i;
 
-	i = 0;
+	i = -1;
 	while (envp[++i])
 		new_env(envp[i], shell);
 	create_envp(shell);
 	replace_env("SHELL=minishell", env_exists("SHELL=minishell", shell), shell);
 	increase_shlvl(shell);
+	create_envp(shell);
 }
 
 t_minishell	*init_minishell(char **envp)

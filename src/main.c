@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/12/14 16:37:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/16 20:53:31 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,11 @@ int	dash_c(t_minishell *shell, char **av, int ac)
 	return (ac);
 }
 
+
+void	leakcheck(void)
+{
+	system("leaks -q ./minishell");
+}
 //later: make more test cases and more todos :)
 //later: make sure EVERY alloc is protected properly.
 int	main(int ac, char **av, char **envp)
@@ -50,6 +55,7 @@ int	main(int ac, char **av, char **envp)
 
 	shell = init_minishell(envp);
 	dash_c(shell, av, ac);
+	// atexit(leakcheck); //REMOVE
 	while (shell->exit == 0)
 	{
 		create_bin(shell);

@@ -6,7 +6,7 @@
 /*   By: root <root@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 11:43:21 by root          #+#    #+#                 */
-/*   Updated: 2022/11/25 16:57:29 by root          ########   odam.nl         */
+/*   Updated: 2023/01/16 22:42:57 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ void	change_pwd(t_minishell *shell, char *env)
 	cwd = getcwd(NULL, 0);
 	pwd = ft_strjoin(env, cwd);
 	if (!pwd)
-	pwd = ft_strdup(ms_getenv("OLDPWD", shell));
+		pwd = ft_strdup(ms_getenv("OLDPWD", shell));
 	if (!pwd)
 		ms_error("getcwd call failed\n", 0, true, shell);
 	replace_env(pwd, env_exists(pwd, shell), shell);
-	free(cwd);
+	create_envp(shell);
+	if (cwd)
+		free(cwd);
 	free(pwd);
 }
 
@@ -35,8 +37,13 @@ int	go_home(t_minishell *shell)
 
 	change_pwd(shell, "OLDPWD=");
 	ret = chdir(ms_getenv("HOME", shell));
+	if (ret == -1)
+	{
+		write (1, "cd: ", 4);
+		perror(ms_getenv("HOME", shell));
+	}
 	change_pwd(shell, "PWD=");
-	return (ret);
+	return (ret * -1);
 }
 
 int	go_back(t_minishell *shell)
@@ -47,9 +54,12 @@ int	go_back(t_minishell *shell)
 	back = ft_strdup(ms_getenv("OLDPWD", shell));
 	if (!back)
 		return (1);
-	printf ("%s\n", back);
 	change_pwd(shell, "OLDPWD=");
 	ret = chdir(back);
+	if (ret == -1)
+		perror(ms_getenv("OLDPWD", shell));
+	else
+		printf ("%s\n", back);
 	change_pwd(shell, "PWD=");
 	free (back);
 	return (ret * -1);
@@ -60,7 +70,7 @@ int	ms_cd(t_command	*cmd, t_minishell *shell)
 	int	cd_ret;
 
 	if (!cmd->command[1] || ft_strcmp(cmd->command[1], "~") == 0)
-		return (chdir(ms_getenv("HOME", shell)) * -1);
+		return (go_home(shell));
 	if (cmd->command[1] && ft_strcmp(cmd->command[1], "-") == 0)
 		return (go_back(shell));
 	change_pwd(shell, "OLDPWD=");

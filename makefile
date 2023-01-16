@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/12/14 17:29:08 by wkonings      ########   odam.nl          #
+#    Updated: 2022/12/14 17:32:30 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -118,7 +118,6 @@ $(NAME): $(OBJS) $(HEADERS) | $(BIN_DIR)
 echo:
 	@echo $(SRCS)
 
-#todo: banner
 all: $(BANNER) $(NAME)
 
 $(LIBFT):

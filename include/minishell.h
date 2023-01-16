@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/12/14 14:55:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/16 21:56:19 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ void		set_status(t_minishell *shell, int cmd_count);
 bool		is_builtin(t_command *cmd, t_minishell *shell);
 int			ms_cd(t_command	*cmd, t_minishell *shell);
 int			ms_echo(t_command *cmd);
-int			ms_pwd(t_command *cmd);
+int			ms_pwd(t_command *cmd, t_minishell *shell);
 int			print_env(t_minishell	*shell, t_command	*cmd);
 int			ms_export(t_command *cmd, t_minishell	*shell);
 int			ms_unset(t_minishell *shell, t_command *cmd);

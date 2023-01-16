@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 18:42:30 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/11/29 21:56:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/16 20:59:07 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ bool	dash_n(const char *flag)
 		while (flag[++i])
 			if (flag[i] != 'n')
 				return (false);
+		if (i == 1)
+			return (false);
 	}
 	else
 		return (false);

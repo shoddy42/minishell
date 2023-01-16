@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 19:42:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/16 22:51:15 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ bool	is_builtin(t_command *cmd, t_minishell *shell)
 	else if (ft_strcmp(cmd->command[0], "env") == 0)
 		g_status = print_env(shell, cmd);
 	else if (ft_strcmp(cmd->command[0], "pwd") == 0)
-		g_status = ms_pwd(cmd);
+		g_status = ms_pwd(cmd, shell);
 	else if (ft_strcmp(cmd->command[0], "export") == 0)
 		g_status = ms_export(cmd, shell);
 	else if (ft_strcmp(cmd->command[0], "unset") == 0)
