@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:29:04 by auzochuk      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:31:20 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ int	dash_c(t_minishell *shell, char **av, int ac)
 	return (ac);
 }
 
-//later: make more test cases and more todos :)
-//later: make sure EVERY alloc is protected properly.
 int	main(int ac, char **av, char **envp)
 {
 	t_minishell	*shell;

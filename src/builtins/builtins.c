@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:29:19 by auzochuk      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:35:41 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	ms_exit(t_command *cmd)
 	exit (status);
 }
 
-//todo real error messaging
 void	builtin_redir(t_command *cmd)
 {
 	if (cmd->in_name)
@@ -57,7 +56,6 @@ void	builtin_redir(t_command *cmd)
 	}
 }
 
-//todo: 
 int	close_builtin(t_command *cmd)
 {
 	if (cmd->infile != STDIN_FILENO)

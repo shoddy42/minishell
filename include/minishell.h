@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:26:48 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:34:09 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@
 # define REDIR_R_NOFILE "Redirect '>' failed; No such file or directory: ["
 # define SHELL_ALLOC_FAILURE "FAILED TO ALLOCATE SHELL, YOU HAVE 0 MEMORY LMAO"
 
-// should ; be token? are tabs actually getting set to void?
 # define DELIM " |$<>=;\t\'\"\n"
 
 typedef enum e_pipe
@@ -77,7 +76,6 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
-//LATER: examine whether we need ALL of these
 typedef struct s_command
 {
 	char				**command;	

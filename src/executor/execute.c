@@ -6,20 +6,19 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:26:08 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:39:51 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-//todo: fix bad error messages!
 void	cmd_child_open(t_command *cmd)
 {
 	if (cmd->in_name)
 	{
 		cmd->infile = open(cmd->in_name, O_RDONLY);
 		if (cmd->infile < 0)
-			printf ("OPENING IN FAILED\n");
+			printf ("Error: Opening infile failed.\n");
 	}
 	if (cmd->out_name)
 	{
@@ -28,14 +27,13 @@ void	cmd_child_open(t_command *cmd)
 		if (cmd->outfile == O_APPEND)
 			cmd->outfile = open(cmd->out_name, O_WRONLY | O_CREAT | O_APPEND);
 		if (cmd->outfile < 0)
-			printf(" OUT BAD \n");
+			printf("Error: Opening outfile failed.\n");
 	}
 	if (cmd->infile == NEEDS_PIPE || cmd->outfile == NEEDS_PIPE
 		|| cmd->infile < 0 || cmd->outfile < 0)
 		cmd->executable = false;
 }
 
-// basic logic, probably needs double checking.
 void	cmd_child_fd(t_command *cmd)
 {
 	if (!cmd->command)
@@ -51,7 +49,6 @@ void	cmd_child_fd(t_command *cmd)
 		exit(1);
 }
 
-//todo: TEST LOCAL_COMMAND
 void	cmd_execute(t_command *cmd, t_minishell *shell)
 {
 	char	*path;
@@ -66,9 +63,10 @@ void	cmd_execute(t_command *cmd, t_minishell *shell)
 		while (shell->path && shell->path[++i])
 		{
 			path = pipex_pathjoin(shell->path[i], cmd->command[0]);
-			if (access(path, X_OK) == 0)
+			if (path && access(path, X_OK) == 0)
 				execve(path, cmd->command, shell->envp);
-			free(path);
+			if (path)
+				free(path);
 		}
 	}
 	local_command(cmd->command, shell->envp);
@@ -78,8 +76,6 @@ void	cmd_execute(t_command *cmd, t_minishell *shell)
 	exit (127);
 }
 
-// pipe creating and closing algorithm seems right.
-// remove return value?
 int	tunnel_fork(t_command *cmd, t_minishell *shell)
 {
 	if (pipe(cmd->tunnel) < 0)

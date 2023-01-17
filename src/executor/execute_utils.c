@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/22 18:52:21 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:19:37 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:40:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,6 @@ void	local_command(char **args, char **envp)
 	free (path);
 }
 
-//OLD DEBUG MESSAGES
-// printf("WAITING FOR [%cmd_count] PROCESS\n", cmd_count);
-// printf("PROCESS [%cmd_count] ENDED WITH CODE:(%cmd_count)
-// STATUS:(%cmd_count)\n", pid, status, WEXITSTATUS(status));
 void	set_status(t_minishell *shell, int cmd_count)
 {
 	pid_t		pid;
