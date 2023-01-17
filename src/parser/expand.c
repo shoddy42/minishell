@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:59:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 00:56:13 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:19:55 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ t_token	*word_adding(char *variable, t_token *token, t_minishell *shell)
 
 	new = new_token(shell, variable, ft_strlen(variable), false);
 	if (!new)
-		ms_error ("Failed to allocate token for split word", -24, true, shell);
+		ms_error ("Failed to allocate token for split word", -24, true);
 	free(variable);
 	space = new_token(shell, " ", 1, false);
 	if (!space)
-		ms_error ("Failed to allocate token for split word", -24, true, shell);
+		ms_error ("Failed to allocate token for split word", -24, true);
 	token->next = space;
 	space->prev = token;
 	space->next = new;
@@ -40,7 +40,7 @@ t_token	*word_splitting(char *variable, t_token *token, t_minishell *shell)
 
 	words = ft_split(variable, ' ');
 	if (!words)
-		ms_error("Failed wordsplitting variable", -23, true, shell);
+		ms_error("Failed wordsplitting variable", -23, true);
 	i = 0;
 	tmp = token;
 	test = NULL;

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 09:24:40 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/16 21:28:01 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:25:59 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	increase_shlvl(t_minishell *shell)
 
 	num = ft_itoa(1 + ft_atoi(ms_getenv("SHLVL", shell)));
 	shlvl = ft_strjoin("SHLVL=", num);
-	replace_env(shlvl, env_exists(shlvl, shell), shell);
+	replace_env(shlvl, env_exists(shlvl, shell));
 	free(shlvl);
 	free(num);
 }
@@ -77,7 +77,7 @@ static void	init_env(t_minishell *shell, char **envp)
 	while (envp[++i])
 		new_env(envp[i], shell);
 	create_envp(shell);
-	replace_env("SHELL=minishell", env_exists("SHELL=minishell", shell), shell);
+	replace_env("SHELL=minishell", env_exists("SHELL=minishell", shell));
 	increase_shlvl(shell);
 	create_envp(shell);
 }
@@ -89,7 +89,7 @@ t_minishell	*init_minishell(char **envp)
 
 	shell = ft_calloc(1, sizeof(t_minishell));
 	if (!shell)
-		ms_error(SHELL_ALLOC_FAILURE, false, true, NULL);
+		ms_error(SHELL_ALLOC_FAILURE, false, true);
 	shell->prompt = "WELCOME TO MINIS HELL > ";
 	if (signal(SIGINT, sighandler) == SIG_ERR)
 		exit (55);

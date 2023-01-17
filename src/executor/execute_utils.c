@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/22 18:52:21 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/16 21:13:04 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:19:37 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	local_command(char **args, char **envp)
 	char	*path;
 
 	if (ft_strncmp(args[0], "./", 2) == 0)
-		ms_error(args[0], errno, true, NULL);
+		ms_error(args[0], errno, true);
 	path = pipex_pathjoin(".", args[0]);
 	if (!path)
 		return ;

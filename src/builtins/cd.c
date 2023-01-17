@@ -6,7 +6,7 @@
 /*   By: root <root@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 11:43:21 by root          #+#    #+#                 */
-/*   Updated: 2023/01/16 22:42:57 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:26:22 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	change_pwd(t_minishell *shell, char *env)
 	if (!pwd)
 		pwd = ft_strdup(ms_getenv("OLDPWD", shell));
 	if (!pwd)
-		ms_error("getcwd call failed\n", 0, true, shell);
-	replace_env(pwd, env_exists(pwd, shell), shell);
+		ms_error("getcwd call failed\n", 0, true);
+	replace_env(pwd, env_exists(pwd, shell));
 	create_envp(shell);
 	if (cwd)
 		free(cwd);

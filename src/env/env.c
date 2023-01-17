@@ -6,7 +6,7 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:51:25 by auzochuk      #+#    #+#                 */
-/*   Updated: 2022/12/14 16:49:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:23:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
  * @returns @b true  When it replaced an env, or the env is illegal.
  * @returns @b false When it did not replace an env.
  */
-int	replace_env(char *beans, t_env *env, t_minishell *shell)
+int	replace_env(char *beans, t_env *env)
 {
 	if (!env || !env->beans || !beans || ft_strchr_num(beans, '=') == -1)
 		return (1);

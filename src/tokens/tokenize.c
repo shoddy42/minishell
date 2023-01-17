@@ -6,13 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:31:46 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 21:17:48 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:18:28 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	set_token_type(t_minishell *shell, t_token *token, char *data)
+void	set_token_type(t_token *token, char *data)
 {
 	if (!data || !data[0])
 		token->type = ERROR;
@@ -57,7 +57,7 @@ t_token	*new_token(t_minishell *shell, char *data, int len, bool link)
 	t_token	*new;
 
 	new = ft_calloc(1, sizeof(t_token));
-	set_token_type(shell, new, data);
+	set_token_type(new, data);
 	new->data = ft_calloc(len + 1, sizeof(char));
 	new->fd = -1;
 	i = -1;

@@ -6,15 +6,14 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/14 11:23:21 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/16 22:57:17 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:26:39 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include  "../../include/minishell.h"
 
-int	ms_pwd(t_command *cmd, t_minishell *shell)
+int	ms_pwd(t_minishell *shell)
 {
-	int		i;
 	char	*path;
 
 	path = getcwd(NULL, 0);

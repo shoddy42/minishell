@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/12/14 15:59:01 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:26:08 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	cmd_child_open(t_command *cmd)
 }
 
 // basic logic, probably needs double checking.
-void	cmd_child_fd(t_command *cmd, t_minishell *shell)
+void	cmd_child_fd(t_command *cmd)
 {
 	if (!cmd->command)
 		exit(-1);
@@ -57,7 +57,7 @@ void	cmd_execute(t_command *cmd, t_minishell *shell)
 	char	*path;
 	int		i;
 
-	cmd_child_fd(cmd, shell);
+	cmd_child_fd(cmd);
 	if (is_builtin(cmd, shell) == true)
 		exit(0);
 	i = -1;
@@ -91,7 +91,7 @@ int	tunnel_fork(t_command *cmd, t_minishell *shell)
 			cmd->next->infile = cmd->tunnel[READ];
 	cmd->pid = fork();
 	if (cmd->pid < 0)
-		ms_error("Forking failed.\n", -43, false, shell);
+		ms_error("Forking failed.\n", -43, false);
 	if (cmd->pid > 0)
 		parent_close(cmd, shell);
 	if (cmd->pid == 0)
@@ -111,7 +111,7 @@ void	execute_two_electric_boogaloo(t_minishell *shell)
 	if (!cmd)
 		return ;
 	if (cmd && !cmd->next && cmd->executable == true)
-		if (is_builtin(cmd, shell) == true && close_builtin(cmd, shell) == 0)
+		if (is_builtin(cmd, shell) == true && close_builtin(cmd) == 0)
 			return ;
 	i = 0;
 	while (i++ <= shell->pipe_count)

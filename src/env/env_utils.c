@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/12/14 17:21:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:19:24 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	fill_env(t_env	*new)
 		new->key = ft_substr(new->beans, 0, (eq));
 		new->data = ft_substr(new->beans, (eq + 1), ft_strlen(new->beans) - eq);
 		if (!new->key || !new->data)
-			ms_error("Failed to allocate ENV.", 0, true, NULL);
+			ms_error("Failed to allocate ENV.", 0, true);
 		return (0);
 	}
 	new->key = ft_strdup(new->beans);
@@ -77,7 +77,7 @@ int	new_env(char *data, t_minishell *shell)
 
 	if (legal_env(data) == false)
 	{
-		ms_error("Illegal env", 0, false, shell);
+		ms_error("Illegal env", 0, false);
 		return (1);
 	}
 	env = shell->env_head;
@@ -85,10 +85,10 @@ int	new_env(char *data, t_minishell *shell)
 		env = env->next;
 	new = ft_calloc(1, sizeof(t_env));
 	if (!new)
-		ms_error("Failed to allocate ENV.", -1, true, NULL);
+		ms_error("Failed to allocate ENV.", -1, true);
 	new->beans = ft_strdup(data);
 	if (!new->beans)
-		ms_error("Failed to allocate ENV->beans.", -1, true, NULL);
+		ms_error("Failed to allocate ENV->beans.", -1, true);
 	fill_env(new);
 	if (!env)
 		shell->env_head = new;

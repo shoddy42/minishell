@@ -6,13 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/16 22:51:15 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:27:13 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ms_exit(t_command *cmd, t_minishell *shell)
+int	ms_exit(t_command *cmd)
 {
 	extern int	g_status;
 	int			status;
@@ -38,7 +38,7 @@ int	ms_exit(t_command *cmd, t_minishell *shell)
 }
 
 //todo real error messaging
-void	builtin_redir(t_command *cmd, t_minishell *shell)
+void	builtin_redir(t_command *cmd)
 {
 	if (cmd->in_name)
 		cmd->infile = open(cmd->in_name, O_RDONLY);
@@ -56,7 +56,7 @@ void	builtin_redir(t_command *cmd, t_minishell *shell)
 }
 
 //todo: 
-int	close_builtin(t_command *cmd, t_minishell *shell)
+int	close_builtin(t_command *cmd)
 {
 	if (cmd->infile != STDIN_FILENO)
 		close(cmd->infile);
@@ -69,7 +69,7 @@ bool	is_builtin(t_command *cmd, t_minishell *shell)
 {
 	extern int	g_status;
 
-	builtin_redir(cmd, shell);
+	builtin_redir(cmd);
 	if (!cmd->command || !cmd->command[0])
 		return (false);
 	if (ft_strcmp(cmd->command[0], "cd") == 0)
@@ -81,13 +81,13 @@ bool	is_builtin(t_command *cmd, t_minishell *shell)
 	else if (ft_strcmp(cmd->command[0], "env") == 0)
 		g_status = print_env(shell, cmd);
 	else if (ft_strcmp(cmd->command[0], "pwd") == 0)
-		g_status = ms_pwd(cmd, shell);
+		g_status = ms_pwd(shell);
 	else if (ft_strcmp(cmd->command[0], "export") == 0)
 		g_status = ms_export(cmd, shell);
 	else if (ft_strcmp(cmd->command[0], "unset") == 0)
 		g_status = ms_unset(shell, cmd);
 	else if (ft_strcmp(cmd->command[0], "exit") == 0)
-		g_status = ms_exit(cmd, shell);
+		g_status = ms_exit(cmd);
 	else
 		return (false);
 	return (true);

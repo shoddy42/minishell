@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 15:15:15 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:19:03 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	dash_c(t_minishell *shell, char **av, int ac)
 		if (av[2])
 			shell->command = av[2];
 		else
-			ms_error("NO COMMAND STR.", -9, true, shell);
+			ms_error("NO COMMAND STR.", -9, true);
 		tokenize(shell, shell->command);
 		parse_token(shell);
 		count_pipes(shell);
