@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/16 22:51:15 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 15:02:08 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,11 @@ int	ms_exit(t_command *cmd, t_minishell *shell)
 void	builtin_redir(t_command *cmd, t_minishell *shell)
 {
 	if (cmd->in_name)
+	{
 		cmd->infile = open(cmd->in_name, O_RDONLY);
+		if (cmd->infile < 0)
+			printf("invalid infile\n");
+	}
 	if (cmd->out_name)
 	{
 		if (cmd->outfile == O_TRUNC)
@@ -49,10 +53,8 @@ void	builtin_redir(t_command *cmd, t_minishell *shell)
 		if (cmd->outfile == O_APPEND)
 			cmd->outfile = open(cmd->out_name, O_WRONLY | O_CREAT | O_APPEND);
 		if (cmd->outfile < 0)
-			printf(" OUT BAD \n");
+			printf("invalid outfile\n");
 	}
-	if (cmd->infile < 0 || cmd->outfile < 0)
-		printf ("someting wong in builtin redir\n");
 }
 
 //todo: 

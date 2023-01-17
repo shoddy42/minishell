@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/22 19:11:04 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/12/14 15:31:07 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 15:05:23 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	print_export(t_minishell	*shell)
 		exit(1);
 	while (env)
 	{
-		ft_putstr_fd("declare -x ", 1);
+		// ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(env->key, 1);
 		if (env->data && env->has_key == true)
 		{

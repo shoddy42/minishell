@@ -6,39 +6,11 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 19:30:41 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 15:57:57 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-//later: remove
-// void	print_commands(t_minishell *shell)
-// {
-// 	t_command	*tmp;
-// 	int			cmd_num;	
-// 	int			i;
-
-// 	i = 0;
-// 	cmd_num = 0;
-// 	tmp = shell->cmd_head;
-// 	printf ("\nPrinting all commands:\n");
-// 	while (tmp)
-// 	{
-// 		printf ("\nCMD (%i) infile [%i] outfile [%i]\n",
-// 			cmd_num, tmp->infile, tmp->outfile);
-// 		cmd_num++;
-// 		i = -1;
-// 		while (tmp && tmp->command && tmp->command[++i])
-// 			printf("cmd(%i) = [%s]\n", i, tmp->command[i]);
-// 		if (!tmp->next)
-// 		{
-// 			printf ("no command next\n");
-// 			break ;
-// 		}
-// 		tmp = tmp->next;
-// 	}
-// }
 
 static void	set_command_options(t_token *token, t_command *cmd)
 {
@@ -75,6 +47,8 @@ t_token	*get_command_options(t_token *start, t_command *cmd)
 	i = 0;
 	token = start;
 	cmd->command = ft_calloc(get_options_amount(token) + 1, sizeof(char *));
+	if (!cmd->command)
+		return (token_error(start, "error: command allocation failed [", true));
 	while (token && token->type != PIPE)
 	{
 		if (token->type == COMMAND)
