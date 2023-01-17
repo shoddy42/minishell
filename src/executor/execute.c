@@ -6,13 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/14 02:42:24 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:39:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:19:06 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	cmd_child_open(t_command *cmd)
+static void	cmd_child_open(t_command *cmd)
 {
 	if (cmd->in_name)
 	{
@@ -34,7 +34,7 @@ void	cmd_child_open(t_command *cmd)
 		cmd->executable = false;
 }
 
-void	cmd_child_fd(t_command *cmd)
+static void	cmd_child_fd(t_command *cmd)
 {
 	if (!cmd->command)
 		exit(-1);
@@ -49,7 +49,7 @@ void	cmd_child_fd(t_command *cmd)
 		exit(1);
 }
 
-void	cmd_execute(t_command *cmd, t_minishell *shell)
+static void	cmd_execute(t_command *cmd, t_minishell *shell)
 {
 	char	*path;
 	int		i;
@@ -76,7 +76,7 @@ void	cmd_execute(t_command *cmd, t_minishell *shell)
 	exit (127);
 }
 
-int	tunnel_fork(t_command *cmd, t_minishell *shell)
+static int	tunnel_fork(t_command *cmd, t_minishell *shell)
 {
 	if (pipe(cmd->tunnel) < 0)
 		cmd->executable = false;

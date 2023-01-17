@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:05:15 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 21:57:11 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:54:05 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ t_token	*open_left(t_token *start, t_token *token, t_minishell *shell)
 		token->fd = open(token->data, O_RDONLY);
 		token->type = INFILE;
 		if (token->fd == -1)
-			return (token_error(token, "Failed to open infile: [", true));
+			return (token_error(token, "Failed to open infile: ["));
 		close (token->fd);
 	}
 	else
 	{
 		shell->cancel_all_commands = true;
-		return (token_error(token, SYN_LUNEX, true));
+		return (token_error(token, SYN_LUNEX));
 	}
 	return (token);
 }
@@ -66,13 +66,13 @@ t_token	*right(t_token *start, t_token *token, t_minishell *shell, bool append)
 	{
 		shell->cancel_all_commands = true;
 		return (token_error(token, "Syntax error near '>';\
-			Unexpected token: [", true));
+			Unexpected token: ["));
 	}
 	token->fd = open(token->data, O_RDWR | O_APPEND | O_CREAT, 0644);
 	if (token->fd < 0 && errno == 13)
-		return (token_error(token, REDIR_R_DENIED, true));
+		return (token_error(token, REDIR_R_DENIED));
 	else if (token->fd < 0)
-		return (token_error(token, REDIR_R_NOFILE, true));
+		return (token_error(token, REDIR_R_NOFILE));
 	close(token->fd);
 	if (append && token->fd > 0)
 		token->fd = O_APPEND;

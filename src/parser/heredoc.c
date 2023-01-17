@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:36:07 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:54:31 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_token	*hd_delim(t_token *token, t_minishell *shell)
 		return (token);
 	delim = ft_calloc(ft_strlen(hd->data) + 1, sizeof(char));
 	if (!delim)
-		return (token_error(hd, "Allocing DELIM for heredoc failed. [", true));
+		return (token_error(hd, "Allocing DELIM for heredoc failed. ["));
 	i = -1;
 	skip = 0;
 	while (hd->data[++i + skip])
@@ -93,7 +93,7 @@ t_token	*hd_open(char *heredoc, t_token *token, t_minishell *shell)
 	fd = open(heredoc, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	pid = fork();
 	if (pid < 0 || fd < 0)
-		return (token_error(token, "Creation of heredoc failed. [", true));
+		return (token_error(token, "Creation of heredoc failed. ["));
 	if (pid == 0)
 	{
 		if (shell->hd_history == true)
@@ -125,10 +125,10 @@ t_token	*heredoc(t_token *start, t_minishell *shell)
 		token = token->next;
 	if (token->type != COMMAND && token->type != QUOTE
 		&& token->type != DQUOTE && token->type != VARIABLE)
-		return (token_error(token, SYN_NODELIM, true));
+		return (token_error(token, SYN_NODELIM));
 	token = hd_delim(token, shell);
 	if (!token)
-		return (token_error(start, "Getting delimiter failed [", start));
+		return (token_error(start, "Getting delimiter failed ["));
 	heredoc = get_hd_name(shell);
 	hd_open(heredoc, token, shell);
 	token->data = heredoc;

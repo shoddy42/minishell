@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:34:09 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:24:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,23 +48,22 @@ typedef enum e_pipe
 	NEEDS_PIPE = -42
 }	t_pipe;
 
-//LATER: remove all the numbers
 typedef enum e_tokentype
 {
-	COMMAND = 42,
-	QUOTE = 45,
-	DQUOTE = 46,
-	VARIABLE = 47,
-	AND = 48,
-	LEFT = 49,
-	RIGHT = 50,
-	PIPE = 51,
-	HEREDOC = 53,
-	SEMICOLON = 60,
-	OUTFILE = 55,
-	INFILE = 56,
-	ERROR = 57,
-	VOID = 69,
+	COMMAND,
+	QUOTE,
+	DQUOTE,
+	VARIABLE,
+	AND,
+	LEFT,
+	RIGHT,
+	PIPE,
+	HEREDOC,
+	SEMICOLON,
+	OUTFILE,
+	INFILE,
+	ERROR,
+	VOID,
 }	t_tokentype;
 
 typedef struct s_token
@@ -124,20 +123,41 @@ typedef struct s_shell_data
 	int			exit;
 }	t_minishell;
 
+// signal.c
+void		child_sig(int signum);
+void		sighandler(int signum);
+void		heredoc_sig(int signum);
+
 // init.c
 t_minishell	*init_minishell(char **envp);
-void		sighandler(int signum);
-void		child_sig(int signum);
 void		create_bin(t_minishell *shell);
 
-// builtins
+// error.c 
+void		ms_error(char *msg, int code, bool terminate);
+t_token		*token_error(t_token *token, char *msg);
+
+// cleanup.c
+void		ms_cleanup(t_minishell *shell);
+void		free_commands(t_minishell *shell);
+
+// BUILTINS
+
+int			close_builtin(t_command *cmd);
+bool		is_builtin(t_command *cmd, t_minishell *shell);
+int			ms_cd(t_command	*cmd, t_minishell *shell);
+int			ms_echo(t_command *cmd);
+int			ms_pwd(t_minishell *shell);
+int			print_env(t_minishell	*shell, t_command	*cmd);
+int			ms_export(t_command *cmd, t_minishell	*shell);
+int			ms_unset(t_minishell *shell, t_command *cmd);
+
+// prompt.c
+bool		change_prompt(t_command *cmd, t_minishell *shell);
+
 t_token		*new_token(t_minishell *shell, char *data, int len, bool link);
 void		tokenize(t_minishell *shell, char *command);
 
 // token_utils.c
-void		print_tokens(t_minishell *shell); //REMOVE LATER
-void		print_tokens_backwards(t_minishell *shell); //REMOVE LATER
-char		*print_token_type(int type); // REMOVE LATER
 void		remove_tokens(t_token *start, t_token *end, t_minishell *shell);
 void		free_single_token(t_token *token);
 void		free_tokens(t_minishell *shell);
@@ -151,40 +171,29 @@ int			count_pipes(t_minishell *shell);
 void		parse_token(t_minishell *shell);
 
 // env
+t_env		*env_exists(char	*beans, t_minishell *shell);
 char		*ms_getenv(char *key, t_minishell *shell);
 int			fill_env(t_env	*new);
 int			new_env(char *data, t_minishell *shell);
 bool		ms_replace_env(char *beans, t_minishell *shell);
-bool		legal_env(char *data);
 int			replace_env(char *beans, t_env *env);
-t_env		*env_exists(char	*beans, t_minishell *shell);
 void		print_export(t_minishell	*shell);
 
 // envp.c
 void		create_envp(t_minishell *shell);
 
-// execute.c
-void		execute(t_command *cmd, t_minishell *shell);
-void		execute_two_electric_boogaloo(t_minishell *shell);
-// char	**get_command_options(t_token	*token);
-t_token		*get_command_options(t_token *token, t_command *cmd);
+// commands.c
+int			make_commands(t_minishell *shell);
 
-// ^^^^doesn't need to be in here probably.
+// execute.c
+void		execute_two_electric_boogaloo(t_minishell *shell);
+
 // execute_utils.c
 void		parent_close(t_command *cmd, t_minishell *shell);
 char		*pipex_pathjoin(char const *path, char const *cmd);
 bool		handle_path(char **args, char **envp);
 void		local_command(char **args, char **envp);
 void		set_status(t_minishell *shell, int cmd_count);
-// Builtins.c
-bool		is_builtin(t_command *cmd, t_minishell *shell);
-int			ms_cd(t_command	*cmd, t_minishell *shell);
-int			ms_echo(t_command *cmd);
-int			ms_pwd(t_minishell *shell);
-int			print_env(t_minishell	*shell, t_command	*cmd);
-int			ms_export(t_command *cmd, t_minishell	*shell);
-int			ms_unset(t_minishell *shell, t_command *cmd);
-int			close_builtin(t_command *cmd);
 
 // heredoc.c
 t_token		*heredoc(t_token *token, t_minishell *shell);
@@ -196,7 +205,6 @@ void		delete_heredocs(t_minishell *shell);
 char		*get_hd_name(t_minishell	*shell);
 void		delete_heredocs(t_minishell *shell);
 int			hd_var(int fd, char *line, t_minishell *shell);
-void		heredoc_sig(int signum);
 
 // redirects.c
 t_token		*handle_left(t_token *token, t_minishell *shell);
@@ -207,27 +215,8 @@ t_token		*handle_quote(t_token *token, t_tokentype type, t_minishell *shell);
 
 // expand.c
 void		expand_dong(t_token *token, t_minishell *shell);
-t_token		*expand_two(t_token *token, t_minishell *shell);
-
-// error.c 
-void		ms_error(char *msg, int code, bool terminate);
-t_token		*token_error(t_token *token, char *msg, bool print_token);
-
-// commands.c
-int			make_commands(t_minishell *shell);
-void		print_commands(t_minishell *shell); //remove later
 
 //env_utils.c
 void		create_envp(t_minishell *shell);
-// char	**create_envp(t_env *env_head);
-void		print_envp(char **envp);
-
-// cleanup.c
-void		ms_cleanup(t_minishell *shell);
-void		close_stdin(t_minishell *shell);
-void		free_commands(t_minishell *shell);
-
-//prompt.c
-bool		change_prompt(t_command *cmd, t_minishell *shell);
 
 #endif

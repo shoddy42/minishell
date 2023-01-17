@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:58:28 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:22:39 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:53:33 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_token	*handle_quote(t_token *start, t_tokentype type, t_minishell *shell)
 
 	tmp = start;
 	if (!tmp || !tmp->next)
-		return (token_error(tmp, NULL, true));
+		return (token_error(tmp, NULL));
 	str = ft_calloc(1, 1);
 	start->type = COMMAND;
 	free(start->data);

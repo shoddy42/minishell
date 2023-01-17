@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 01:05:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/24 01:10:42 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:49:51 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ void	child_sig(int signum)
 	extern int	g_status;
 
 	if (signum == SIGQUIT)
-	{
 		g_status = 131;
-	}
 	if (signum == SIGINT)
 	{
 		g_status = 130;
@@ -41,7 +39,5 @@ void	sighandler(int signum)
 void	heredoc_sig(int signum)
 {
 	if (signum == SIGINT)
-	{
 		exit (1);
-	}
 }

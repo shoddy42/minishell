@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:29:24 by auzochuk      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:53:18 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_token	*get_command_options(t_token *start, t_command *cmd)
 	token = start;
 	cmd->command = ft_calloc(get_options_amount(token) + 1, sizeof(char *));
 	if (!cmd->command)
-		return (token_error(start, "error: command allocation failed [", true));
+		return (token_error(start, "error: command allocation failed ["));
 	while (token && token->type != PIPE)
 	{
 		if (token->type == COMMAND)

@@ -6,12 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 03:42:34 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:19:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:24:11 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+//returns a pointer to an env matching. expects a key including the '='
 t_env	*env_exists(char *beans, t_minishell *shell)
 {
 	t_env	*env;
@@ -34,7 +35,9 @@ t_env	*env_exists(char *beans, t_minishell *shell)
 // const char	legal_last[] = "+";
 // const char	illegal[] = "~@#%%^&*()-|[]{};:\"\'$";
 // const char	first_illegal[] = "+=";
-bool	legal_env(char *data)
+
+//returns whether an env key is legal or not.
+static bool	legal_env(char *data)
 {
 	bool	ret;
 	int		i;

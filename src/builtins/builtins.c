@@ -6,13 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:35:41 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:08:06 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ms_exit(t_command *cmd)
+static int	ms_exit(t_command *cmd)
 {
 	extern int	g_status;
 	int			status;
@@ -37,7 +37,7 @@ int	ms_exit(t_command *cmd)
 	exit (status);
 }
 
-void	builtin_redir(t_command *cmd)
+static void	builtin_redir(t_command *cmd)
 {
 	if (cmd->in_name)
 	{

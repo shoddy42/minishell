@@ -6,13 +6,13 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 21:22:53 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 15:15:55 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:15:43 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	set_prompt(t_minishell *shell)
+static int	set_prompt(t_minishell *shell)
 {
 	if (shell->prompt_type == TURTLE)
 		shell->prompt = TURTLE1 TURTLE2;
@@ -39,7 +39,7 @@ int	set_prompt(t_minishell *shell)
 	return (0);
 }
 
-void	cutscene(void)
+static void	cutscene(void)
 {
 	long	wait;
 
@@ -61,7 +61,7 @@ void	cutscene(void)
 	exit (0);
 }
 
-int	prompt_choose(char **prompt, t_minishell *shell)
+static int	prompt_choose(char **prompt, t_minishell *shell)
 {
 	if (ft_strcmp(prompt[1], "turtle") == 0)
 		shell->prompt_type = TURTLE;
@@ -90,6 +90,15 @@ int	prompt_choose(char **prompt, t_minishell *shell)
 	return (true);
 }
 
+/**
+ * @brief Changes the minishell's prompt. Use just "prompt" to cycle.
+ * 		 "prompt [x]" to change to a chosen prompt.
+ * 
+ * @param cmd 	The command.
+ * @param shell The shell.
+ * @return true 
+ * @return false 
+ */
 bool	change_prompt(t_command *cmd, t_minishell *shell)
 {
 	if (cmd && cmd->command[1] && prompt_choose(cmd->command, shell))

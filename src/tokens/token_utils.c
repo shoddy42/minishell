@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/13 20:32:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:36:22 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:53:14 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_token	*merge_tokens(t_token *start, t_token *end, t_minishell *shell)
 		token = token->next;
 	}
 	if (!new_data)
-		return (token_error(start, "Token merge error. [", true));
+		return (token_error(start, "Token merge error. ["));
 	free (end->data);
 	end->data = new_data;
 	remove_tokens(start, end, shell);

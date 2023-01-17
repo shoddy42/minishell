@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2023/01/17 15:54:10 by wkonings      ########   odam.nl          #
+#    Updated: 2023/01/17 17:34:44 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,10 +15,10 @@
 # ----------------------------------------- #
 
 NAME = minishell
-FLAGS = -Wall -Wextra -Werror #//todo: RENABLE FLAGS WHEN HANDING IN FOR THE LOVE OF GOD
-DEBUG = -g #-fsanitize=address
+FLAGS = -Wall -Wextra -Werror
+DEBUG = #-g #-fsanitize=address
 MAKEFILE = makefile
-CC = clang
+# CC = clang
 
 # ---------------------------------------- #
 # --------------- DIRECTORIES ------------ #d
@@ -108,16 +108,12 @@ VIOLET	:= \1\33[38;5;183m\2
 # --------------- RECIPES ----------------- #
 # ----------------------------------------- #
 
-#todo: dependancy on makefile
 $(NAME): $(OBJS) $(HEADERS) $(MAKEFILE) | $(BIN_DIR)
 	@make all -C $(LIB_DIR)
 	@printf "$(BLUE)Compiling $(YELLOW)$(NAME).\n$(END)"
 	@$(CC) $(FLAGS) $(DEBUG) $(SRCS) -o $(NAME) -I include $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 	@make hell
 	@printf "$(YELLOW)minihell compiled. $(RED)continue at your own risk.\n$(END)"
-
-echo:
-	@echo $(SRCS)
 
 all: $(BANNER) $(NAME)
 
@@ -133,19 +129,15 @@ $(OBJ_DIR)/%.o:$(SRC_DIR)/%.c $(LIBFT)
 	@printf "$(YELLOW)Compiling $(PINK)$(notdir $@) $(RESET)from $(RED)$(notdir $<)$(END)\n"
 	@$(CC) $(FLAGS) -I include $(INCLUDE_READLINE) -c $< -o $@
 
-flags:
-	$(CC) $(FLAGS) $(SOURCES) -lft $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
-	./$(NAME)
-
 clean:
+	@printf "$(YELLOW)Cleaning up $(NAME)!\n$(END)"
 	/bin/rm -rf $(OBJ_DIR)
 
 fclean:	clean
 	/bin/rm -f $(NAME)
 	/bin/rm -rf $(BIN_DIR)
-
-mrclean: fclean
 	@make fclean -C $(LIBFT)
+	@printf "$(L_BLUE)Fully cleaned $(NAME)\n$(END)"
 
 tooclean: fclean
 	/bin/rm -rf $(LIBFT)
@@ -216,4 +208,4 @@ banner:
 	@printf "   \_|  |_/_|_| |_|_|___/_| |_|\___|_|_|\n"
 	@printf "$(END)"
 
-.PHONY: all clean fclean mrclean tooclean re tooreal test banner hell pog flags
+.PHONY: all clean fclean tooclean re tooreal test pog hell banner

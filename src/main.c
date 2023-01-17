@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:31:20 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:48:03 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	g_status;
  * @param av	The arg variables of the call to ./minishell.
  * @returns 0 on success. 1 on failure (currently doesnt happen.)
  */
-int	dash_c(t_minishell *shell, char **av, int ac)
+static int	dash_c(t_minishell *shell, char **av, int ac)
 {
 	if (av[1] && ft_strcmp(av[1], "-c") == 0)
 	{

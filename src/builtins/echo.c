@@ -6,14 +6,14 @@
 /*   By: auzochuk <auzochuk@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/14 18:42:30 by auzochuk      #+#    #+#                 */
-/*   Updated: 2023/01/16 20:59:07 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:17:28 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
 //removed != 0 from the strcmp. should be good? thx norme
-bool	dash_n(const char *flag)
+static bool	dash_n(const char *flag)
 {
 	int	i;
 

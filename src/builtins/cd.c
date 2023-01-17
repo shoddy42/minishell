@@ -6,14 +6,14 @@
 /*   By: root <root@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/09 11:43:21 by root          #+#    #+#                 */
-/*   Updated: 2023/01/17 16:26:22 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:12:33 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 #include <sys/param.h>
 
-void	change_pwd(t_minishell *shell, char *env)
+static void	change_pwd(t_minishell *shell, char *env)
 {
 	char	*pwd;
 	char	*cwd;
@@ -31,7 +31,7 @@ void	change_pwd(t_minishell *shell, char *env)
 	free(pwd);
 }
 
-int	go_home(t_minishell *shell)
+static int	go_home(t_minishell *shell)
 {
 	int	ret;
 
@@ -46,7 +46,7 @@ int	go_home(t_minishell *shell)
 	return (ret * -1);
 }
 
-int	go_back(t_minishell *shell)
+static int	go_back(t_minishell *shell)
 {
 	char	*back;
 	int		ret;

@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/22 18:52:21 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:40:08 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:21:15 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	parent_close(t_command *cmd, t_minishell *shell)
 		close(cmd->tunnel[READ]);
 }
 
-// check what ahppen if mallok fail
 char	*pipex_pathjoin(char const *path, char const *cmd)
 {
 	char	*ret;
