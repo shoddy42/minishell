@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 01:05:49 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 16:49:51 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 20:20:25 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	child_sig(int signum)
 	if (signum == SIGINT)
 	{
 		g_status = 130;
+		write(1, "\n", 1);
 		rl_redisplay();
 	}
 }
