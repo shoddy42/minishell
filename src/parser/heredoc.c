@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/13 10:19:23 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 21:57:02 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 15:35:15 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ t_token	*find_delim(t_token *token, t_minishell *shell)
 	return (hd);
 }
 
-//todo: check for potential segfaults if malloc fails.
 t_token	*hd_delim(t_token *token, t_minishell *shell)
 {
 	t_token	*hd;
@@ -38,7 +37,9 @@ t_token	*hd_delim(t_token *token, t_minishell *shell)
 	int		i;
 
 	hd = find_delim(token, shell);
-	delim = ft_calloc(ft_strlen(hd->data), sizeof(char));
+	if (!hd)
+		return (token);
+	delim = ft_calloc(ft_strlen(hd->data) + 1, sizeof(char));
 	if (!delim)
 		return (token_error(hd, "Allocing DELIM for heredoc failed. [", true));
 	i = -1;
@@ -50,7 +51,6 @@ t_token	*hd_delim(t_token *token, t_minishell *shell)
 		if (hd->data[i + skip])
 			delim[i] = hd->data[i + skip];
 	}
-	delim[i] = '\0';
 	free (hd->data);
 	hd->data = delim;
 	return (hd);

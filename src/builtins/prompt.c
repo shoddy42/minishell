@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 21:22:53 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/16 21:42:38 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 15:15:55 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ void	cutscene(void)
 
 	wait = 0;
 	printf (RED "Fatal:" RESET);
-	printf (" [1]		69420	Segmentation Fault		./minishell\n");
+	printf (" [1]	69420	segmentation fault	./minishell\n");
 	while (++wait < 2000000000)
 		;
-	printf (RED "Fatal:" RESET " [7]			cpu temperature: 117 °C \n");
+	printf (RED "Fatal:" RESET " [7]	cpu temperature: 117 °C \n");
 	wait = 0;
 	while (++wait < 1000000000)
 		;
