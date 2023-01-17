@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/08 20:31:43 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 17:08:06 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 19:49:45 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	ms_exit(t_command *cmd)
 	if (ft_strisnum(cmd->command[1]) == false)
 	{
 		write(2, "exit: ", 7);
-		write(2, cmd->command[1], ft_strlen(cmd->command[0]));
+		write(2, cmd->command[1], ft_strlen(cmd->command[1]));
 		write(2, ": numeric argument required\n", 29);
 		exit (255);
 	}

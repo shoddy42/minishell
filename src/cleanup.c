@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 01:11:56 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 19:28:46 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 20:06:50 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	ms_cleanup(t_minishell *shell)
 		if (signal(SIGINT, sighandler) == SIG_ERR)
 			exit (55);
 	}
+	signal(SIGQUIT, SIG_IGN);
 	delete_heredocs(shell);
 	free_tokens(shell);
 	if (ft_strlen(shell->command) > 0)

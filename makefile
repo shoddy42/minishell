@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2023/01/17 17:34:44 by wkonings      ########   odam.nl          #
+#    Updated: 2023/01/17 20:02:18 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,6 +71,7 @@ SRCS	:=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJS	:=	$(addprefix $(OBJ_DIR)/, $(FILES:%.c=%.o))
 
 LIBFT := libft
+LIBFT_A	:= $(LIBFT)/libft.a
 
 # ----------------------------------------- #
 # --------------- BREW -------------------- #
@@ -108,14 +109,16 @@ VIOLET	:= \1\33[38;5;183m\2
 # --------------- RECIPES ----------------- #
 # ----------------------------------------- #
 
-$(NAME): $(OBJS) $(HEADERS) $(MAKEFILE) | $(BIN_DIR)
-	@make all -C $(LIB_DIR)
+$(NAME): $(LIBFT_A) $(OBJS) $(HEADERS) $(MAKEFILE) | $(BIN_DIR)
 	@printf "$(BLUE)Compiling $(YELLOW)$(NAME).\n$(END)"
 	@$(CC) $(FLAGS) $(DEBUG) $(SRCS) -o $(NAME) -I include $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)
 	@make hell
 	@printf "$(YELLOW)minihell compiled. $(RED)continue at your own risk.\n$(END)"
 
 all: $(BANNER) $(NAME)
+
+$(LIBFT_A): $(LIBFT)
+	@make all -C $(LIB_DIR)
 
 $(LIBFT):
 	@git clone https://github.com/shoddy42/libft
@@ -124,7 +127,7 @@ $(BIN_DIR):
 	@printf "$(YELLOW)Creating $(RESET)/$@/ directory.\n$(END)"
 	@mkdir -p $@
 
-$(OBJ_DIR)/%.o:$(SRC_DIR)/%.c $(LIBFT)
+$(OBJ_DIR)/%.o:$(SRC_DIR)/%.c #$(LIBFT)
 	@mkdir -p $(dir $@)
 	@printf "$(YELLOW)Compiling $(PINK)$(notdir $@) $(RESET)from $(RED)$(notdir $<)$(END)\n"
 	@$(CC) $(FLAGS) -I include $(INCLUDE_READLINE) -c $< -o $@
@@ -144,7 +147,7 @@ tooclean: fclean
 
 re: fclean all
 
-tooreal: tooclean re
+tooreal: tooclean all
 
 test: $(NAME)
 	@./$(NAME)
