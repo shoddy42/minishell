@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 21:22:53 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 15:15:55 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 17:05:57 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,17 @@ void	cutscene(void)
 	long	wait;
 
 	wait = 0;
-	printf (RED "Fatal:" RESET);
-	printf (" [1]	69420	segmentation fault	./minishell\n");
+	printf (RED "fatal:" RESET);
+	printf (" [1] *** 69420  segmentation fault  ./minishell\n");
 	while (++wait < 2000000000)
 		;
-	printf (RED "Fatal:" RESET " [7]	cpu temperature: 117 °C \n");
+	printf (RED "fatal:" RESET " [7]	cpu temperature: 117 °C \n");
 	wait = 0;
 	while (++wait < 1000000000)
 		;
-	printf (RED "Overloaded:" RESET);
+	printf (RED "unable to write:" RESET);
 	printf (" [6] SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.MHlHV8A369\n");
-	printf ("Terminating macOS Mojave 10.14.6\n");
+	printf ("terminating macOS Mojave 10.14.6\n");
 	wait = 0;
 	while (++wait < 1000000000)
 		;
