@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:16:20 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 14:03:01 by auzochuk      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:29:04 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	dash_c(t_minishell *shell, char **av, int ac)
 		if (av[2])
 			shell->command = av[2];
 		else
-			ms_error("NO COMMAND STR.", -9, true, shell);
+			ms_error("NO COMMAND STR.", -9, true);
 		tokenize(shell, shell->command);
 		parse_token(shell);
 		count_pipes(shell);
@@ -42,11 +42,6 @@ int	dash_c(t_minishell *shell, char **av, int ac)
 	return (ac);
 }
 
-
-void	leakcheck(void)
-{
-	system("leaks -q ./minishell");
-}
 //later: make more test cases and more todos :)
 //later: make sure EVERY alloc is protected properly.
 int	main(int ac, char **av, char **envp)
@@ -55,7 +50,6 @@ int	main(int ac, char **av, char **envp)
 
 	shell = init_minishell(envp);
 	dash_c(shell, av, ac);
-	// atexit(leakcheck); //REMOVE
 	while (shell->exit == 0)
 	{
 		create_bin(shell);

@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         ::::::::             #
-#    Makefile                                           :+:    :+:             #
+#    makefile                                           :+:    :+:             #
 #                                                      +:+                     #
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2022/12/14 17:32:30 by wkonings      ########   odam.nl          #
+#    Updated: 2023/01/17 15:54:10 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,9 @@
 # ----------------------------------------- #
 
 NAME = minishell
-FLAGS = #-Wall -Wextra -Werror #//todo: RENABLE FLAGS WHEN HANDING IN FOR THE LOVE OF GOD
+FLAGS = -Wall -Wextra -Werror #//todo: RENABLE FLAGS WHEN HANDING IN FOR THE LOVE OF GOD
 DEBUG = -g #-fsanitize=address
+MAKEFILE = makefile
 CC = clang
 
 # ---------------------------------------- #
@@ -108,7 +109,7 @@ VIOLET	:= \1\33[38;5;183m\2
 # ----------------------------------------- #
 
 #todo: dependancy on makefile
-$(NAME): $(OBJS) $(HEADERS) | $(BIN_DIR)
+$(NAME): $(OBJS) $(HEADERS) $(MAKEFILE) | $(BIN_DIR)
 	@make all -C $(LIB_DIR)
 	@printf "$(BLUE)Compiling $(YELLOW)$(NAME).\n$(END)"
 	@$(CC) $(FLAGS) $(DEBUG) $(SRCS) -o $(NAME) -I include $(INCLUDES) -lreadline $(READLINE_DIRS) $(INCLUDE_READLINE)

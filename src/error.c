@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 05:59:42 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/29 21:12:16 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:02:56 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_token	*token_error(t_token *token, char *msg, bool print_token)
 }
 
 //later: evaluate whether this is even needed at all.
-void	ms_error(char *msg, int error_code, bool quit, t_minishell *shell)
+void	ms_error(char *msg, int error_code, bool quit)
 {
 	if (error_code != 0)
 	{

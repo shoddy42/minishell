@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/28 11:29:32 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 15:57:57 by auzochuk      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:29:24 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ t_token	*get_command_options(t_token *start, t_command *cmd)
 	return (token);
 }
 
-t_command	*new_command(t_minishell *shell, t_command *cmd)
+t_command	*new_command(t_command *cmd)
 {
 	t_command	*new;
 
 	new = ft_calloc(1, sizeof(t_command));
 	if (!new)
-		ms_error("Failed at allocating command.", -1, true, shell);
+		ms_error("Failed at allocating command.", -1, true);
 	new->infile = STDIN_FILENO;
 	new->outfile = STDOUT_FILENO;
 	new->executable = true;
@@ -86,7 +86,7 @@ int	make_commands(t_minishell *shell)
 	t_command	*cmd;
 	t_token		*token;
 
-	cmd = new_command(shell, NULL);
+	cmd = new_command(NULL);
 	shell->cmd_head = cmd;
 	token = shell->token_head;
 	if (!token)
@@ -99,7 +99,7 @@ int	make_commands(t_minishell *shell)
 		token = get_command_options(token, cmd);
 		if (token && token->type == PIPE)
 		{
-			cmd = new_command(shell, cmd);
+			cmd = new_command(cmd);
 			if (cmd->infile == STDIN_FILENO)
 				cmd->infile = NEEDS_PIPE;
 			if (cmd->prev->outfile == STDOUT_FILENO)

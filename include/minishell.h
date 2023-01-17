@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/09/08 16:17:11 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/16 21:56:19 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:26:48 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int			fill_env(t_env	*new);
 int			new_env(char *data, t_minishell *shell);
 bool		ms_replace_env(char *beans, t_minishell *shell);
 bool		legal_env(char *data);
-int			replace_env(char *beans, t_env *env, t_minishell *shell);
+int			replace_env(char *beans, t_env *env);
 t_env		*env_exists(char	*beans, t_minishell *shell);
 void		print_export(t_minishell	*shell);
 
@@ -182,11 +182,11 @@ void		set_status(t_minishell *shell, int cmd_count);
 bool		is_builtin(t_command *cmd, t_minishell *shell);
 int			ms_cd(t_command	*cmd, t_minishell *shell);
 int			ms_echo(t_command *cmd);
-int			ms_pwd(t_command *cmd, t_minishell *shell);
+int			ms_pwd(t_minishell *shell);
 int			print_env(t_minishell	*shell, t_command	*cmd);
 int			ms_export(t_command *cmd, t_minishell	*shell);
 int			ms_unset(t_minishell *shell, t_command *cmd);
-int			close_builtin(t_command *cmd, t_minishell *shell);
+int			close_builtin(t_command *cmd);
 
 // heredoc.c
 t_token		*heredoc(t_token *token, t_minishell *shell);
@@ -205,14 +205,14 @@ t_token		*handle_left(t_token *token, t_minishell *shell);
 t_token		*handle_right(t_token *token, t_minishell *shell);
 
 // quote.c
-t_token		*handle_quote(t_token *token, int type, t_minishell *shell);
+t_token		*handle_quote(t_token *token, t_tokentype type, t_minishell *shell);
 
 // expand.c
 void		expand_dong(t_token *token, t_minishell *shell);
 t_token		*expand_two(t_token *token, t_minishell *shell);
 
 // error.c 
-void		ms_error(char *msg, int code, bool terminate, t_minishell *shell);
+void		ms_error(char *msg, int code, bool terminate);
 t_token		*token_error(t_token *token, char *msg, bool print_token);
 
 // commands.c

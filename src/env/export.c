@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/22 19:11:04 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 15:05:23 by auzochuk      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:29:01 by auzochuk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	ms_export(t_command *cmd, t_minishell *shell)
 	{
 		env = env_exists(cmd->command[i], shell);
 		if (env)
-			status = replace_env(cmd->command[i], env, shell);
+			status = replace_env(cmd->command[i], env);
 		else
 			status = new_env(cmd->command[i], shell);
 	}

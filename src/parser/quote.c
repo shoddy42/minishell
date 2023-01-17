@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/17 14:58:28 by wkonings      #+#    #+#                 */
-/*   Updated: 2022/11/23 23:57:24 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/17 16:22:39 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 /**
  * @brief Writes error in case of no closing quote.
  */
-void	quote_error(t_token *tmp, t_token *start, int type, t_minishell *shell)
+void	quote_error(t_token *tmp, t_token *start,
+	t_tokentype type, t_minishell *shell)
 {
 	if (tmp->type != type)
 		printf ("WARNING: UNCLOSED QUOTE\n");
@@ -33,7 +34,7 @@ void	quote_error(t_token *tmp, t_token *start, int type, t_minishell *shell)
  * @param shell The shell.
  * @return @b [start] after all tokens are merged.
  */
-t_token	*handle_quote(t_token *start, int type, t_minishell *shell)
+t_token	*handle_quote(t_token *start, t_tokentype type, t_minishell *shell)
 {
 	t_token	*tmp;
 	char	*str;
