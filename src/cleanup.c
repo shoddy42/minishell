@@ -6,7 +6,7 @@
 /*   By: wkonings <wkonings@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/24 01:11:56 by wkonings      #+#    #+#                 */
-/*   Updated: 2023/01/17 20:22:20 by wkonings      ########   odam.nl         */
+/*   Updated: 2023/01/23 02:59:58 by wkonings      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ms_cleanup(t_minishell *shell)
 		if (signal(SIGINT, sighandler) == SIG_ERR)
 			printf ("error: signal system call failed. sigint (ctrl + c)\n");
 		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-			printf ("error: signal system call failed. sigquit (ctrol + \\)\n");
+			printf ("error: signal system call failed. sigquit (ctrl + \\)\n");
 	}
 	delete_heredocs(shell);
 	free_tokens(shell);

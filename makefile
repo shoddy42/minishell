@@ -6,7 +6,7 @@
 #    By: wkonings <wkonings@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/10/29 16:21:56 by wkonings      #+#    #+#                  #
-#    Updated: 2023/01/17 20:02:18 by wkonings      ########   odam.nl          #
+#    Updated: 2023/01/23 02:58:54 by wkonings      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,6 @@ INC			:= -I include
 # --------------- FILES ------------------- #
 # ----------------------------------------- #
 
-#this cant be fully right?
 HEADER_FILES:= minishell.h prompt.h
 HEADERS		:=	$(addprefix $(INCLUDE_DIR)/, $(HEADER_FILES))
 
@@ -115,10 +114,11 @@ $(NAME): $(LIBFT_A) $(OBJS) $(HEADERS) $(MAKEFILE) | $(BIN_DIR)
 	@make hell
 	@printf "$(YELLOW)minihell compiled. $(RED)continue at your own risk.\n$(END)"
 
-all: $(BANNER) $(NAME)
+all: $(NAME)
 
 $(LIBFT_A): $(LIBFT)
-	@make all -C $(LIB_DIR)
+	@printf "test\n"
+	@make -C $(LIB_DIR)
 
 $(LIBFT):
 	@git clone https://github.com/shoddy42/libft
@@ -127,20 +127,20 @@ $(BIN_DIR):
 	@printf "$(YELLOW)Creating $(RESET)/$@/ directory.\n$(END)"
 	@mkdir -p $@
 
-$(OBJ_DIR)/%.o:$(SRC_DIR)/%.c #$(LIBFT)
+$(OBJ_DIR)/%.o:$(SRC_DIR)/%.c | $(BANNER)
 	@mkdir -p $(dir $@)
 	@printf "$(YELLOW)Compiling $(PINK)$(notdir $@) $(RESET)from $(RED)$(notdir $<)$(END)\n"
 	@$(CC) $(FLAGS) -I include $(INCLUDE_READLINE) -c $< -o $@
 
 clean:
-	@printf "$(YELLOW)Cleaning up $(NAME)!\n$(END)"
+	@printf "$(YELLOW)Cleaning up $(RESET)$(NAME)!\n$(END)"
 	/bin/rm -rf $(OBJ_DIR)
 
 fclean:	clean
 	/bin/rm -f $(NAME)
 	/bin/rm -rf $(BIN_DIR)
 	@make fclean -C $(LIBFT)
-	@printf "$(L_BLUE)Fully cleaned $(NAME)\n$(END)"
+	@printf "$(L_BLUE)Fully cleaned $(RESET)$(NAME)\n$(END)"
 
 tooclean: fclean
 	/bin/rm -rf $(LIBFT)
@@ -202,13 +202,12 @@ hell:
 	@printf "$(END)"
 
 banner:
-	@printf "\n$(BLUE)"
-	@printf "   ___  ____       _     _          _ _ \n"
-	@printf "   |  \/  (_)     (_)   | |        | | |\n"
-	@printf "   | .  . |_ _ __  _ ___| |__   ___| | |\n"
-	@printf "   | |\/| | | '_ \| / __| '_ \ / _ \ | |\n"
-	@printf "   | |  | | | | | | \__ \ | | |  __/ | |\n"
-	@printf "   \_|  |_/_|_| |_|_|___/_| |_|\___|_|_|\n"
+	@printf " $(YELLOW)  ___  ____       _    $(RED) _          _ _ \n"
+	@printf " $(YELLOW)  |  \/  (_)     (_)   $(RED)| |        | | |\n"
+	@printf " $(YELLOW)  | .  . |_ _ __  _ ___$(RED)| |__   ___| | |\n"
+	@printf " $(YELLOW)  | |\/| | | '_ \| / __$(RED)| '_ \ / _ \ | |\n"
+	@printf " $(YELLOW)  | |  | | | | | | \__ $(RED)\ | | |  __/ | |\n"
+	@printf " $(YELLOW)  \_|  |_/_|_| |_|_|___$(RED)/_| |_|\___|_|_|\n"
 	@printf "$(END)"
 
 .PHONY: all clean fclean tooclean re tooreal test pog hell banner
